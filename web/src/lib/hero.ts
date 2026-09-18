@@ -134,6 +134,10 @@ export function initHero() {
     saturate: tok('--recede-saturate', 0.72),
     brightness: tok('--recede-brightness', 0.82),
   };
+  /* Rule 2: the cutout plane leads the plate by this much of the
+     segment's travel, peaking mid-segment and exactly zero at each beat
+     so every cutout lands on its drawn figure. */
+  const LEAD = (tok('--plane-front', 1.06) - 1) * HERO.parallaxLead;
 
   let box = coverBox(1, 1);
   let vw = 1;
@@ -218,6 +222,34 @@ export function initHero() {
     }
   }
 
+  /* ---- depth (Rule 2) --------------------------------------------
+     The lead is a fraction of the camera's translate across the current
+     segment, shaped by 4f(1−f): zero at both beats, peak between. It is
+     applied to the cutouts in scene space (divided by the scale, since
+     they live inside the scaled scene), so it reads as the front plane
+     arriving a beat ahead of the back plane and settling exactly on it. */
+  function renderDepth(p: number) {
+    if (LEAD === 0) return;
+    const cams = beatCams();
+    const n = cams.length - 1;
+    const t = Math.min(Math.max(p, 0), 1) * n;
+    const i = Math.min(Math.floor(t), n - 1);
+    const f = t - i;
+    const a = poseFor(cams[i], box, vw, vh);
+    const b = poseFor(cams[i + 1], box, vw, vh);
+    const shape = 4 * f * (1 - f);
+    const s = camAt(p).s;
+    const lx = ((b.tx - a.tx) * LEAD * shape) / s;
+    const ly = ((b.ty - a.ty) * LEAD * shape) / s;
+    for (let k = 1; k < HERO.beats.length; k++) {
+      const cut = cuts[k];
+      if (!cut) continue;
+      /* Only the two cutouts that can be visible in this segment move. */
+      cut.style.transform =
+        k === i || k === i + 1 ? `translate3d(${lx.toFixed(2)}px, ${ly.toFixed(2)}px, 0)` : '';
+    }
+  }
+
   /* ---- progress → camera --------------------------------------
      Three segments between four beats. Position eases; scale eases in
      log space (camBetween). */
@@ -237,6 +269,7 @@ export function initHero() {
   const render = () => {
     applyCam(camAt(proxy.p));
     renderFocus(proxy.p);
+    renderDepth(proxy.p);
   };
 
   const remeasure = () => {
@@ -250,6 +283,15 @@ export function initHero() {
      visualViewport, so the first measure may see the 100vh fallback.
      Measure again once everything has loaded. */
   window.addEventListener('load', remeasure);
+
+  /* Reduced motion: beat 0 as a composed still, no travel, no trigger.
+     The section's own CSS collapses its height under .hero--static; the
+     no-JS path reaches the same still through .no-js in CSS alone. */
+  if (reducedMotion()) {
+    section.classList.add('hero--static');
+    remeasure();
+    return;
+  }
 
   const tl = gsap
     .timeline({ paused: true })
@@ -275,8 +317,6 @@ export function initHero() {
     onRefreshInit: measure,
     onRefresh: render,
   });
-
-  void reducedMotion;
 
   /* Dev handle: placement is judged by eye, not measured (spec). */
   if (import.meta.env.DEV) {
