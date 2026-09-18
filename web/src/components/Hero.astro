@@ -57,7 +57,7 @@ import HeroScene from './HeroScene.astro';
   .hero {
     position: relative;
     /* Four beats, about one screen of travel each (plan). The pin is
-             one --vh; the section is the travel. Never 100vh. */
+               one --vh; the section is the travel. Never 100vh. */
     height: calc(var(--vh) * 4);
     background: var(--night);
   }
@@ -120,11 +120,11 @@ import HeroScene from './HeroScene.astro';
      (Rule 3). Same block, moved. */
   @media (max-width: 767px) {
     /* Top third: the sky. The people occupy the middle and bottom thirds
-         of the phone's slice (Rule 3). */
+           of the phone's slice (Rule 3). */
     .hero__open {
       right: auto;
       left: var(--gutter);
-      top: calc(var(--nav-h) + var(--s-7));
+      top: calc(var(--nav-h) + var(--s-6));
       max-width: none;
       width: calc(100% - var(--gutter) * 2);
     }

@@ -41,10 +41,14 @@ export const HERO = {
     { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.52, y: 0.71, w: 0.072 } },
   ] as Beat[],
 
-  /* On a phone the caption takes the bottom third, so each subject's
-     camera target sits higher — Rule 3, copy and person in different
-     thirds. Fraction of the plate's height, by eye. */
-  phoneCyLift: 0.08,
+  /* On a phone the caption takes the bottom third, so each subject must
+     sit in the middle third (Rule 3). The camera puts its target at the
+     viewport centre, so to raise the subject it aims BELOW the subject —
+     the lift is added to cam.y. And a 4x push on a 390px screen makes
+     one person 35% of the height, so the phone zooms less. Both by eye;
+     measured to land every subject's centre in the middle third. */
+  phoneCyLift: 0.05,
+  phoneScale: 0.7,
 
   /* Rule 4's tokens were sized for receding siblings; the hero applies
      them to the whole plate, which is the largest surface on the site.
@@ -150,7 +154,9 @@ export function initHero() {
     const phone = isPhone();
     return HERO.beats.map((b, i) => {
       if (i === 0) return { ...b.cam, x: phone ? HERO.focusX.phone : HERO.focusX.desktop };
-      return phone ? { ...b.cam, y: b.cam.y - HERO.phoneCyLift } : b.cam;
+      return phone
+        ? { ...b.cam, y: b.cam.y + HERO.phoneCyLift, s: b.cam.s * HERO.phoneScale }
+        : b.cam;
     });
   }
 
