@@ -645,15 +645,15 @@ Ten tasks, one commit each. Each ends with `npm run check && npm run build`.
       palette swatches, dark tokens on `--night`, the scrim over a real
       photograph, a recede before/after pair. This is a deliverable — a
       criterion depends on it — not a scratch page.
-- [ ] **5. `Base.astro`.** Style imports, `<Font>`, `Nav`, `Footer`, `<slot>`,
+- [x] **5. `Base.astro`.** Style imports, `<Font>`, `Nav`, `Footer`, `<slot>`,
       `noindex` by default. Keeps the existing `initScroll()` call untouched.
-- [ ] **6. `Nav.astro` + `lib/nav.ts`.** Markup from `index.html:20-56` with
+- [x] **6. `Nav.astro` + `lib/nav.ts`.** Markup from `index.html:20-56` with
       the two inline styles removed, the SVG logo on `currentColor`, the
       sentinel observer, the `<dialog>` drawer, the 390px composition with
       Support inside the drawer. Solid-by-default in CSS.
-- [ ] **7. `Footer.astro`.** Four columns from `index.html:153-182`, dark
+- [x] **7. `Footer.astro`.** Four columns from `index.html:153-182`, dark
       tokens instead of hand-written white, `.pageswitch` padding dropped.
-- [ ] **8. Pages.** Delete the smoke test from `index.astro`; add
+- [x] **8. Pages.** Delete the smoke test from `index.astro`; add
       `about.astro`. Both are shells — nav, a heading, footer — and nothing
       more. Delete `web/src/.DS_Store`.
 - [ ] **9. Images.** `image` config; `styles/README.md` with the convention and

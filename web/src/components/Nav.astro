@@ -272,12 +272,20 @@ const LINKS: NavLink[] = [
   }
 
   /* ---- burger ---- */
+  /* A full 44px tap target without changing the visual mark. The
+     three bars are only 14.5px tall, so padding alone measured
+     44x39 — min-height plus centring gets the short axis there
+     too. Pulled flush to the gutter by a negative inline margin. */
   .nav__burger {
     display: none;
     margin-inline-start: auto;
-    /* 44px tap target without changing the visual mark. */
-    padding: var(--s-3);
+    padding-inline: var(--s-3);
     margin-inline-end: calc(-1 * var(--s-3));
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav__burger-bar {
@@ -364,7 +372,7 @@ const LINKS: NavLink[] = [
     }
 
     .nav__burger {
-      display: block;
+      display: flex;
     }
 
     .nav__meta {

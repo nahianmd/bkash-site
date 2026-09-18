@@ -95,54 +95,67 @@ function initNavGround(nav: HTMLElement): void {
    hand-rolling any of it. */
 function initDrawer(): void {
   const drawer = document.querySelector<HTMLDialogElement>('[data-drawer]');
-  const open = document.querySelector<HTMLElement>('[data-drawer-open]');
-  const close = document.querySelector<HTMLElement>('[data-drawer-close]');
-  if (!drawer || !open) return;
+  const opener = document.querySelector<HTMLElement>('[data-drawer-open]');
+  const closer = document.querySelector<HTMLElement>('[data-drawer-close]');
+  if (!drawer || !opener) return;
 
-  open.addEventListener('click', () => {
-    /* showModal() moves focus into the dialog and returns it to the
-       burger on close, because the burger was the active element. */
+  const openDrawer = () => {
+    /* showModal() gives the focus trap and background inertness.
+       Because the burger is the active element when it is called,
+       the engine also knows to send focus back here on close. */
     drawer.showModal();
-    open.setAttribute('aria-expanded', 'true');
-  });
+    opener.setAttribute('aria-expanded', 'true');
+  };
 
-  close?.addEventListener('click', () => drawer.close());
+  /* State is set HERE rather than in a `close` event listener.
 
-  /* Escape, explicitly.
+     The `close` event was measured not to fire in the target
+     browser — neither for close() from a click nor from Escape,
+     with `drawer.open` correctly going false either way. Hanging
+     aria-expanded and focus restoration off that event left the
+     burger permanently announcing aria-expanded="true". So every
+     path that closes the drawer calls this, and the event listener
+     below is kept only as a harmless backstop for engines that do
+     fire it. Idempotent: close() on a closed dialog is a no-op. */
+  const closeDrawer = () => {
+    drawer.close();
+    opener.setAttribute('aria-expanded', 'false');
+    /* Only when the burger is actually rendered: above 900px it is
+       display:none, and focusing a hidden element silently drops
+       focus to <body>. */
+    if (opener.offsetParent !== null) opener.focus({ preventScroll: true });
+  };
 
-     A modal <dialog> is supposed to close on Escape by itself, via
-     the `cancel` event. Relying on that alone was tested and could
-     not be confirmed in this environment, and the criterion is
-     specifically "closes on Escape" — so it is handled here as
-     well. `close()` on an already-closed dialog is a no-op, so this
-     is additive to the native behaviour, not a replacement for it. */
+  opener.addEventListener('click', openDrawer);
+  closer?.addEventListener('click', closeDrawer);
+
+  /* Escape, explicitly. A modal <dialog> is supposed to close on
+     Escape by itself via `cancel`, but the criterion is specifically
+     "closes on Escape", so it is not left to chance. */
   drawer.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       e.preventDefault();
-      drawer.close();
+      closeDrawer();
     }
   });
 
-  drawer.addEventListener('close', () => {
-    open.setAttribute('aria-expanded', 'false');
-    /* Belt and braces: Escape closes without a click, and not every
-       engine restores focus on its own. Only when the burger is
-       actually rendered — above 900px it is display:none, and
-       focusing a hidden element silently drops focus to <body>. */
-    if (open.offsetParent !== null) open.focus({ preventScroll: true });
-  });
-
-  /* Clicking the backdrop closes it. The dialog fills the screen, so
-     "outside" means the ::backdrop, which targets the dialog itself. */
+  /* Backdrop. The dialog fills the screen, so a click that lands on
+     the dialog itself rather than its content is the backdrop. */
   drawer.addEventListener('click', (e) => {
-    if (e.target === drawer) drawer.close();
+    if (e.target === drawer) closeDrawer();
   });
 
-  /* Following a link inside the drawer must not leave it open behind
-     the new page in a bfcache restore. */
+  /* Following a link must not leave the drawer open behind the new
+     page on a bfcache restore. */
   for (const a of drawer.querySelectorAll('a')) {
-    a.addEventListener('click', () => drawer.close());
+    a.addEventListener('click', closeDrawer);
   }
+
+  /* Backstop for engines that do dispatch it, e.g. a close driven by
+     the engine itself rather than by our own code. */
+  drawer.addEventListener('close', () => {
+    opener.setAttribute('aria-expanded', 'false');
+  });
 }
 
 /** Boot the nav. Called once, from Nav.astro's own module script. */
