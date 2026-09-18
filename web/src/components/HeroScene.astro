@@ -1,0 +1,128 @@
+---
+/* The scene: the plate and the three cutouts, through astro:assets.
+
+   Shared by two sections. The hero animates it — a camera pushes
+   through it beat by beat. The bird renders it STATIC at beat 3 as
+   the content under its mask, which is what makes the handover
+   exact by construction: same component, same assets, same pixels.
+
+   The plate already contains all three figures, drawn small. The
+   cutouts are hi-res detail layers that fade up only when the camera
+   is on them (specs/hero/plan.md, "beat-local"), so at rest the still
+   is the plate alone and no cutout can ghost its drawn figure.
+
+   Sizing is the camera's job, not Astro's — `layout="none"` on every
+   image, and the scene box is set by lib/hero.ts from the plate's
+   cover fit. The no-JS fallback is plain CSS cover, below.        */
+import { Picture } from 'astro:assets';
+
+import plate from '../assets/img/hero/plate.jpg';
+import amena from '../assets/img/hero/amena.png';
+import rahim from '../assets/img/hero/rahim.png';
+import faysal from '../assets/img/hero/faysal.png';
+
+/* The widths cap each variant at about 2x its largest display size:
+   the plate never displays above its own 1600; a cutout's largest
+   size is its box fraction x the plate's display width x its beat's
+   zoom (plan, Assets). Upscaling is a later pass — spec. */
+---
+
+<div class="scene" data-hero-scene>
+  <Picture
+    src={plate}
+    alt="A neighbourhood street at golden hour"
+    widths={[390, 640, 768, 1024, 1280, 1600]}
+    sizes="100vw"
+    formats={['avif', 'webp']}
+    layout="none"
+    loading="eager"
+    fetchpriority="high"
+    decoding="async"
+    pictureAttributes={{ class: 'scene__plate' }}
+    data-hero-plate
+  />
+
+  <div class="scene__cut" data-hero-cut="amena">
+    <Picture
+      src={amena}
+      alt=""
+      widths={[400, 700, 1008]}
+      sizes="35vw"
+      formats={['avif', 'webp']}
+      layout="none"
+    />
+  </div>
+  <div class="scene__cut" data-hero-cut="rahim">
+    <Picture
+      src={rahim}
+      alt=""
+      widths={[600, 1000, 1600]}
+      sizes="60vw"
+      formats={['avif', 'webp']}
+      layout="none"
+    />
+  </div>
+  <div class="scene__cut" data-hero-cut="faysal">
+    <Picture
+      src={faysal}
+      alt=""
+      widths={[500, 1000, 1546]}
+      sizes="50vw"
+      formats={['avif', 'webp']}
+      layout="none"
+    />
+  </div>
+</div>
+
+<style is:global>
+  /* Global on purpose: <Picture> renders its own elements, which do
+     not carry this component's scope attribute. Every selector is
+     prefixed with .scene so the reach is the same as scoping. */
+
+  .scene {
+    position: absolute;
+    inset: 0;
+    /* Origin 0 0 keeps the camera maths solvable: after
+         translate(tx, ty) scale(s) the box is exactly
+         (tx, ty, W*s, H*s), so the cover clamp is arithmetic. */
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+
+  .scene__plate,
+  .scene__plate img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+
+  /* The phone's slice of the wide plate (spec, 390): a window at
+     ~46% across contains Amena, the tea stall and Faysal. Only the
+     no-JS path uses this — with JS the scene box carries fx. */
+  @media (max-width: 767px) {
+    .scene__plate img {
+      object-position: 46% 50%;
+    }
+  }
+
+  /* Cutouts: positioned by JS as fractions of the scene box, and
+     invisible until the camera is on them. No-JS never shows them. */
+  .scene__cut {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 10%;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    will-change: opacity, transform;
+  }
+
+  .scene__cut img {
+    width: 100%;
+    height: auto;
+  }
+</style>

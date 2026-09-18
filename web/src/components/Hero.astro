@@ -1,0 +1,137 @@
+---
+/* Section 1: Hero — one camera through one street.
+   specs/sections/hero.md · specs/hero/plan.md
+
+   Four beats over four screens of travel: the street, then Amena,
+   Rahim, Faysal. The pin is `--vh` tall; the section provides the
+   travel. lib/hero.ts drives the camera; this file is composition. */
+import HeroScene from './HeroScene.astro';
+---
+
+<section class="hero" data-hero aria-label="Stories from one neighbourhood">
+  <div class="hero__pin" data-hero-pin>
+    <HeroScene />
+
+    <div class="hero__chrome">
+      <!-- Beat 0. Bottom-right on desktop: the lower right of this plate
+           is open road; everything that matters is on the left. -->
+      <div class="hero__open on-photo" data-hero-open>
+        <h1 class="t-hero">300 Transactions Every Second</h1>
+        <p class="t-lead hero__line">The Digital Rhythm of Bangladesh</p>
+        <p class="t-sm hero__cue">Scroll to meet them</p>
+      </div>
+
+      <!-- Beats 1–3. One block each, stacked at the same spot; the
+           camera's focus drives which is visible. Eyebrow is the ROLE
+           (decided 2026-09-18), in scrim ink — pink on the scrim is
+           audit H4 again. -->
+      <div class="hero__caps">
+        <div class="hero__cap on-photo" data-hero-cap="1">
+          <p class="t-eyebrow hero__role">Customer</p>
+          <h2 class="t-h2">7 in 10 Adults in Bangladesh</h2>
+          <p class="t-lead hero__line">Control Their Money with bKash</p>
+        </div>
+        <div class="hero__cap on-photo" data-hero-cap="2">
+          <p class="t-eyebrow hero__role">Agent</p>
+          <h2 class="t-h2">One Agent Every 2 KM</h2>
+          <p class="t-lead hero__line">Your Neighborhood is the Branch</p>
+        </div>
+        <div class="hero__cap on-photo" data-hero-cap="3">
+          <p class="t-eyebrow hero__role">Merchant</p>
+          <h2 class="t-h2">From Floating Stalls to Digital Storefronts</h2>
+          <p class="t-lead hero__line">Moving Millions of Cashless Commerce</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The nav is transparent while this marker is below its band
+       (lib/nav.ts). The plate's top is bright sky; the nav carries its
+       own scrim, and verify measures it. -->
+  <div data-nav-dark-end></div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    /* Four beats, about one screen of travel each (plan). The pin is
+         one --vh; the section is the travel. Never 100vh. */
+    height: calc(var(--vh) * 4);
+    background: var(--night);
+  }
+
+  .hero__pin {
+    position: relative;
+    height: var(--vh);
+    overflow: hidden;
+    background: var(--night);
+  }
+
+  .hero__chrome {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-chrome);
+    pointer-events: none;
+  }
+
+  .hero__open {
+    position: absolute;
+    right: var(--gutter);
+    bottom: calc(var(--gutter) + var(--s-6));
+    max-width: min(52vw, 44rem);
+  }
+
+  .hero__line {
+    margin-top: var(--s-4);
+    color: var(--scrim-ink);
+  }
+
+  .hero__cue {
+    margin-top: var(--s-5);
+    color: var(--on-night-2);
+  }
+
+  .hero__caps {
+    position: absolute;
+    left: var(--gutter);
+    bottom: calc(var(--gutter) + var(--s-6));
+    width: min(38rem, calc(100% - var(--gutter) * 2));
+  }
+
+  .hero__cap {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+
+  .hero__role {
+    color: var(--scrim-ink);
+    opacity: 0.82;
+    margin-bottom: var(--s-3);
+  }
+
+  /* 390: headline in the bottom third, subjects in the middle third
+     (Rule 3). Same block, moved. */
+  @media (max-width: 767px) {
+    .hero__open {
+      right: auto;
+      left: var(--gutter);
+      bottom: calc(var(--gutter) + var(--s-8));
+      max-width: none;
+      width: calc(100% - var(--gutter) * 2);
+    }
+
+    .hero__caps {
+      bottom: calc(var(--gutter) + var(--s-8));
+    }
+  }
+
+  /* No JS: beat 0 as a composed still, no travel. Reduced motion takes
+     the same path from lib/hero.ts by adding .hero--static. */
+  :global(.no-js) .hero,
+  .hero.hero--static {
+    height: var(--vh);
+  }
+</style>

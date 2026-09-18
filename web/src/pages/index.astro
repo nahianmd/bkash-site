@@ -9,6 +9,7 @@
    one at a time under the SDD loop. Nothing below is final content.
 */
 import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
 ---
 
 <Base
@@ -16,21 +17,22 @@ import Base from '../layouts/Base.astro';
   description="A secure digital account where millions store value and decide how to use it."
   current="home"
 >
-  <main class="shell">
-    <div class="wrap shell__in">
-      <p class="t-eyebrow">Foundation</p>
-      <h1 class="t-display">Financial freedom for millions</h1>
-      <p class="t-lead">
-        The shell is built: tokens, fonts, nav and footer. The hero, the bird, the people and
-        the services sections land here one at a time.
-      </p>
-      <p class="t-body">
-        Every label in the nav and the footer is placeholder until bKash approves it, and the
-        page is <code>noindex</code> until the content is signed off.
-      </p>
-      <p class="t-sm shell__link">
-        <a href="/specimen">Token specimen</a> · <a href="/about">About shell</a>
-      </p>
+  <main>
+    <Hero />
+
+    <div class="shell">
+      <div class="wrap shell__in">
+        <p class="t-eyebrow">Next</p>
+        <h2 class="t-h1">The bird, the people, the services</h2>
+        <p class="t-lead">The hero is in. The remaining sections land here one at a time.</p>
+        <p class="t-body">
+          Every label in the nav and the footer is placeholder until bKash approves it, and the
+          page is <code>noindex</code> until the content is signed off.
+        </p>
+        <p class="t-sm shell__link">
+          <a href="/specimen">Token specimen</a> · <a href="/about">About shell</a>
+        </p>
+      </div>
     </div>
   </main>
 </Base>
