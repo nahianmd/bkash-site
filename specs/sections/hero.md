@@ -165,7 +165,12 @@ Beat 0 as a composed still, not pinned.
 | `Faysal.png` | 1546×1600 | — | comfortable at 3.5× |
 
 The plate is the problem, not the cutouts. As previs for the shoot it does not
-matter. **If the illustrated hero ships**, the plate needs to be delivered at
+matter.
+
+*Nahian, 2026-09-18: build with the current files; upscale later once things
+are assembled. Asset quality is a pass of its own, after the sections exist.*
+The acceptance row about upscaling is therefore deferred, not failed, until
+that pass. **If the illustrated hero ships**, the plate needs to be delivered at
 ≥3200px wide, and Amena at ≥2000px. Illustrations can be regenerated at size;
 ask for it in the same request as the layers and the portrait.
 
