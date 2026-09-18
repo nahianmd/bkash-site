@@ -1,0 +1,299 @@
+/* ============================================================
+   bKash — reset, layout primitives, shared states
+
+   Ported from `reference/prototype/css/base.css`, with two
+   deliberate omissions:
+
+   1. The @font-face block is gone. Astro's fonts config owns the
+      faces now — see astro.config.mjs for why the prototype's
+      five hand-subset files could not be kept.
+
+   2. The blanket
+        *, *::before, *::after { transition-duration: .01ms !important }
+      reduced-motion override is gone. It would fight ScrollTrigger,
+      and the spec rules it out explicitly. The answer lives in
+      tokens.css instead: the four duration tokens collapse, and
+      because everything here transitions through them, everything
+      collapses with it.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* ScrollTrigger owns scrolling; native smooth fights it. */
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* A safety net, not the mechanism. The criterion is measured with
+     documentElement.scrollWidth against innerWidth, which this does
+     not mask. */
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: var(--pink);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease-io);
+}
+
+a:hover {
+  color: var(--pink-deep);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Anchors must clear the fixed header. --nav-h is the single
+   source, so this follows the 390px redefinition for free. */
+:target {
+  scroll-margin-top: calc(var(--nav-h) + var(--s-4));
+}
+
+/* ---- layout primitives ------------------------------------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.stack > * + * {
+  margin-top: var(--flow, var(--s-4));
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- buttons ----------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-5);
+  border-radius: var(--r-full);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  transition:
+    background var(--t-base) var(--ease-io),
+    color var(--t-base) var(--ease-io),
+    transform var(--t-fast) var(--ease-io);
+  will-change: transform;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--pink);
+  color: var(--paper);
+}
+
+.btn--primary:hover {
+  background: var(--pink-deep);
+  color: var(--paper);
+}
+
+.btn--ghost {
+  color: var(--ink);
+  border: 1px solid var(--pink-line);
+}
+
+.btn--ghost:hover {
+  background: var(--pink-wash);
+  color: var(--pink);
+}
+
+/* Outlined. Border and label both ride currentColor, so one rule
+   works white on the transparent nav over the hero AND ink on the
+   solid nav — the header swaps its own colour and this follows.
+   Filling with pink on hover is legible against either ground. */
+.btn--outline {
+  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+.btn--outline:hover {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--paper);
+}
+
+/* ---- inert, used by the বাংলা toggle ----
+   Visibly present but clearly dead. Hiding it entirely invites
+   "where is Bangla?"; leaving it live invites a dead click.
+   See specs/needs.md C3. */
+.is-inert {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ---- text on a photograph (design language Rule 3) ----------
+   The ONLY sanctioned way text sits on an image anywhere in web/.
+
+   The contract: the scrim is at full strength across the whole
+   text block and fades only ABOVE it, over --scrim-fade. Apply
+   this to the TEXT BLOCK, never to a whole container — a gradient
+   already fading behind the top line of a caption is exactly how
+   the prototype's hero captions vanished into sand.
+
+   `isolation: isolate` keeps the negative z-index pseudo-element
+   behind the text but in front of the photograph, without needing
+   a stacking-context hack at the call site. */
+.on-photo {
+  position: relative;
+  isolation: isolate;
+  color: var(--scrim-ink);
+}
+
+.on-photo::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--scrim-fade)) calc(-1 * var(--scrim-bleed))
+    calc(-1 * var(--scrim-bleed));
+  background: var(--scrim);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ---- recede (design language Rule 4) ------------------------
+   When one thing is the subject, everything else steps back. Used
+   three times — hero cutouts, people cards, services icons — and
+   identical in all three because it is one class.
+
+   No blur: hero.md scrubs recede with the camera and CLAUDE.md
+   performance rule 2 forbids animating filter: blur() per frame.
+   Opacity, saturate and brightness are cheap compositor filters.
+
+   Scrubbed use sets the token values per frame instead of toggling
+   the class, which is why the properties read from tokens. */
+.is-receded {
+  opacity: var(--recede-opacity);
+  filter: saturate(var(--recede-saturate)) brightness(var(--recede-brightness));
+  transition:
+    opacity var(--recede-t) var(--ease-io),
+    filter var(--recede-t) var(--ease-io);
+}
+
+/* The opt-in softness path: a PRE-RENDERED blurred copy, crossfaded
+   on opacity. Rule 2's own prescribed technique — never a live
+   blur. The copy sits on top of its sharp original. */
+.recede-soft {
+  opacity: 0;
+  transition: opacity var(--recede-t) var(--ease-io);
+}
+
+.is-receded > .recede-soft,
+.is-receded + .recede-soft {
+  opacity: var(--recede-soft-opacity);
+}
+
+/* ---- scroll reveal -----------------------------------------
+   Elements start shifted; a section adds .is-in.
+
+   Audit X3: the prototype gated every reveal on IntersectionObserver
+   with no fallback, so a missed observation — bfcache, a deep link,
+   print — left whole sections at opacity 0. Reproduced by jumping
+   to About's stats. The fallbacks below are that fix: without JS,
+   and when printing, the resting state is visible. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--t-slow) var(--ease),
+    transform var(--t-slow) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* No JS: nothing will ever add .is-in, so never hide it. */
+.no-js [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+@media print {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}

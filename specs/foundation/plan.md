@@ -638,7 +638,7 @@ Ten tasks, one commit each. Each ends with `npm run check && npm run build`.
       390px redefinition, `--vh: 100vh` fallback, dark tokens, scrim tokens,
       recede tokens, plane rates. Plus the `.t-*` classes with size,
       line-height and tracking bundled.
-- [ ] **3. `base.css`.** Reset, `.wrap` / `.stack` / `.sr-only`, buttons,
+- [x] **3. `base.css`.** Reset, `.wrap` / `.stack` / `.sr-only`, buttons,
       `.is-inert`, `[data-reveal]`, `.on-photo`, the recede state class, and
       the token-level reduced-motion block. **No `@font-face`.**
 - [ ] **4. `/specimen`.** Every type step with its token name and computed px,
