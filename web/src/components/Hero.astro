@@ -55,7 +55,7 @@ import HeroScene from './HeroScene.astro';
   .hero {
     position: relative;
     /* Four beats, about one screen of travel each (plan). The pin is
-         one --vh; the section is the travel. Never 100vh. */
+           one --vh; the section is the travel. Never 100vh. */
     height: calc(var(--vh) * 4);
     background: var(--night);
   }
@@ -135,3 +135,8 @@ import HeroScene from './HeroScene.astro';
     height: var(--vh);
   }
 </style>
+
+<script>
+  import { initHero } from '../lib/hero';
+  initHero();
+</script>
