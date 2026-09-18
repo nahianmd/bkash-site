@@ -25,7 +25,8 @@ bkash-site/
 ├── PROGRESS.md         ← durable memory; update as sections land
 ├── specs/              ← the source of truth for what gets built
 │   ├── prototype-audit.md   ← every bug found in the demo, by section
-│   ├── foundation/spec.md   ← DRAFT, awaiting approval
+│   ├── design-language.md   ← the layer above the tokens; approve first
+│   ├── foundation/spec.md   ← implements the design language
 │   ├── sections/            ← one spec per section
 │   └── _templates/
 ├── reference/          ← the frozen prototype. READ-ONLY. See its README.
@@ -66,36 +67,39 @@ Nothing else. No tokens, no fonts, no nav, no assets, no sections.
 
 ## Order of work
 
-Sections depend on each other, so this order is not arbitrary.
+Reset on 2026-09-18 (evening), after Nahian's principle: **every section must
+look good standing still, with no animation; transitions come second and can
+only be as good as the two states they connect. Mobile is non-negotiable.**
 
-1. **`foundation`** — **spec written**, `specs/foundation/spec.md`, awaiting
-   Nahian's approval. Five open questions, two of them for bKash.
-   Type scale and spacing from `reference/prototype/css/tokens.css`, fonts,
-   the `astro:assets` convention, nav + footer shell. Also where two review
-   findings get fixed once instead of nine times: **named dark-section tokens**
-   (sections currently hand-write `rgba(255,255,255,.72)`) and the **missing
-   scale step** between `--fs-h1` and `--fs-display`.
+The page is now four sections — **hero → bird → people → services** — one arc,
+story → proof → product. The bento is retired; the phone stays as the
+transition into services; the six bento photographs become per-service
+evidence. See `specs/design-language.md`.
 
-2. **`hero`** — **spec written**, `specs/sections/hero.md`. New file: the four
-   story beats were built but never specified; `hero-collapse.md` only ever
-   covered the bird. Six open questions, the first being the AI imagery.
+1. **`design-language`** — **written**, `specs/design-language.md`, DRAFT.
+   Four rules: the seam is the structure; every section is 2–3 planes; text on
+   a photograph always has a ground; focus means the rest recedes. Four open
+   questions. Approve or argue with it first — everything below implements it.
 
-3. **`bird-collage`** — **spec written**, `specs/sections/bird-collage.md`.
-   Four open questions; the first (pull-back vs grow-over) inverts the motion
-   table if it is wrong. Its facet geometry and the opening-frame resolution
-   problem are measured, not inferred — see also `reference/README.md`.
+2. **`foundation`** — spec exists; it now *implements* the design language.
+   Its acceptance criteria stand, with three added (ground, recede and plane
+   tokens). Opus.
 
-4. **`phone-bento`** / **`phone-services`** — Nahian approved these on
-   2026-09-17 and they are largely right. Each now carries a **Revision:
-   rebuild** section covering ScrollTrigger, the mobile composition, and its
-   audit rows. Two questions from 2026-09-17 are still unanswered.
+3. **Section specs, rewritten still-first** — `hero`, `bird-collage`,
+   `people`, `services`. Composition at rest at 1920 and 390 first, the
+   transition second. The five specs written earlier today are port-forward
+   and are the *baseline*, not the target; `phone-bento.md` is retired and its
+   approved phone behaviour moves into `services.md`.
 
-5. **`about`** — carries a **Revision: rebuild** section. The Journey Wall on
-   mobile is the biggest single piece of design work on the page.
+4. **Transitions** — designed against composed states, once those exist.
 
-`people-stories` is deliberately not in that list. If the bird carries nine
-selectable stories, a three-tile row of stories directly beneath it is
-redundant and one of them should go. Decide while specifying the bird.
+5. **`about`** — after the homepage. Voices are text-only until originals
+   arrive.
+
+**Decisions taken 2026-09-18 evening (Nahian):** seam-as-structure, yes. Bento,
+not mandatory — scaffolding for the phone. "Mechanism that focuses each story"
+= non-subjects recede, not the stepped gesture. Voices, later. Mobile,
+non-negotiable.
 
 ## Open questions, carried forward
 

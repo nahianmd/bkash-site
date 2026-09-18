@@ -1,6 +1,9 @@
 # Section: Phone — bento grid that collapses into the device
 
-> Status: APPROVED — Nahian, 2026-09-17
+> Status: **RETIRED 2026-09-18** — Nahian: "bento isn't mandatory. it was there to
+> setup the ground for a phone to emerge." The approved phone behaviour moves to
+> `services.md`; the six photographs become per-service evidence. Kept for the
+> record of what was approved and why.
 > Model: **Opus 5.** The revision is written and the work is execution.
 > Exception: the mobile composition decision (fewer larger cards vs. a
 > different mechanic) is a real design call — **Fable 5.1** for that alone.

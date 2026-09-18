@@ -183,11 +183,14 @@ Two practical notes:
 
 ## Order of work
 
-`foundation` → `hero` → `bird-collage` → `phone-bento` → `about`.
+`design-language` → `foundation` (implements it) → section specs rewritten
+**still-first** (`hero`, `bird-collage`, `people`, `services`) → transitions →
+`about`.
 
-Not arbitrary: the bird's opening frame hands over from the hero's last beat,
-and every section needs the type scale. `people-stories` is deliberately
-unscheduled — it may be redundant once the bird carries selectable stories.
+The page is four sections, one arc: story → proof → product. The bento is
+retired. Every section must look good standing still before its transition is
+designed, and its 390px composition is part of "designed", not a follow-up.
+See `specs/design-language.md`.
 
 ## Open, and Nahian's call
 
