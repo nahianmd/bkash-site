@@ -18,11 +18,9 @@ Do this:
    Most work on this project is the first kind.
 3. Fill in everything you can from what Nahian has already told you, plus what
    you can establish by reading the reference prototype in `reference/prototype/` and the
-   existing specs. Then list **every** ambiguity under Open questions in ONE
-   batch.
-
-   Do NOT interview question-by-question. Nahian works in long sessions and a
-   drip of single questions wastes them. One batch, then wait.
+   existing specs. Then raise **every** ambiguity — batched under Open
+   questions, or talked through with Nahian, whichever suits the section. Where
+   the uncertainty is the mechanism itself, talk it through.
 4. Write the spec. Set `Status: DRAFT`.
 
 Hard rules:

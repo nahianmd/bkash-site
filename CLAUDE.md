@@ -141,8 +141,8 @@ Spec-driven. See `SDD-WORKFLOW.md`.
 with Nahian approving at every boundary. `/clear` between phases.
 
 - One spec per section in `specs/sections/<slug>.md`.
-- Claude fills the spec from Nahian's instruction and batches **every**
-  ambiguity in one list. No question-by-question interview.
+- Claude fills the spec from Nahian's instruction and raises whatever is
+  ambiguous — batched, or talked through, whichever suits the section.
 - **Every spec carries an "Explicitly NOT this" section.** The failure mode on
   this project is Claude inferring a plausible mechanism that is not the one
   Nahian pictured, then building it well. The hero collapse was built twice for

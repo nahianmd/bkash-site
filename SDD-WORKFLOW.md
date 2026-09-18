@@ -40,7 +40,7 @@ bkash/
 
 | Phase | Command | What happens | Nahian's job |
 |-------|---------|--------------|--------------|
-| 1. Specify | `/specify <slug>` | Claude writes the spec from your instruction and batches **every** ambiguity in one list. No code. | Answer the batch, edit, approve. |
+| 1. Specify | `/specify <slug>` | Claude writes the spec from your instruction and raises **every** ambiguity — batched, or talked through. No code. | Resolve the questions, edit, approve. |
 | 2. Plan | `/plan <slug>` | Investigates `web/` and the `reference/` prototype, writes `plan.md` — motion, layout at both widths, file paths, task list. No code. | Review the approach and task list, approve. |
 | 3. Implement | `/implement <slug>` | Works the checklist one task at a time, `astro check` + build after each, one small commit per task. | Review diffs. If Claude says the plan is wrong, decide the fix. |
 | 4. Verify | `/verify <slug>` | Drives the real page in Chrome at desktop and 390px, marks each criterion PASS / FAIL / NEEDS NAHIAN'S EYE with evidence. | Look at what it flags, then mark the spec `SIGNED-OFF`. |
@@ -52,9 +52,6 @@ A failed verify goes back to **Plan**, not to a patch.
 - **No test suite, and there will not be one.** `/verify` drives the page and
   looks at it instead. That is not a weaker gate — it caught a bento grid
   rendering at 43% of viewport width, which no unit test would have.
-- **One batch of questions, never a drip.** The kit's `/specify` interviews one
-  question at a time. That wastes long working sessions; everything ambiguous
-  goes in one list.
 - **`section.md` beats the kit's `spec.md`** for anything with motion in it. It
   has Motion beats, Content slots with PLACEHOLDER marking, and Explicitly NOT
   this. The kit's edge-case and constraint sections are backend-shaped and come
