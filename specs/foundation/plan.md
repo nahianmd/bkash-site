@@ -626,10 +626,11 @@ How `/verify` checks each criterion. Sonnet 5, per `CLAUDE.md`.
 
 Ten tasks, one commit each. Each ends with `npm run check && npm run build`.
 
-- [ ] **1. Fonts.** Install `@fontsource-variable/inter` as a devDependency;
+- [x] **1. Fonts.** Install `@fontsource-variable/inter` as a devDependency;
       add the `fonts` block to `astro.config.mjs`; `<Font>` into `Base.astro`.
       Confirm in `dist/` that exactly two woff2 files are emitted and record
       the real total against the ~85KB estimate.
+      **Done, with one correction — see "Task 1 correction" below.**
 - [ ] **2. `tokens.css`.** The full closed system: palette anchored to the
       mark, ten type steps with derived clamps and the derivation in a comment,
       spacing, measure, radius, elevation, motion, z-index, `--nav-h` with its
@@ -662,6 +663,65 @@ Ten tasks, one commit each. Each ends with `npm run check && npm run build`.
       Inter-vs-bKash row to `specs/needs.md`; set the spec to BUILT.
 
 ---
+
+## Task 1 correction — the provider, 2026-09-18
+
+**The npm provider cannot do subsets, so the plan's mechanism was wrong.**
+`resolveFromLocal(pkgName, cssFile, family, options.formats)` at
+`unifont/dist/index.mjs:780` never receives `options.subsets`; the provider
+parses the package's whole `index.css` and returns every face in it. Built as
+planned, it emitted **all seven subsets** — cyrillic, cyrillic-ext, greek,
+greek-ext, vietnamese, latin-ext, latin — 213KB, and **preloaded every one**.
+A preload is an unconditional request, so that breaks "no font file is
+requested that the page does not use" outright.
+
+`fontProviders.fontsource()` was tested as the alternative and is worse: four
+files, 422KB, every face duplicated, four preloads, and it fetches from the
+CDN at build.
+
+**Resolved: `fontProviders.local()`** with the two subsets named explicitly as
+variants, `src` given as a package import so the files stay pinned to the
+devDependency and the build still needs no network. The unicode ranges are
+copied verbatim from `@fontsource-variable/inter@5.3.0`'s own `index.css` —
+19 ranges for latin, 17 for latin-ext — and are generated into the config
+rather than retyped.
+
+Every property the plan claimed is preserved: two files, offline,
+version-pinned, correct `unicode-range`, `display: swap`, one variable file
+per subset covering 400/500/600/700, and `optimizedFallbacks` emitting a
+metric-compatible `fallback: Arial` face. Only the provider changed.
+
+**Measured, against the plan's ~85KB estimate:** latin **47KB**, latin-ext
+**83KB**, **132KB total**. The estimate was low. Only latin is needed to render
+any current page.
+
+### Open, for Nahian — latin-ext is preloaded but never rendered
+
+`<Font preload />` preloads **both** faces, so every page pays 83KB of
+high-priority latin-ext that no current page uses. The board names on About
+are ASCII; latin-ext exists to satisfy the spec's coverage criterion and to
+survive a European name later.
+
+It cannot be filtered declaratively: `filterPreloads` matches on
+`weight`/`style`/`subset`, both variants are `100 900`/`normal`, and the local
+provider builds its `FontData` from a whitelist that **excludes `subset`**
+(`astro/dist/assets/fonts/providers/local.js:39-49`). The only route is
+`preload={false}` plus a hand-rolled `<link rel="preload">` built from
+`fontData['--font-inter'][0]` — correct, but **order-dependent on our own
+config**, which is the kind of clever-but-fragile thing foundation should not
+carry without a decision.
+
+Three options, Nahian's call:
+
+1. **Leave it** — 132KB preloaded, 83KB of it wasted. Simplest.
+2. **Preload latin only** via the `fontData` index, with the order dependency
+   commented. ~5 lines in `Base.astro`.
+3. **`preload={false}`** — both load at normal priority after CSS. The
+   metric-compatible fallback means little layout shift, but the real font
+   arrives later.
+
+Not blocking; the shell tasks do not depend on it.
+
 
 ## Risks
 
