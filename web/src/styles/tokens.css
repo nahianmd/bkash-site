@@ -268,12 +268,16 @@
 
 /* ============================================================
    Type steps — size, line-height, tracking and measure travel
-   TOGETHER. Bundling them as one class is deliberate: it makes it
+   TOGETHER. Display steps also balance their lines: a measure alone
+   still orphans the last word ("Writing Millions of Stories in /
+   Motion" at 24ch), and a per-element measure is the micro-adjustment
+   the language forbids. `text-wrap: balance` is the formula. Bundling them as one class is deliberate: it makes it
    structurally impossible for them to drift apart the way they
    did in the original.
    ============================================================ */
 
 .t-display {
+  text-wrap: balance;
   font-size: var(--fs-display);
   line-height: 0.98;
   letter-spacing: -0.035em;
@@ -281,6 +285,7 @@
   max-width: var(--measure-display);
 }
 .t-hero {
+  text-wrap: balance;
   font-size: var(--fs-hero);
   line-height: 1;
   letter-spacing: -0.032em;
@@ -288,6 +293,7 @@
   max-width: var(--measure-display);
 }
 .t-h1 {
+  text-wrap: balance;
   font-size: var(--fs-h1);
   line-height: 1.04;
   letter-spacing: -0.028em;
@@ -295,6 +301,7 @@
   max-width: var(--measure-head);
 }
 .t-h2 {
+  text-wrap: balance;
   font-size: var(--fs-h2);
   line-height: 1.12;
   letter-spacing: -0.022em;
@@ -305,6 +312,7 @@
    leading — it is speech, and at 390px it is distinguished from
    --fs-h2 by treatment as much as by its 4px of size. */
 .t-quote {
+  text-wrap: balance;
   font-size: var(--fs-quote);
   line-height: 1.28;
   letter-spacing: -0.018em;

@@ -1,0 +1,136 @@
+---
+/* Section 2: Bird — the street, seen through the mark.
+   specs/sections/bird.md · specs/bird/plan.md
+
+   A second copy of the hero's scene, posed at beat 3 by the shared
+   rig, under a white sheet with the mark as its hole. This section's
+   pinned element comes after the hero's in the DOM, so once it pins it
+   paints over the hero's identical frame — the seam cannot show. */
+import HeroScene from './HeroScene.astro';
+import { FACETS, facetPath } from '../lib/bird-shape';
+
+const paths = FACETS.map((_, i) => facetPath(i));
+---
+
+<section class="bird" data-bird aria-label="The bKash mark, framing the street">
+  <div class="bird__pin" data-bird-pin>
+    <HeroScene />
+
+    <!-- The sheet: white outside the mark, transparent inside. The hole
+         group and the line group get ONE transform each per frame. The
+         mask is in user space so the sheet and the hole share px. -->
+    <svg class="bird__mask" data-bird-svg aria-hidden="true" focusable="false">
+      <defs>
+        <mask id="bird-hole" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+          <rect width="100%" height="100%" fill="#fff"></rect>
+          <g data-bird-hole fill="#000">
+            {paths.map((d) => (
+              <path d={d}></path>
+            ))}
+          </g>
+        </mask>
+      </defs>
+      <rect class="bird__sheet" width="100%" height="100%" mask="url(#bird-hole)"></rect>
+      <!-- Facet lines: the same eight edges as strokes, constant 2px. Off
+           screen at the start because the viewport is inside one facet. -->
+      <g class="bird__lines" data-bird-lines fill="none">
+        {paths.map((d) => (
+          <path d={d} vector-effect="non-scaling-stroke"></path>
+        ))}
+      </g>
+    </svg>
+
+    <div class="bird__copy" data-bird-copy>
+      <p class="t-eyebrow bird__eyebrow">Across Bangladesh</p>
+      <h2 class="t-h1 bird__title">Writing Millions of Stories in Motion</h2>
+    </div>
+  </div>
+
+  <!-- Transparent nav while this is below the band; bird.ts hides the
+       marker once the white wins, so the nav goes solid over the rest
+       pose — and comes back on the way up. -->
+  <div data-nav-dark-end data-bird-marker></div>
+</section>
+
+<style>
+  .bird {
+    position: relative;
+    /* Two and a half screens of travel on one screen of pin (plan). */
+    height: calc(var(--vh) * 3.5);
+    background: var(--paper);
+  }
+
+  .bird__pin {
+    position: relative;
+    height: var(--vh);
+    overflow: hidden;
+    background: var(--night);
+  }
+
+  .bird__mask {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .bird__sheet {
+    fill: var(--paper);
+  }
+
+  .bird__lines path {
+    stroke: var(--paper);
+    stroke-width: 2;
+  }
+
+  /* Centred beneath the mark. --bird-bottom is written by bird.ts on
+     resize: the mark's bottom edge at rest, in px. Ink on paper — no
+     photograph under this copy, so no scrim. */
+  .bird__copy {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: calc(var(--bird-bottom, 71%) + var(--s-6));
+    z-index: 3;
+    text-align: center;
+    color: var(--ink);
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+
+  .bird__eyebrow {
+    color: var(--ink-3);
+    margin-bottom: var(--s-4);
+  }
+
+  .bird__title {
+    margin-inline: auto;
+  }
+
+  @media (max-width: 767px) {
+    .bird__title {
+      font-size: var(--fs-h2);
+      line-height: 1.12;
+      letter-spacing: -0.022em;
+      font-weight: 600;
+    }
+  }
+
+  /* No JS / reduced motion: the rest pose as a still, no travel. */
+  :global(.no-js) .bird,
+  .bird.bird--static {
+    height: var(--vh);
+  }
+
+  :global(.no-js) .bird__copy,
+  .bird--static .bird__copy {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import { initBird } from '../lib/bird';
+  initBird();
+</script>
