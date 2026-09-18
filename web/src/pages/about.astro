@@ -11,7 +11,10 @@
    built, the banner opts in by placing that marker at the end of its
    dark region — the nav state follows the composition, not the page.
 */
+import { Picture } from 'astro:assets';
+
 import Base from '../layouts/Base.astro';
+import banner from '../assets/img/about/banner.jpg';
 ---
 
 <Base
@@ -20,6 +23,29 @@ import Base from '../layouts/Base.astro';
   current="company"
 >
   <main class="shell">
+    {/* The worked example for the image convention in
+        `src/styles/README.md`. AVIF then WebP, srcset from the
+        configured breakpoints, and the one eager/high-priority
+        image on this page because it is the LCP element.
+
+        The caption sits on `.on-photo` — the only sanctioned way
+        text goes on a photograph (design language Rule 3). */}
+    <figure class="shell__banner">
+      <Picture
+        src={banner}
+        formats={['avif', 'webp']}
+        alt="bKash customers across Bangladesh"
+        loading="eager"
+        fetchpriority="high"
+        sizes="100vw"
+        class="shell__banner-img"
+      />
+      <figcaption class="on-photo shell__banner-cap">
+        <p class="t-eyebrow">Documentary register</p>
+        <p class="t-h3">Real light, real clutter, real faces</p>
+      </figcaption>
+    </figure>
+
     <div class="wrap shell__in">
       <p class="t-eyebrow">About bKash</p>
       <h1 class="t-h1">Empowering 85M Bangladeshis with financial freedom</h1>
@@ -45,8 +71,37 @@ import Base from '../layouts/Base.astro';
 
 <style>
   .shell {
-    padding-top: calc(var(--nav-h) + var(--s-8));
     padding-bottom: var(--s-10);
+  }
+
+  /* Clears the fixed header from the single source, --nav-h. */
+  .shell__banner {
+    position: relative;
+    margin: 0;
+    padding-top: var(--nav-h);
+  }
+
+  .shell__banner-img {
+    width: 100%;
+    /* A wide band at both widths rather than the source's own ratio,
+         so the caption has somewhere to sit at 390px too. */
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+
+  .shell__banner-cap {
+    position: absolute;
+    inset-inline: var(--gutter);
+    bottom: var(--s-6);
+    max-width: var(--measure-head);
+  }
+
+  .shell__banner-cap > * + * {
+    margin-top: var(--s-2);
+  }
+
+  .shell__in {
+    padding-top: var(--s-8);
   }
 
   .shell__in > * + * {

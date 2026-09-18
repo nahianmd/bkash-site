@@ -3,6 +3,24 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+  /* ---- images -----------------------------------------------
+     The prototype shipped an 11MB homepage with no srcset and no
+     AVIF/WebP (audit X8), on a site that serves Bangladesh. This is
+     most of why Astro was chosen at all.
+
+     The convention every section follows is written down in
+     `src/styles/README.md`. The parts that belong in config:
+
+     `breakpoints` are this project's two design widths plus the
+     common ones between and a 2x ceiling. Astro's defaults start at
+     640 and have nothing at 390, which is one of our two.        */
+  image: {
+    layout: 'constrained',
+    objectFit: 'cover',
+    responsiveStyles: true,
+    breakpoints: [390, 640, 768, 1024, 1280, 1536, 1920, 2560],
+  },
+
   /* ---- fonts ------------------------------------------------
      The prototype shipped five hand-subset woff2 files that were
      not subset consistently: weight 600 carried 222KB of glyph

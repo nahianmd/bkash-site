@@ -656,7 +656,7 @@ Ten tasks, one commit each. Each ends with `npm run check && npm run build`.
 - [x] **8. Pages.** Delete the smoke test from `index.astro`; add
       `about.astro`. Both are shells — nav, a heading, footer — and nothing
       more. Delete `web/src/.DS_Store`.
-- [ ] **9. Images.** `image` config; `styles/README.md` with the convention and
+- [x] **9. Images.** `image` config; `styles/README.md` with the convention and
       the per-section motion-config rule; the About banner through `<Picture>`
       as the worked example; verify the emitted `srcset` in `dist/`.
 - [ ] **10. Close out.** Reduced-motion pass over both pages and the specimen;
