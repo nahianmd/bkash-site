@@ -259,3 +259,49 @@ display-band guard the same plan proposed, so the 390 display steps widened to
 **Left for `/verify`:** the nav's transparent state (neither shell page places
 a `[data-nav-dark-end]` marker), FOIT on throttled Slow 4G, the reduced-motion
 pass, and screen-reader announcement of the inert Bangla toggle.
+
+
+## Built — hero (`web/`, 2026-09-18, Fable)
+
+`specs/sections/hero.md` · `specs/hero/plan.md` · `web/src/components/Hero.astro`,
+`HeroScene.astro`, `web/src/lib/hero.ts`.
+
+**What ships.** Four beats over four screens of travel on a pinned
+ScrollTrigger: the street, Amena, Rahim, Faysal. Scrub 0.6 through a proxy
+timeline, snap to the four beats on scroll-end, log-space scale between them,
+one transform write per frame. The scene is the plate's cover box, so cutouts
+anchored as fractions of it land at every aspect — one wide image serves a
+phone and a desktop; the prototype's portrait plate and `anchorPortrait()`
+are gone. Cutouts are beat-local: opacity is the beat's focus, so subjects
+cross at the midpoint; the plate recedes from the token set (no blur). The
+beat-0 headline sits in the sky, top-right on desktop and top third on a
+phone. Parallax lead is exactly zero at every beat. Reduced motion renders
+beat 0 with no trigger.
+
+**Audit rows closed.** H1 H2 H3 H4 H7 H8 H9 H11.
+
+**What measurement caught that reading would not have.**
+- The headline "on open road, bottom-right" was on Faysal's road. Seen in the
+  first look; the sky is the one region the plate leaves open at every width.
+- The phone lift had its sign backwards: aiming the camera higher pushes the
+  subject DOWN. Every subject's centre measured in the bottom third until it
+  was flipped; +0.05 and 0.7x zoom lands all three in the middle third.
+- The beat-0 headline came back at beats 2 and 3 — it was a tent around
+  Amena, not a fade that stays gone.
+- The hidden automation tab does not paint decoded images on the first
+  screenshot. Placement was done against an offline sharp composite instead
+  (`/tmp/claude-501/compose.mjs` pattern: plate + cutouts at the config
+  fractions, boxes outlined) — reliable, and faster than the browser.
+- `scroll.ts`'s dev handle assigned a fresh `__bkash` and clobbered the
+  hero's, because Hero's script runs before the layout's. Now merges.
+
+**For `/verify` (Sonnet).** Expect to pass: continuous scrollbar, forward/back
+land on the same frames, cover at every position, token-exact recede at the
+beats and 0.5/0.5 at the midpoints, 390 thirds, no overflow, no layout reads
+in handlers, dist gates. **Unsure — look first:** nav contrast over the bright
+sky at p=0 (the nav's own scrim is the ground; fallback is to drop the marker
+and keep the nav solid); feet on the ground line at 768 and 1280; whether the
+plate at token recede reads too dark under a focused subject (`recedeStrength`
+is the dial); Rahim's caption clearance at 390 under a moving `--vh`; AVIF
+alpha edges on the painted cutouts; a real handset for the filter cost.
+**Nahian's eye:** the four stills at both widths, and the plate recede.

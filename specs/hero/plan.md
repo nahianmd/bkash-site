@@ -190,24 +190,24 @@ Driven with `__bkash.driveSection('hero', p)` at `p ∈ {0, ⅙, ⅓, ½, ⅔, �
 
 ## Task checklist
 
-- [ ] **1. Assets + static scene.** Copy the four files into
+- [x] **1. Assets + static scene.** Copy the four files into
       `src/assets/img/hero/`; `HeroScene.astro` renders them through
       `astro:assets` with `layout="none"`; cutouts positioned by the spec's
       starting fractions; `Hero.astro` shell; `index.astro` composes it. Build.
-- [ ] **2. Cover box + pose.** `lib/hero.ts`: `HERO` config, cover-box measure on
+- [x] **2. Cover box + pose.** `lib/hero.ts`: `HERO` config, cover-box measure on
       load/resize (`fx` by breakpoint), `poseFor()`, beat-0 pose applied
       statically. _One look, 1920 and 390:_ cutouts sit on their drawn figures
       at beat 0 — this is the placement-by-eye task the spec allows.
-- [ ] **3. Camera.** ScrollTrigger pin/scrub/snap; segment interpolation with
+- [x] **3. Camera.** ScrollTrigger pin/scrub/snap; segment interpolation with
       log-space scale and cubic ease; translate solve; cover clamp; one
       transform per frame. `driveSection('hero', p)` moves the camera.
-- [ ] **4. Focus.** Cutout opacity = focus; plate recede from tokens; captions
+- [x] **4. Focus.** Cutout opacity = focus; plate recede from tokens; captions
       scrubbed; beat-0 headline out. Eyebrow in `--scrim-ink`.
-- [ ] **5. Composition.** `.on-photo` blocks placed; 390: `fx = 0.46`,
+- [x] **5. Composition.** `.on-photo` blocks placed; 390: `fx = 0.46`,
       `phoneCyLift`, bottom-third headline; nav marker.
-- [ ] **6. Depth, dev, fallbacks.** Zero-at-beats parallax lead; `__bkash.hero`
+- [x] **6. Depth, dev, fallbacks.** Zero-at-beats parallax lead; `__bkash.hero`
       with `nudge()`; reduced-motion and `.no-js` static path.
-- [ ] **7. Close out.** `PROGRESS.md`; spec → BUILT; hand to `/verify` with the
+- [x] **7. Close out.** `PROGRESS.md`; spec → BUILT; hand to `/verify` with the
       list of criteria I expect to pass and the two I am unsure of (nav
       contrast, feet on the ground line).
 

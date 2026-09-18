@@ -80,7 +80,10 @@ export function initScroll() {
 function exposeDevHandle() {
   if (!import.meta.env.DEV && !import.meta.env.PUBLIC_EXPOSE_DEV_HANDLE) return;
 
-  (window as any).__bkash = {
+  /* Merge, never replace: a section's own script may have registered
+     its handle first — Hero.astro's runs before the layout's. */
+  const w = window as any;
+  w.__bkash = Object.assign(w.__bkash ?? {}, {
     gsap,
     ScrollTrigger,
     /** Jump to an absolute scroll position and settle the frame. */
@@ -106,7 +109,7 @@ function exposeDevHandle() {
         end: Math.round(st.end),
         progress: +st.progress.toFixed(4),
       })),
-  };
+  });
 }
 
 export { gsap, ScrollTrigger };
