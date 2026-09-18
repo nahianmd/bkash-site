@@ -1,6 +1,6 @@
 # Spec: Foundation
 
-> Status: DRAFT
+> Status: APPROVED
 > Model: **Opus 5**. A port of a token system that already exists plus two
 > additions. Every answer is determinable from `reference/`. Do not spend
 > Fable credit here.
@@ -144,6 +144,10 @@ Visual and measurable. `/verify` checks each one.
   does not go in the markup.
 
 ## Open questions
+
+> **All five resolved 2026-09-18** — see the resolution table at the head of
+> `specs/foundation/plan.md`, together with `design-language.md`'s OQ1 (the
+> ground is a scrim). Kept here as the record of what was asked.
 
 One batch. Items 1 and 2 are for bKash, not for Nahian to invent — and I
 checked the client deck (`Website_N_1.pptx`) hoping to answer them: it carries
