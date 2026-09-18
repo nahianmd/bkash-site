@@ -25,6 +25,7 @@ bkash-site/
 ├── PROGRESS.md         ← durable memory; update as sections land
 ├── specs/              ← the source of truth for what gets built
 │   ├── prototype-audit.md   ← every bug found in the demo, by section
+│   ├── foundation/spec.md   ← DRAFT, awaiting approval
 │   ├── sections/            ← one spec per section
 │   └── _templates/
 ├── reference/          ← the frozen prototype. READ-ONLY. See its README.
@@ -67,7 +68,8 @@ Nothing else. No tokens, no fonts, no nav, no assets, no sections.
 
 Sections depend on each other, so this order is not arbitrary.
 
-1. **`foundation`** — infrastructure spec (uses `specs/_templates/spec.md`).
+1. **`foundation`** — **spec written**, `specs/foundation/spec.md`, awaiting
+   Nahian's approval. Five open questions, two of them for bKash.
    Type scale and spacing from `reference/prototype/css/tokens.css`, fonts,
    the `astro:assets` convention, nav + footer shell. Also where two review
    findings get fixed once instead of nine times: **named dark-section tokens**
@@ -106,7 +108,7 @@ redundant and one of them should go. Decide while specifying the bird.
 - Does mobile keep a **separate portrait plate**? Right now desktop and mobile
   show different photographs of different scenes.
 
-**For the bird spec** (see its own Open questions too):
+**For the bird spec** (not yet written):
 - How many facets are selectable, and does that kill `people-stories`?
 - The opening frame's resolution — see `reference/README.md`.
 
@@ -125,7 +127,12 @@ cd /Users/nahian/Projects/bkash-site
 claude
 ```
 
-Then `/specify foundation`.
+**`foundation`'s spec is already written** — read `specs/foundation/spec.md`,
+answer its five open questions, and correct anything you disagree with. Then:
+
+```
+/plan foundation
+```
 
 `CLAUDE.md` loads automatically. `/clear` between phases — the specs are the
 durable memory, the chat is not.
