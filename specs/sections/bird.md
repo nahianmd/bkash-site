@@ -1,6 +1,9 @@
 # Section 2: Bird — the street, seen through the mark
 
-> Status: DRAFT
+> Status: BUILT — 2026-09-19 (Fable). One deviation from the spec's option (a),
+> made on the picture and flagged: the street pulls back with the window
+> (`content: 'wide'`); `'hold'` is one flag away. Not yet verified;
+> SIGNED-OFF is Nahian's alone.
 > Model: **Fable 5.1**, spec and build.
 > Source: Nahian, 2026-09-18 (evening): "drop the scenes inside the bird — it
 > will be closing on the whole display, zooming out." Confirmed as a **mask

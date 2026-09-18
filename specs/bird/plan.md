@@ -164,17 +164,17 @@ Driven with `__bkash.driveSection('bird', p)` + `__bkash.bird.settle()` at
 
 ## Task checklist
 
-- [ ] **1. Extract the rig.** `scene-rig.ts`; `hero.ts` consumes it. Re-run the
+- [x] **1. Extract the rig.** `scene-rig.ts`; `hero.ts` consumes it. Re-run the
       hero's six-position measurement — identical values.
-- [ ] **2. Static bird.** `Bird.astro` with the second scene posed at beat 3 by
+- [x] **2. Static bird.** `Bird.astro` with the second scene posed at beat 3 by
       the rig; the SVG overlay at `k_rest` (rest pose B); copy beneath;
       `index.astro` composes it. _One look, both widths:_ the poster.
-- [ ] **3. The solver and the pull-back.** `k_start` per facet, pick the
+- [x] **3. The solver and the pull-back.** `k_start` per facet, pick the
       smaller; trigger, scrub, `k(p)`, the two `transform` writes; hold.
       `driveSection('bird', 0)` equals the hero's last frame — measured.
-- [ ] **4. Copy, nav, fallbacks, dev.** Copy resolve over 0.7→0.8; marker
+- [x] **4. Copy, nav, fallbacks, dev.** Copy resolve over 0.7→0.8; marker
       toggle at 0.5; reduced-motion still; `__bkash.bird`.
-- [ ] **5. Close out.** `PROGRESS.md`; spec → BUILT; hand to `/verify`.
+- [x] **5. Close out.** `PROGRESS.md`; spec → BUILT; hand to `/verify`.
 
 ## Risks
 

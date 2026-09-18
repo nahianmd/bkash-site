@@ -327,3 +327,47 @@ micro-adjustments.** Formula-level fixes, for the hero's next pass:
   beats. Map the first and last ~25% of each segment's scroll distance to a
   hold; move only in the middle half. Move–hold–move–hold at any speed; a
   single tick still snaps forward. Plus ~1.5 screens per beat.
+
+
+## Built — bird (`web/`, 2026-09-19, Fable)
+
+`specs/sections/bird.md` · `specs/bird/plan.md` · `web/src/components/Bird.astro`,
+`web/src/lib/bird.ts`, `bird-shape.ts`, and the shared `scene-rig.ts`.
+
+**What ships.** The mark as a window. A second copy of the hero's scene,
+parked on beat 3 by the shared rig, under an SVG sheet whose hole is the
+official bKash mark — eight triangles as numbers, no image. The start facet
+and start scale are **solved per viewport** (the smallest scale at which the
+viewport rectangle fits inside a candidate facet, about that facet's rest
+centroid); 1920x992 and 390x780 both pick the central facet, at 9.11x and
+4.39x. The mask scales in log space about the fixed point, origin derived
+from scale; hold from 0.8; copy resolves 0.7–0.8; the nav marker flips at
+0.5 so the nav goes solid over the white and comes back on the way up.
+
+**The one deviation, made on the picture.** Option (a) strictly — the street
+holds at beat 3, receded — rests the mark on a dark bird full of Faysal's
+sacks with a small face; not a poster. `content: 'wide'` pulls the camera back
+from beat 3 to the establishing shot as the window shrinks and lifts the
+recede, so the mark rests on the bright, whole street. Nahian's own words
+("closing on the whole display, zooming out") support it; `'hold'` is one flag.
+
+**Seam.** At bird p=0 the scene's transform, plate state and Faysal's opacity
+equal the hero's at p=1, string for string, at both widths. The bird's pinned
+frame paints over the hero's, so the handover cannot show if those are equal;
+they are.
+
+**What measurement caught.** The headline orphaned "Motion" at 24ch — fixed
+at the system level with `text-wrap: balance` on the display steps, not a
+per-element measure. `--bird-bottom` positions the copy under the mark at any
+width. The nav's IntersectionObserver did not update under instant scrolls in
+the hidden tab (`is-over-dark` stayed false) — expected, not a code fault;
+verify with real scrolling.
+
+**For `/verify` (Sonnet).** Expect to pass: seam equality both widths,
+monotone k with hold, copy timing, no overflow, mark ≥300px at 390, dist
+gates. **Look first:** the nav transparent→solid→transparent across the
+section under real scrolling; frame time while scrubbing the first 30% (the
+mask is thousands of px across); AVIF alpha on the painted cutouts; the first
+edge at p≈0.1 reading as an edge and not an artefact. **Nahian's eye:** the
+rest poster at both widths; at 390 the lower third is empty below the copy
+(mark centred at 34% — the spec's number); the `'wide'` vs `'hold'` choice.
