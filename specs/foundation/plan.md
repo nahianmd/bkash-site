@@ -168,8 +168,9 @@ it is aimed at the wrong end of the scale. **Proposed amendment**, for Nahian:
 
 - [ ] Every step's rendered size at 1920 and at 390 matches the table in
       `tokens.css` to the pixel.
-- [ ] No two **display** steps (`display` … `h3`) render within 4px of each
-      other at either width.
+- [ ] No two **display** steps (`display` … `quote`) render within 4px of each
+      other at either width, compared at 0.1px precision. (`h3` moved into the
+      text band at task 2 — see "Task 2 correction".)
 - [ ] The **text** steps (`lead`, `body`, `sm`, `xs`) render at exactly their
       specified values at both widths.
 
@@ -659,7 +660,7 @@ Ten tasks, one commit each. Each ends with `npm run check && npm run build`.
 - [x] **9. Images.** `image` config; `styles/README.md` with the convention and
       the per-section motion-config rule; the About banner through `<Picture>`
       as the worked example; verify the emitted `srcset` in `dist/`.
-- [ ] **10. Close out.** Reduced-motion pass over both pages and the specimen;
+- [x] **10. Close out.** Reduced-motion pass over both pages and the specimen;
       run every grep in the Verification table; update `PROGRESS.md`; add the
       Inter-vs-bKash row to `specs/needs.md`; set the spec to BUILT.
 

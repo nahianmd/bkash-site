@@ -83,6 +83,8 @@ Status: OPEN.
 | C2 | "NGO" (prototype) vs "Microfinance" (supplied icon) | Use supplied set unless told otherwise | OPEN |
 | C3 | বাংলা toggle: disable visibly, or hide | Visibly disabled — hiding it invites "where's Bangla?" | OPEN |
 | C4 | Is the Kamal Quadir quote cleared for use? | Must confirm before it goes on screen in front of him | OPEN |
+| C5 | **Is Inter the right typeface, or does bKash have an official one?** Inter was the prototype's substitute choice, not a brand decision. The whole type scale is tuned to Inter's metrics — the negative tracking at display sizes especially — so a swap is a retune, not a find-and-replace. Cheap to change mechanically (`astro.config.mjs` names the family once and `tokens.css` reads one variable), expensive to retune. | Proceed with Inter; the config makes the swap one entry | OPEN |
+| C6 | **Which pinks and greys are official?** `--pink: #e2136e` is confirmed by the mark itself. `specs/refs/bkash-logo.svg` also yields `#d12053` and `#9e1638`, now shipped as `--pink-mid`/`--pink-dark`. But `--pink-wash`, `--pink-line` and the warm-neutral ink ramp (`--ink` … `--ink-4`) were invented in the prototype to sit next to the pink. If bKash has a secondary palette, it should be those instead. | Anchored to the mark where the mark answers it; flag the invented rest | OPEN |
 
 ## D. Deferred by us (not blocked — choices we made)
 

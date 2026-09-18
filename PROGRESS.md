@@ -185,3 +185,77 @@ than the content, which reads as a small centring offset that is not real.
   the people row, the bento, the About page — is real photography, so the page
   now contrasts the two. This is the biggest remaining exposure.
 - Real story copy for the hero beats and the bird facets (A3/A4)
+
+---
+
+# Production rebuild (`bkash-site`)
+
+## foundation — BUILT 2026-09-18
+
+`specs/foundation/spec.md` APPROVED, `specs/foundation/plan.md` worked
+top-to-bottom, ten tasks, one commit each. Not SIGNED-OFF — that is Nahian's.
+
+**What ships**
+
+- `web/src/styles/tokens.css` — the closed system. Ten type steps (the two the
+  spec asked for are `--fs-hero` and `--fs-quote`), each clamp derived from its
+  two endpoints with the derivation in a comment. Dark-ground tokens (X5), the
+  three design-language token sets that had no prior form — scrim (Rule 3),
+  recede (Rule 4), plane rates (Rule 2) — headline measure per step, `--nav-h`
+  as the single source (X2, 3.5rem below 767px), and the motion durations as
+  the reduced-motion hook.
+- `web/src/styles/base.css` — reset and primitives, deliberately without the
+  prototype's blanket `!important` reduced-motion override.
+- `web/src/styles/README.md` — the image convention, the X9 answer, and the
+  greps, pointed at `dist/` rather than `src/`.
+- `Logo.astro`, `Nav.astro`, `Footer.astro`, `lib/nav.ts`, `Base.astro`,
+  `index.astro`, `about.astro`, `specimen.astro`.
+- Inter via Astro's fonts API: two woff2 files, 132KB, no build-time network.
+
+**Audit findings closed:** X2, X5, X6, X8, X9, A7, H4 (at the token level),
+H7, H11, and A5 caught reproducing itself in the footer. X3 has no-JS, print
+and reduced-motion fallbacks. X1 has `--vh` plus a written rule.
+
+**The five things measurement caught that reading would not have**
+
+1. The prototype's Inter files could not satisfy the spec. Decompressed,
+   weight 600 held 222KB of glyph data against weight 500's 26KB, and only
+   weight 400 had latin-ext at all — while `.t-h1` is 700 and `.t-h2`/`.t-h3`
+   are 600. A single `ā` in a headline fell back mid-word.
+2. `fontProviders.npm()` cannot filter subsets (`unifont` never passes
+   `options.subsets` to `resolveFromLocal`). It emitted all seven subsets and
+   preloaded every one. `fontProviders.local()` with the two subsets named
+   explicitly is the fix. `fontsource()` was tested and is worse: 4 files,
+   422KB, CDN fetch.
+3. Solid-by-default in the nav was inverted: `.nav:not(.is-solid)` matches the
+   default state, so a page with no marker rendered white-on-white.
+4. The footer's `auto-fit` grid made SIX tracks for four columns at 1920 and
+   collapsed to ONE at 390 (a 15px scrollbar takes it under the 344px two
+   columns need). Now explicit, 4 and 2.
+5. The `<dialog>` `close` event does not fire in the target browser, for
+   either `close()` or Escape, though `drawer.open` goes false correctly — so
+   `aria-expanded` was stuck at `"true"` forever. State is set at the call
+   sites now.
+
+**Corrections made to the plan while implementing** (both recorded in
+`plan.md`, under "Task 1 correction" and "Task 2 correction"): the font
+provider, and the 390px type ladder — the plan's own table failed the 4px
+display-band guard the same plan proposed, so the 390 display steps widened to
+46/41/36/28/24 and the band boundary moved to `display`…`quote`.
+
+**Open for Nahian**
+
+- `latin-ext` is preloaded (83KB) but rendered by no current page, and cannot
+  be filtered declaratively. Three options in `plan.md`.
+- The type floors are a judgement dressed as arithmetic. `--fs-display` at
+  390px is now 46px; the hero's 390 composition is where that gets settled.
+- Whether `--scrim-strength: 0.62` reads as a designed ground rather than a
+  grey bar. It is provably legible (5.56:1 against pure white, measured); that
+  is not the same as good.
+- Recede without blur — the resolution of a three-way conflict between
+  `design-language.md`, `hero.md` and CLAUDE.md performance rule 2.
+- Inter itself, and the invented half of the palette: `specs/needs.md` C5/C6.
+
+**Left for `/verify`:** the nav's transparent state (neither shell page places
+a `[data-nav-dark-end]` marker), FOIT on throttled Slow 4G, the reduced-motion
+pass, and screen-reader announcement of the inert Bangla toggle.

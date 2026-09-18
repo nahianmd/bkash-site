@@ -1,6 +1,6 @@
 # Spec: Foundation
 
-> Status: APPROVED
+> Status: BUILT
 > Model: **Opus 5**. A port of a token system that already exists plus two
 > additions. Every answer is determinable from `reference/`. Do not spend
 > Fable credit here.
