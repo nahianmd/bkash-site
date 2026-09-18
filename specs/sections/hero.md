@@ -128,10 +128,10 @@ Big file, one requirement.
 
 ## Depth (Rule 2)
 
-**Plate** (back), **cutouts** (middle), **captions** (front). If the plate
-comes layered, the back plane becomes three — sky and skyline slowest,
-rooftops, then the near building and tree fastest — and the push-in has real
-parallax. If not, cutouts-versus-plate is still depth.
+**Plate** (back), **cutouts** (middle), **captions** (front). For the demo the
+plate is one layer (decided 2026-09-18); cutouts-versus-plate is the depth,
+and it is enough. If a layered plate ever arrives, the back plane splits into
+sky, rooftops, and the near building — real parallax with no other change.
 
 ## Motion
 
@@ -241,9 +241,10 @@ H1 · H2 · H3 · H4 (Rule 3) · H7 · H8 · H9 · H11. H5, H6, H10 belong to th
 
 ## Open questions
 
-1. **Layered plate and a big plate (3200px+; 4000px+ is safer for 3×
-   phones)** — one request to the illustrator. The portrait extension is
-   dropped: one wide plate serves both.
+1. ~~Layered plate and a big plate~~ — **resolved 2026-09-18:** skip the
+   layers for the demo (parallax is cutouts-versus-plate, which Rule 2
+   allows); **upscale the plate to 3200px+** so beat 0 is not soft on a laptop.
+   Nahian deferred to the recommendation.
 2. ~~The agent beat needs a face~~ — **resolved 2026-09-18 (Nahian):** the
    illustration stays as it is for the demo; the stall owner goes into the
    shoot brief only (item 2 there already says so).
