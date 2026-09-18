@@ -1,6 +1,7 @@
 # Section: Phone — selectable services, description on the right
 
-> Status: BUILT — Nahian's eye needed on copy and spacing
+> Status: BUILT in the prototype. **Superseded by `services.md` (2026-09-18)**,
+> which absorbs the approved selection behaviour. Kept as the record.
 > Model: **Opus 5.** Execution against a written answer.
 > Source: Nahian, 2026-09-17
 > Follows: `phone-bento.md`. Begins where that ends — phone at 520x1098,

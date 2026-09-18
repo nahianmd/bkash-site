@@ -85,12 +85,11 @@ on approach; the phone emerges from it into the sixteen services. See
    Its acceptance criteria stand, with three added (ground, recede and plane
    tokens). Opus.
 
-3. **Section specs, rewritten still-first** — `hero`, `bird-collage`,
-   `people`, `services`. Composition at rest at 1920 and 390 first, the
-   transition second. The five specs written earlier today are port-forward
-   and are the *baseline*, not the target; `phone-bento.md` stays as the approved
-   baseline for the fall and emergence; `services.md` covers the bento's still
-   and the sixteen services.
+3. **Section specs, rewritten still-first — written**, all four DRAFT:
+   `hero.md`, `bird-collage.md`, `people.md`, `services.md`. Composition at
+   rest at 1920 and 390 first, the transition second. `phone-bento.md` and
+   `phone-services.md` are superseded by `services.md` and kept as the record.
+   Each carries its open questions at the foot; none blocks `foundation`.
 
 4. **Transitions** — designed against composed states, once those exist.
 

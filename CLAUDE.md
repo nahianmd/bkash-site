@@ -159,6 +159,10 @@ with Nahian approving at every boundary. `/clear` between phases.
 Each spec carries a `> Model:` line. The four commands check it before starting
 and say so if the session is on the wrong one — they never switch it themselves.
 
+**And at the end of every unit of work, say which model the next unit is
+tagged for** — one line, unprompted. The check at phase start catches a wrong
+model; this is what stops the wrong model being started at all.
+
 The test, when tagging new work:
 
 - **Fable 5.1** when the answer is **not determinable from what is written

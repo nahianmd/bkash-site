@@ -1,200 +1,190 @@
-# Section: Hero — one camera through one street
+# Section 1: Hero — one camera through one street
 
 > Status: DRAFT
-> Model: **Fable 5.1 to specify and to build the camera.** The framing, the
-> 1px handover contract and the mobile re-anchoring fail quietly — almost-right
-> is the expensive outcome here. **Opus 5** for the rest of the build.
-> Source: Claude, 2026-09-18, from the prototype's `SCENE` data, the client
-> deck copy already in it, and `specs/prototype-audit.md` H1–H11.
-> **New spec.** The prototype's four story beats were built but never written
-> down — `hero-collapse.md` only ever covered the bird that followed them.
+> Model: **Fable 5.1** to specify and to build the camera and the focus
+> mechanism. **Opus 5** for the rest of the build.
+> Source: Nahian's concept (approved by the client on style), the client's
+> five-beat copy, the client's four flags, and `specs/design-language.md`.
+> Rewritten still-first on 2026-09-18, replacing the port-forward version.
+> Camera targets and the mobile re-anchoring are ported from
+> `reference/prototype/js/hero.js` — the parts of the prototype that are sound.
 
-## Intent
+## Job
 
-One photograph of one neighbourhood, and three lives inside it. The camera
-does not cut — it pushes in, finds someone, holds long enough for you to read
-who they are, then travels on. By the end you understand that a customer, an
-agent and a merchant are all standing in the same street, and that bKash is
-what connects them.
+The claim, then three lives in one street. Beat 0 says *300 transactions every
+second*. Beats 1–3 make it human: a customer, an agent, a merchant, all
+standing in the same photograph. The hero is the **story** half of the site
+(Rule 1) — rendered, idealized, a diorama.
 
-The opening frame is the claim: **300 transactions every second**. The three
-beats that follow are the evidence.
+It ends on the merchant, framed so the bird's largest facet can take the
+viewport with no visible cut. That frame is this section's contract with
+section 2.
 
-## What changes from the prototype
+## The stills
 
-The composition and the camera maths stay. Two things change:
+Four composed frames. Each must hold as a poster with no motion.
 
-1. **It is scrolled, not gestured.** The prototype intercepted the wheel and
-   advanced one beat per gesture (`hero.js:404-470`), so the scrollbar never
-   moved and the page read as frozen — audit **H1**. It becomes a pinned
-   ScrollTrigger with real travel.
-2. **It ends on the merchant.** The bird was beat 5; it is now its own section.
-   This spec owns beats 0–3 and the frame it hands over on.
+### Beat 0 — the street (1920)
 
-## Layout
+The wide plate full-bleed. All three cutouts in place, small, part of the
+street. Headline `300 Transactions Every Second` with the line
+`The Digital Rhythm of Bangladesh` beneath, **bottom-left third, on the scrim**
+(Rule 3). It sits on open road in the plate, not on a person or a building.
+Scroll cue beneath it. Nothing else.
 
-### Desktop, per beat
+The prototype placed this headline mid-right, under the agent's shop, with a
+text-shadow for legibility. Bottom-left on a scrim is the language's answer;
+the shadow was the per-section improvisation the language exists to end.
 
-A full-bleed plate under a camera transform, with the subject cutouts placed
-as fractions of the plate so they travel with it. Caption block bottom-left,
-progress dots right.
+### Beats 1–3 — a life (1920)
 
-| Beat | Camera (x, y, scale) | Subject | Caption |
+The camera on one subject. Caption block bottom-left on the scrim: eyebrow
+(`Customer` / `Agent` / `Merchant`), headline, line. **The other two cutouts
+and the plate recede** — dimmer, softer, less saturated (Rule 4). The subject
+is full. This is the client's "mechanism that focuses each story," and it is
+what the prototype did not have: it zoomed, but nothing focused.
+
+| Beat | Camera x, y, scale | Subject | Copy |
 |---|---|---|---|
-| 0 | 50, 50, 1.0 | — establishing | `300 Transactions Every Second` / `The Digital Rhythm of Bangladesh` |
 | 1 | 29.5, 57.0, 3.1 | Customer | `7 in 10 Adults in Bangladesh` / `Control Their Money with bKash` |
 | 2 | 59.1, 28.2, 3.0 | Agent | `One Agent Every 2 KM` / `Your Neighborhood is the Branch` |
 | 3 | 79.4, 27.0, 5.5 | Merchant | `From Floating Stalls to Digital Storefronts` / `Moving Millions of Cashless Commerce` |
 
-Camera targets ported verbatim from `reference/prototype/js/hero.js`. They are
-hand-framed against that specific photograph and are not derivable — if the
-plate changes, every one of them is re-framed by eye.
+Targets ported verbatim; they are hand-framed to this plate and not derivable.
+Beat 3's framing is fixed by the handover to the bird, so the merchant sits
+right of centre with the caption clear on the left — the prototype got this
+right and it stays.
 
-**The caption must be legible on every beat.** In the prototype it was not:
-the pink eyebrow vanishes against sand on beats 1 and 3, and beat 2 is white
-text on pale wood — audit **H4**. The captions need their own ground, not a
-vignette tuned for a different frame.
+### 390 — the same four beats, a different photograph
 
-### Mobile (390px), in its own right
+The wide plate is 16:9; a portrait crop shows a quarter of it with the people
+in the wrong places. The prototype's answer stands: a **portrait plate**, and
+`anchorPortrait()` re-placing each cutout against it and re-deriving the camera
+targets from where they land. That function ports as-is.
 
-The wide plate is 16:9. Cover-cropped on a portrait phone it shows about a
-quarter of its width, and the cutouts are positioned against the viewport — so
-people stand in the wrong places relative to the background. The prototype
-solved this with a second, portrait photograph plus `anchorPortrait()`, which
-re-places every cutout against it **and re-derives the camera targets** from
-where each one actually lands. That function is the single most valuable thing
-in the hero and it ports as-is.
+What changes is the composition:
 
-Two things it did not solve, and this spec must:
+- **Headline and subject occupy different thirds** (Rule 3). Beat 0: copy in
+  the bottom third on the scrim, people in the middle third. The prototype put
+  the headline on Amena's body.
+- Captions on beats 1–3 sit in the bottom third on the scrim, at a measure
+  that fits 390px — not edge-to-edge `t-h2`.
+- The recede rule applies the same way. On a phone the frame is tighter, so
+  the non-subjects are often out of frame anyway; the plate still recedes.
 
-- The headline sits **on top of the subject** (audit **H8**). The mobile
-  composition needs the copy and the person to occupy different thirds.
-- Captions run edge-to-edge at `t-h2` with no measure control (**H9**).
+## Depth (Rule 2)
+
+Three planes, already present in the concept: **plate** (back), **cutouts**
+(middle), **captions** (front). Between beats the camera moves all three; on
+top of that, the front plane leads and the back plane lags by a few percent so
+the push-in has parallax, not just zoom. Never inside the plate.
 
 ## Motion
 
-One pinned ScrollTrigger, scrubbed, **snapping to the four beats**.
+One pinned ScrollTrigger, scrubbed, **snapping to the four beats**. Snap keeps
+the promise that every frame a viewer rests on was composed; free scrub alone
+would let the page park half-zoomed between two people. The scrollbar moves the
+whole way; any position is reachable.
 
-Snap is the point: it keeps the promise that every frame a viewer rests on is
-one somebody composed, while the scrollbar still moves the whole way and any
-position remains reachable. Free scrub alone would let the page park
-half-zoomed between two subjects, which is the state the prototype's stepper
-existed to prevent.
+- Scale interpolates in **log space**, position with the cubic ease — ported;
+  it is why the zoom rate reads as constant.
+- The caption for the beat being approached resolves as the camera arrives;
+  the previous one clears. Opacity and a short rise, on the front plane.
+- **Recede is scrubbed with the camera**: as the camera leaves one subject for
+  the next, the old subject recedes and the new one comes full, crossing at
+  the midpoint. It is not a state that flips on arrival.
+- Travel: about one screen per beat. A feel judgement; tune against the build.
 
-| Phase | Progress | What happens |
-|---|---|---|
-| Travel | 0 → 1 | Camera moves continuously between the four targets. Scale interpolates in **log space**, position in the cubic ease — ported from the prototype, and the reason the zoom rate reads as constant. |
-| Snap | on scroll-end | Settles to the nearest beat. |
-| Caption | per beat | The caption for the beat being approached resolves; the previous one clears. Opacity and a short rise, nothing else. |
-| Release | 1 | Hands over to the bird section on beat 3's frame. |
+### The handover to the bird
 
-**What does not move:** the cutouts relative to the plate. They are children of
-the transformed scene, so this is true by construction.
-
-**Travel budget:** roughly one screen per beat, so four. To be confirmed against
-feel — the number that matters is how much scroll separates two adjacent
-subjects, not the total.
-
-### The handover — the contract with `bird-collage`
-
-Beat 3 must end framed so the bird's largest facet can take over the viewport
-with no visible cut. In the prototype this was exact: the live facet measured
-**0px error on x, y, width and height** against the viewport at the start pose.
-That is the standard to hold.
-
-This section therefore owns beat 3's final camera, and the bird section is
-built against it — **not the other way round.**
+At progress 1 the frame is beat 3, and the bird section's first frame is the
+same pixels. The prototype measured this at **0px error on all four edges**.
+That is the standard.
 
 ### Reduced motion
 
-Renders beat 0 — the establishing frame, headline, and a visible way to reach
-the sections below. Not pinned. A composed still, not a blank box.
+Beat 0 as a composed still — plate, cutouts, headline, and a visible way on.
+Not pinned.
+
+## The cutouts — resolution and placement (the client's flag)
+
+Measured, not polished around: at beat 1's 3.1× zoom on a 1920 screen the
+customer cutout (941px source) displays at ~1060px — soft at 1×, **2.25×
+upscaled at 2×**. The merchant at 5.5× is similar. Two ways out:
+
+- **(a) Regenerate the cutouts at 2×.** They are AI; this is possible. Same
+  composition, four times the pixels. The camera stays as tuned.
+- **(b) Cap the camera's maximum zoom** so no cutout exceeds ~1.2× native at
+  2×. Beats 1–3 get wider; the subjects read smaller.
+
+(a) keeps the approved framing. It is Nahian's call because it is Nahian's
+tooling and time. The spec assumes (a) and states (b) as the fallback.
+
+Placement: the cutouts' feet must sit on the plate's ground line at every
+viewport. The prototype exposed a `nudge()` helper for this because it cannot
+be measured, only judged — keep that helper in dev.
 
 ## Content slots
 
 | Slot | Content | Status |
 |---|---|---|
-| Plate, wide | `scene-plate-wide.webp` | **AI-GENERATED** — see Open question 1 |
-| Plate, portrait | `scene-plate-portrait.webp` | **AI-GENERATED**, and a different scene — Open question 2 |
-| Cutouts | `cut-customer.webp`, `cut-agent.webp`, `cut-merchant.webp` | **AI-GENERATED** |
-| Beat 0 copy | `300 Transactions Every Second` / `The Digital Rhythm of Bangladesh` | **CLIENT DECK** |
-| Beat 1–3 copy | as tabled above | **CLIENT DECK** |
-| Scroll cue | `Scroll to meet them` | **PLACEHOLDER** |
-| Character names | Amena, Faisal, Rahim appear in the prototype's tuning code but never on screen | **UNVERIFIED** — origin unknown, see Open question 5 |
+| Wide plate, portrait plate, three cutouts | as in `reference/assets/img` | **RENDERED** (AI). Approved on style. Resolution: see above. |
+| Beat copy, all four beats | the client's five lines, beats 1–4 | **CLIENT DECK** |
+| Scroll cue | `Scroll to meet them` | **PLACEHOLDER** — not in the deck |
+| Names | Amena, Faisal, Rahim exist only in the prototype's tuning helper; never on screen | **UNVERIFIED** origin |
 
-## Audit rows this section closes
+## Audit rows closed
 
-`H1` scroll-jacking · `H2` rect in the wheel handler · `H3` `touch-action:none`
-set at init · `H4` caption legibility · `H7` `hero-light` never cleared ·
-`H8` mobile headline over subject · `H9` mobile caption measure ·
-`H11` per-frame rect in `initNav`.
-
-`H5`, `H6` and `H10` belong to the bird section, not this one.
+H1 scroll-jacking · H2 rect in the wheel handler · H3 `touch-action` at init ·
+H4 caption legibility (Rule 3) · H7 `hero-light` sticking · H8 mobile headline
+on the subject · H9 mobile caption measure · H11 per-frame rect in the nav.
+H5, H6, H10 belong to the bird.
 
 ## Acceptance
 
-- [ ] The page scrollbar moves continuously from the first beat to the last.
-      Nothing is ever swallowed.
-- [ ] Scrolling forward and back lands on the same four frames, with no drift
-      and no half-zoomed resting state.
-- [ ] A trackpad flick does not skip a beat; a slow drag can sit between two
-      and settle to the nearer one.
-- [ ] The caption is legible on **all four** beats at both widths — measured,
-      at least 4.5:1 against the pixels actually behind it, not against an
-      assumed ground.
-- [ ] On mobile, copy and subject never overlap on any beat.
-- [ ] On mobile, every subject stands in the right place against the portrait
-      plate at every beat — the re-anchoring holds under resize and rotation.
-- [ ] The scene covers the viewport at every point in the travel. No ground
-      shows at any edge, at any scale, at either width.
-- [ ] Beat 3's final frame matches the bird section's opening frame to within
-      1px on all four edges.
-- [ ] No `getBoundingClientRect` in any input handler.
-- [ ] With `prefers-reduced-motion`, beat 0 renders composed and readable and
-      the page scrolls normally.
-- [ ] No horizontal overflow at 390px.
+- [ ] Each of the four beats, with motion disabled, reads as a composed still
+      at 1920 and at 390. **Nahian's eye.**
+- [ ] Every caption measures at least 4.5:1 against the pixels behind it, on
+      every beat, at both widths.
+- [ ] On beats 1–3 the non-subjects are visibly receded and the subject is not.
+      Measured: the recede tokens are applied to exactly the non-subjects.
+- [ ] At 390, copy and any person occupy different thirds on every beat.
+- [ ] The scrollbar moves continuously; nothing is swallowed. Forward and back
+      land on the same four frames; a slow drag settles to the nearer beat.
+- [ ] Recede crosses over mid-travel, not on arrival — scrub to 50% between
+      two beats and both subjects are half-receded.
+- [ ] Beat 3's frame matches the bird's opening frame within 1px on all edges.
+- [ ] No cutout displays above 1.2× its native pixels at 2× DPR (path a), or
+      the camera never exceeds the capped zoom (path b).
+- [ ] Every cutout's feet sit on the ground line at 390, 768, 1280 and 1920.
+- [ ] The scene covers the viewport at every point in the travel; no ground
+      shows at any edge.
+- [ ] Reduced motion: beat 0 composed and readable, page scrolls normally.
+- [ ] No `getBoundingClientRect` in any input handler. No horizontal overflow
+      at 390.
 
 ## Explicitly NOT this
 
-- **NOT one gesture per beat.** That is precisely what is being removed. Scroll
-  position drives the camera; snap only decides where it settles.
+- **NOT one gesture per beat.** Scroll drives the camera; snap only decides
+  where it settles.
 - **NOT a cut, dissolve or crossfade between beats.** One camera, moving.
-- **NOT the subjects moving independently of the plate.** They are pinned into
-  the photograph and travel with it.
-- **NOT a blur that animates.** The prototype kept a depth-of-field dial at
-  `DOF = 0` because it flattened the scene and killed the depth the zoom was
-  creating. Leave it at zero.
-- **NOT a re-framing of the camera targets.** They are hand-set against this
-  photograph. Touch them only if the photograph changes.
-- **NOT desktop's composition narrowed for mobile.** The portrait plate is a
-  different crop of a different scene and needs its own copy placement.
-- **NOT owning the bird.** This section ends on beat 3. What happens to that
-  frame afterwards belongs to `bird-collage`.
+- **NOT a blur on the plate.** The prototype's depth-of-field flattened the
+  scene. Focus is the non-subjects receding — dim, soft, desaturated — never
+  the plate blurring.
+- **NOT text-shadow as a legibility strategy.** The scrim is the ground.
+- **NOT the subjects moving independently of the plate.** They are in it.
+- **NOT the same composition narrowed for a phone.** The portrait plate is a
+  different photograph with its own copy placement.
+- **NOT re-framing the camera targets.** Touch them only if the plate changes.
+- **NOT owning the bird.** This ends on beat 3.
 
 ## Open questions
 
-1. **The hero is AI-generated and everything below it is real photography.**
-   This is flagged in `CLAUDE.md` as the biggest remaining exposure, and it has
-   to be settled *here* rather than later, because every camera target above is
-   framed by eye against this specific image. Replacing the plate is not a swap,
-   it is a re-framing of the whole section. Is it staying?
-
-2. **Does mobile keep a separate portrait plate?** Right now desktop and mobile
-   show different photographs of different scenes — arguably fine, since nobody
-   sees both, but it means two art directions to keep in step. Alternative is
-   one plate with a safe portrait crop, which costs composition on desktop.
-
-3. **Snap, or free scrub?** Recommending snap, for the reason in Motion. Worth
-   confirming, because it is the one place the old stepped feel survives, and
-   you may want it gone entirely.
-
-4. **How much travel per beat?** One screen each is the starting proposal. This
-   is a feel judgement and better made against something running than in a spec.
-
-5. **Amena, Faisal, Rahim** — these names exist only in the prototype's console
-   tuning helper and never reach the screen. Are they real people from the
-   client's material, or were they invented during the build? It matters if a
-   caption ever names them.
-
-6. **`Scroll to meet them`** — my line or the client's? It is not in the deck
-   copy that the other lines came from.
+1. **Cutouts: regenerate at 2× (assumed), or cap the zoom?** Yours — it is
+   your tooling.
+2. **Is the AI plate staying?** The client did not flag it; they flagged its
+   execution. Assumed staying. If it changes, every camera target is re-framed.
+3. **Snap: confirm.** Recommended for the reason above; it is the one place
+   the old stepped feel survives, on purpose.
+4. **`Scroll to meet them`** — keep, or the client's words? It sets up the
+   people section, which is why it earns its place.

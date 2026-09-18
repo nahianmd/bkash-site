@@ -1,207 +1,192 @@
-# Section: Bird collage — the mark is made of people
+# Section 2: Bird — the mark is made of people
 
 > Status: DRAFT
-> Model: **Fable 5.1**, spec and build. The mechanism is genuinely open, it has
-> been got wrong twice, and it is the signature moment of the site. Specify it
-> in conversation with Nahian, not from files — the answer is not on disk.
-> Source: Nahian, 2026-09-18, in conversation — the MacBook Pro performance
-> section as the pacing reference. Facet geometry measured from the artwork the
-> same day. Written by Claude; open questions at the foot.
+> Model: **Fable 5.1**, spec and build.
+> Source: Nahian, 2026-09-17 (resolved list in `hero-collapse.md`) and
+> 2026-09-18 (in conversation); facet geometry measured from the artwork;
+> `specs/design-language.md`. Rewritten still-first on 2026-09-18.
 
-## Provenance of what is already decided
+## Provenance — decisions from three places, not all agreeing
 
-Recorded explicitly, because this section has accumulated decisions from three
-places and they do not all agree.
+**Nahian, 2026-09-17:** bird right, text left · white ground, no glow · facets
+inert for now, structure kept for a future clickable version.
 
-**Nahian, 2026-09-17** (`hero-collapse.md`, "Resolved"):
-1. Bird **right**, text **left**.
-2. No glow. Background **white**.
-3. Facets static for now; clickable is a future want — keep the per-facet
-   structure and hit targets in place but inert.
-4. One gesture: the whole collapse is a single beat.
+**Nahian, 2026-09-18:** its own scroll-driven section, not a hero beat ·
+stories render in the bird once it pins · the stories *might* be selectable ·
+every section must hold as a still (the principle that reopens the first
+decision below).
 
-**Nahian, 2026-09-18** (this conversation) — supersedes 4, and reopens 3:
-- Not a hero beat any more. Its own **scroll-driven** section: keep scrolling
-  and the bird resolves.
-- Once it pins, **stories render in the bird** — the facets carry photographs.
-- **"The stories might be selectable."**
+**A Claude session, 2026-09-17:** changed the rest pose to *centred, copy
+beneath* and claimed seven facets traced from the logo. The seven-facet claim
+is wrong (nine, measured). The centred pose is not Nahian's — it is reopened
+below as a still-first question, not adopted.
 
-**A Claude session, 2026-09-17** (`hero-collapse.md`, "Revision: real geometry
-+ pure scale") — *not* Nahian, and it contradicts his point 1:
-- Bird rests **centred**, copy beneath, "because a pure scale wants its fixed
-  point near the middle of the screen".
-- Also claims the mark has **seven** facets traced from the logo. **That is
-  wrong** — see Geometry. `PROGRESS.md` records the logo trace as a failed
-  attempt, and the artwork has nine.
+## Job
 
-The centred-vs-right conflict is Open question 2. It is flagged rather than
-silently resolved because one side of it is Nahian's and the other is not.
+Beat 5 of the client's brief: `Writing Millions of Stories in Motion Across
+Bangladesh`. The story half ends here. The camera that has just been inside the
+merchant's stall pulls back, and the stall turns out to be one facet of the
+bKash mark — a mark made of nine photographs of people. It is the last
+rendered frame on the page; the next section turns to real people (Rule 1).
 
-## Intent
+## The still
 
-The bKash mark is not a logo here. It is nine photographs, and every one is
-someone who uses bKash. You do not get told that — you start inside one of
-those photographs without knowing it is inside a shape, and the camera pulls
-back until the shape resolves into the mark on every shopfront in the country.
+The mark at rest on white, with the line. This is a poster, and it must read
+as one at 1920 and at 390 with nothing moving.
 
-The reveal is a **camera move**. Nothing morphs, assembles, dissolves or flies.
+Two candidate compositions, because the decision is reopened:
+
+**A — bird right, copy left** (Nahian, 09-17). Mark at ~40% of viewport width
+on the right; eyebrow and headline in the left column, measure `--measure-tight`.
+Reads as a web layout: image and text side by side.
+
+**B — mark centred, copy beneath.** Mark at ~58% of `--vh` tall, centred, its
+vertical centre at ~42%; eyebrow and headline centred beneath. Reads as a
+poster: one object, one line.
+
+**Recommendation: B**, on the still-first principle alone — a centred mark
+with a line beneath is a poster; side-by-side is a layout. It also lets the
+pull-back's fixed point sit near the middle of the screen, which is what keeps
+the reveal a pure scale. But A was your decision and B was not; **this is
+yours**, Open question 1.
+
+**At 390:** the mark at ~86% of viewport width, centred, vertical centre at
+~34% of `--vh`; copy beneath, headline one step down. The mark is never smaller
+than ~300px across — at the prototype's 36% it was 140px and stopped reading as
+the bird. Composition B at both widths; A would have to become B on a phone
+anyway, which is one more reason for B.
+
+## Depth (Rule 2)
+
+Three planes: **ground** (white), **the mark** (one rigid object — never
+parallax between facets), **copy**. During the hold and on the way out, the
+copy leads the mark by a few percent. That is all.
 
 ## Motion
 
-One pinned ScrollTrigger, scrubbed directly from scroll position, two to three
-screens of travel. The bird is a fixed object; only the camera moves, and it
-moves only in scale.
+One pinned ScrollTrigger, scrubbed, two to three screens of travel — 2.5 on
+desktop, 2 on a phone. The mark is a fixed object; only the camera moves, and
+only in scale.
 
-Scale interpolates in **log space**; position is **derived** from the scale
-about one fixed point, never interpolated separately. Interpolating both is
-what made the first build read as the mark sliding across the screen while it
-grew — two motions reading as one muddle. Ported from
-`reference/prototype/js/hero.js`.
+Scale in **log space**; position **derived** from the scale about one fixed
+point (the centre of facet `f0` where it lands at rest), never interpolated
+separately. Interpolating both is what made the first build read as the mark
+sliding while it grew. Ported from `reference/prototype/js/hero.js`.
 
 | Phase | Progress | What happens |
 |---|---|---|
-| A — inside | 0 | The frame is filled by facet `f0`, the pink tea stall. Its edges are off-frame. It reads as a photograph, not a shape. |
-| B — the shape appears | 0 → ~30% | Camera pulls back. `f0`'s straight edges enter frame and the photograph is visibly cut by them. **This is the moment the idea lands.** |
-| C — the mark resolves | ~30 → ~70% | Neighbouring facets enter frame **already filled**. No fade, no stagger, no entrance of any kind. |
-| D — settle | ~70 → ~80% | The complete mark reaches resting size. Copy resolves — opacity and a short rise, the only thing moving that is not the camera. |
-| E — hold | ~80 → 100% | Nothing moves. The mark and its line sit still before the section releases. |
+| A — inside | 0 | Facet `f0`, the pink stall, fills the frame — the hero's beat-3 pixels. It reads as a photograph. |
+| B — the shape appears | 0 → ~30% | `f0`'s straight edges enter frame. The photograph is visibly cut by them. **The moment the idea lands.** |
+| C — the mark resolves | ~30 → ~70% | Neighbouring facets enter frame already filled. No fade, no stagger, no entrance. |
+| D — settle | ~70 → ~80% | The complete mark reaches its resting size. Copy resolves — opacity and a short rise on the front plane. |
+| E — hold | ~80 → 100% | Still. The poster, held, for about half a screen before release. |
 
-The hold in E is not padding. A pin that finishes its animation exactly as its
-container runs out starts scrolling away at the moment of payoff — the bento
-shipped that bug and viewers read it as the scroll jamming.
+Direction is a **pull-back** — the mark gets smaller, more of it enters frame.
+Nahian's words were "zoom out" and "keep swallowing the screen"; the first is a
+pull-back and the spec follows it. Open question 2 confirms.
 
-**What does not move:** the bird's internal geometry. The nine facets never
-change size or position relative to one another, at any point, at either width.
+### The turn — the transition into the people section
 
-**Structural note from the reference:** Apple's equivalent is
-`.sticky-container > .sticky-content` with the shape masking media behind it,
-plus a `mask-extension-container` — panels that extend the shape's interior so
-it reads edge-to-edge when scaled up. Worth knowing, because the prototype
-already solved the same problem twice (the derived start scale in `poses()`,
-and the `50/s <= cam.x <= 100 - 50/s` cover clamp).
+This is the one transition on the page that is about the photography itself
+(Rule 1). It is not a set-piece. The bird holds its poster; the section
+releases; the people section arrives by ordinary scroll with its own ground
+— a warm dark field — rising beneath the white. The register changes because
+the ground and the photographs change, not because anything morphs. A line of
+copy can bridge it: the bird says *millions of stories*; the people section's
+eyebrow answers *meet three of them* (placeholder).
 
 ### Reduced motion
 
-Renders the rest pose — the complete mark, copy, readable. Not pinned, no
-scrub. A composed still.
+The still, composition B, not pinned.
 
-## Geometry — measured, not inferred
+## Geometry — measured
 
-Decomposed from the artwork's own alpha by connected component, 2026-09-18
-(`tools/bird-facets.mjs`). **Nine** components. The prototype's nine
-`HIT_REGIONS` polygons match these to within ~1%, so they are the artwork's real
-facet geometry and can be used as clip paths directly.
+Nine facets, decomposed from the artwork's own alpha by connected component
+(`tools/bird-facets.mjs`). The prototype's nine `HIT_REGIONS` match to within
+~1% and serve as clip paths directly.
 
 | id | bbox x | bbox y | native px | subject |
 |----|--------|--------|-----------|---------|
-| f0 | 35.6–78.9% | 6.0–55.1% | 517x546 | Pink tea stall — **the camera starts here** |
-| f1 | 35.8–77.7% | 49.0–75.1% | 501x290 | Group outside a village shop |
-| f2 | 1.4–45.2% | 0–26.2% | 524x291 | Young man, maroon tee, teal wall |
-| f3 | 19.2–41.4% | 50.3–99.9% | 265x551 | Man carrying radishes — the tail |
-| f4 | 20.3–45.2% | 7.0–46.3% | 297x437 | Man in orange, app open |
-| f5 | 68.4–90.6% | 30.1–54.6% | 265x272 | Older man with lychees — right wing |
-| f6 | 44.6–73.8% | 61.7–79.2% | 349x194 | Woman and two schoolchildren |
-| f7 | 87.8–99.9% | 30.4–41.0% | 145x117 | Man in a pink turban — right tip |
-| f8 | 0.1–15.3% | 7.5–23.6% | 182x179 | Shop signage, dark — left tip |
+| f0 | 35.6–78.9% | 6.0–55.1% | 517×546 | Pink tea stall — **the camera starts here** |
+| f1 | 35.8–77.7% | 49.0–75.1% | 501×290 | Group outside a village shop |
+| f2 | 1.4–45.2% | 0–26.2% | 524×291 | Young man, maroon tee, teal wall |
+| f3 | 19.2–41.4% | 50.3–99.9% | 265×551 | Man carrying radishes — the tail |
+| f4 | 20.3–45.2% | 7.0–46.3% | 297×437 | Man in orange, app open |
+| f5 | 68.4–90.6% | 30.1–54.6% | 265×272 | Older man with lychees — right wing |
+| f6 | 44.6–73.8% | 61.7–79.2% | 349×194 | Woman and two schoolchildren |
+| f7 | 87.8–99.9% | 30.4–41.0% | 145×117 | Man in a pink turban — right tip |
+| f8 | 0.1–15.3% | 7.5–23.6% | 182×179 | Shop signage, dark — left tip |
 
-**The artwork is the shape.** `collage-bird.webp` is already cut to the mark
-with its own alpha. Do not rebuild it from polygons or from the official SVG —
-that SVG is 8 triangles in a different layout, and three attempts in the
-prototype went wrong on exactly this.
+**The artwork is the shape.** Not rebuilt from polygons or the official SVG
+(eight triangles, different layout). Three prototype attempts went wrong on
+exactly this.
 
-## The resolution problem
+## Resolution
 
-Facet `f0` is **517px wide**. Filling a 1440px viewport with it means rendering
-the artwork ~3330px wide — a **2.8x upscale**, held on screen at the moment the
-section opens, which is the moment the whole idea depends on.
-
-The prototype never hit this because the hero's own full-resolution frame sat
-over that facet and faded out early. Three ways forward:
-
-- **(a)** Port that live-facet overlay. The hero now comes first, so this works.
-- **(b)** Composite the collage from the **real source photographs** instead of
-  the baked raster. 25 candidates sit in `reference/assets/salvage-photos/` at
-  up to 1400x1050, and `f0`'s source is `Merchant.jpg` at 6000x4000. **The
-  facet-to-photo mapping is not established** — a colour match was attempted and
-  was not decisive.
-- **(c)** Cap the start scale below full-bleed so the section opens with `f0`
-  nearly filling the frame and slivers of neighbours already visible. Softer
-  framing, sharper pixels.
-
-(b) is the only one that survives a 4K screen, and it is also what makes
-per-facet selection tractable. (a) is the cheap near-term answer.
+`f0` is 517px wide. Filling a 1440px viewport with it is a **2.8× upscale** at
+the moment the section opens. The hero comes first now, so the prototype's
+answer is available: the hero's full-resolution beat-3 frame sits over `f0`
+during phase A–B and fades out early, before the upscale would show. Sharp
+where it matters, gone before you could catch it. The real fix — compositing
+from source photographs — waits on the facet-to-photo mapping, which is not
+established (`reference/README.md`).
 
 ## Content slots
 
 | Slot | Content | Status |
 |---|---|---|
-| Artwork | `collage-bird.webp`, 1195x1111, nine facets, alpha | **REAL** — resolution caveat above |
+| Artwork | `collage-bird.webp`, nine facets, alpha | **RENDERED** |
 | Eyebrow | `Across Bangladesh` | **CLIENT DECK**, word order altered |
 | Headline | `Writing Millions of Stories in Motion` | **CLIENT DECK**, same |
-| Nine facet stories | none written | **ABSENT** — `needs.md` A4, open with the client |
+| Nine facet stories | none | **ABSENT** — `needs.md` A4 |
 | Alt text | "The bKash mark, made of photographs of the people who use it" | **PLACEHOLDER** |
 
-The deck's line is one sentence: *"Writing Millions of Stories in Motion Across
-Bangladesh."* The prototype split it into eyebrow + headline, reordering the
-client's words. Open question 4.
+The deck's line is one sentence. The eyebrow/headline split reorders it. Open
+question 4.
+
+## Audit rows closed
+
+H5 the `<br>` headline (Rule 3: measure, no `<br>`) · H6 hairline seams
+between facets · H10 mobile dead air and clipped copy.
 
 ## Acceptance
 
-- [ ] Reads as **one continuous zoom-out** — no cut, fade or dissolve anywhere.
-- [ ] The mark **grows without travelling**: cover the fixed point with a finger
-      and it stays under the finger for the whole scrub, at both widths.
-- [ ] Every facet is **fully populated the instant it enters frame**. Scrubbing
-      slowly, none is ever seen empty or fading up.
-- [ ] Facets hold position relative to each other throughout — pause anywhere
-      and the shape is a correctly-proportioned piece of the bird.
-- [ ] **Scrubbing backwards** reverses cleanly and lands exactly on the opening
-      frame. No drift, no snap at either end.
-- [ ] The opening frame matches the hero's beat-3 frame to within 1px on all
-      four edges.
-- [ ] The opening frame is **not visibly soft** on a 1440px screen — faces in
-      `f0` hold detail.
-- [ ] At rest the mark is **recognisably the bKash bird at 390px**.
-- [ ] Copy and mark never touch or overlap, 390px to 1920px. No horizontal
-      overflow.
-- [ ] The composition **holds still** for roughly half a screen before the
-      section releases.
-- [ ] Reduced motion shows the complete mark and its line, composed, no pin.
+- [ ] The still, composition B (or A if chosen), reads as a poster at 1920 and
+      390 with motion disabled. **Nahian's eye.**
+- [ ] One continuous zoom-out — no cut, fade or dissolve anywhere in it.
+- [ ] The mark grows without travelling: cover the fixed point with a finger
+      and it stays under the finger for the whole scrub, both widths.
+- [ ] Every facet is fully populated the instant it enters frame.
+- [ ] The nine facets hold position relative to each other throughout.
+- [ ] Scrubbing backwards reverses cleanly to the exact opening frame.
+- [ ] The opening frame matches the hero's beat-3 frame within 1px, all edges.
+- [ ] The opening frame is not visibly soft on a 1440px screen — the hero's
+      frame covers `f0` until the mark is small enough to resolve.
+- [ ] No white hairlines between facets at any scale.
+- [ ] At 390 the mark is recognisably the bird and never under 300px across.
+- [ ] Copy and mark never touch, 390 to 1920; no horizontal overflow.
+- [ ] The hold lasts about half a screen before release.
+- [ ] Reduced motion: the still, composed, no pin.
 
 ## Explicitly NOT this
 
-- **NOT facets flying in and assembling.** Not staggered, not from off-screen,
-  not rotating into place. "Collage" names the artwork, not an animation. Every
-  facet is in position before it is visible.
+- **NOT facets flying in and assembling.** Every facet is in position before
+  it is visible. "Collage" names the artwork, not an animation.
 - **NOT a fade-up of nine triangles.**
-- **NOT a morph into the flat pink logo.** The photographs are the point. No
-  pink silhouette at either end.
-- **NOT the bird flapping or flying.** `bird-flap.webp` exists in the prototype
-  assets and is not this section.
-- **NOT parallax between facets.** No depth, no differential rates.
-- **NOT rebuilt from polygons or the official SVG.**
+- **NOT a morph into the flat pink logo.**
+- **NOT the bird flapping or flying.** `bird-flap.webp` is not this section.
+- **NOT parallax between facets.** One rigid object.
+- **NOT rebuilt from polygons or the SVG.**
 - **NOT a growth that also travels.** One fixed point, pure scale.
-- **NOT a stepped tween on a gesture.** Scroll position drives it; the
-  scrollbar moves the whole time.
+- **NOT a stepped tween on a gesture.**
+- **NOT clickable in this pass** — structure and hit targets kept, inert.
+- **NOT a transition set-piece into the people section.** The turn is the
+  ground and the photographs changing under ordinary scroll.
 
 ## Open questions
 
-1. **Direction — confirm.** Written above as a **pull-back**: the bird gets
-   smaller and more of it enters frame, so the shape resolves. Your words were
-   *"zoom out"* and *"keep swallowing the screen"*, which point opposite ways —
-   zoom-out is a pull-back, swallowing sounds like it grows over the scene. The
-   whole spec assumes pull-back. If it is the other, the motion table inverts.
-
-2. **Rest pose — centred, or bird right and copy left?** You said bird-right on
-   2026-09-17; a Claude revision later changed it to centred and argued the
-   fixed point wants to be near the middle. Your call, and the argument for
-   centred is real but it is not yours.
-
-3. **Selectable — this pass or later, and what does it do?** You said "the
-   stories might be selectable". A panel beside the bird, the facet expanding in
-   place, or navigating away? And **does this replace the three-tile people
-   row** — nine selectable stories plus three more directly below is redundant.
-   Also: at 390px the facets are 40–90px across, below a reliable tap target, so
-   mobile needs a different affordance (a list beneath, or tap-to-cycle).
-
-4. **The deck line** — keep the eyebrow/headline split that reorders the
-   client's words, or set it as written?
+1. **Rest pose: A (your 09-17 decision) or B (recommended on the still-first
+   principle, which is also yours)?**
+2. **Pull-back — confirm.** The spec is written as one.
+3. **Selectable facets — this pass or later?** Written as later.
+4. **The deck line** — keep the split, or set it as written?

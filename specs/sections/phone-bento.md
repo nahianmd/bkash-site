@@ -1,8 +1,9 @@
 # Section: Phone — bento grid that collapses into the device
 
 > Status: APPROVED — Nahian, 2026-09-17. Retired for an hour on 2026-09-18 and
-> reinstated the same evening: the bento stays, made beautiful, with parallax on
-> approach, and the phone emerges from it. See `specs/design-language.md`.
+> reinstated the same evening. **Superseded by `services.md`**, which absorbs the
+> approved fall and emergence into a still-first spec. Kept as the record of
+> what was approved and why.
 > Model: **Opus 5.** The revision is written and the work is execution.
 > Exception: the mobile composition decision (fewer larger cards vs. a
 > different mechanic) is a real design call — **Fable 5.1** for that alone.

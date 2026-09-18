@@ -1,6 +1,8 @@
 # Design language
 
-> Status: DRAFT
+> Status: APPROVED — Nahian, 2026-09-18, in conversation (each rule as it was
+> proposed; the bento reinstated the same evening). Not SIGNED-OFF: that waits
+> on the sections being built against it.
 > Model: **Fable 5.1** to write and approve; **Opus 5** implements it (that
 > implementation is what `foundation` becomes).
 > Source: Nahian, 2026-09-18, in conversation. Decisions are his and are marked.
