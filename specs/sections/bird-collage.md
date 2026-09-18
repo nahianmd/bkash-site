@@ -121,6 +121,18 @@ Nine facets, decomposed from the artwork's own alpha by connected component
 (eight triangles, different layout). Three prototype attempts went wrong on
 exactly this.
 
+## The handover target has moved — content dependency
+
+*2026-09-18, evening.* The hero is re-specified around four illustrated assets
+(`hero.md`): the last hero frame is now **Faysal on the scooter riding into the
+city**, not the AI pink stall. `collage-bird.webp`'s largest facet is the pink
+stall. **The current artwork no longer matches the handover.** The bird must be
+remade in the same hand as the new hero — nine facets, painterly, `f0` being
+Faysal's frame — or the opening is a cut. Until the remake exists, the facet
+table below describes the *old* artwork and the handover is known-broken. The
+rules, the motion and the acceptance criteria are unchanged; only the pictures
+are.
+
 ## Resolution
 
 `f0` is 517px wide. Filling a 1440px viewport with it is a **2.8× upscale** at

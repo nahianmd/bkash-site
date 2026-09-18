@@ -90,6 +90,10 @@ on approach; the phone emerges from it into the sixteen services. See
    rest at 1920 and 390 first, the transition second. `phone-bento.md` and
    `phone-services.md` are superseded by `services.md` and kept as the record.
    Each carries its open questions at the foot; none blocks `foundation`.
+   **`hero.md` was re-specified the same evening around four illustrated
+   assets** (`reference/assets/img/hero.jpeg`, `amena.png`, `Rahim.png`,
+   `Faysal.png`) — previs for a real shoot. It carries the photographer's brief
+   and a content dependency: the bird collage must be remade to match.
 
 4. **Transitions** — designed against composed states, once those exist.
 

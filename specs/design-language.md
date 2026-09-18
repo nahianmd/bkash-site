@@ -69,8 +69,11 @@ the phone emerges from. What "beautiful" means for it is in Rule 2 and in
 
 There are two kinds of photograph on this site and they do not match:
 
-- **Rendered** — the hero plates, the cutouts, the bird's nine facets. Warm,
-  idealized, clean-edged, no grain. A diorama.
+- **Rendered** — the hero plate, the cutouts, the bird's nine facets. As of
+  2026-09-18 evening these are **illustrated** — a painterly street, previs for
+  a real photo shoot on a real set. A storybook, literally. After the shoot the
+  hero becomes *staged* real photography and the seam against the candid
+  documentary sections softens; it stays a designed turn.
 - **Documentary** — the people, the six ex-bento photographs, the About banner,
   the CEO. Real light, real clutter, real faces.
 
