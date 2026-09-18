@@ -1,0 +1,312 @@
+/* ============================================================
+   bKash — About page
+   ============================================================ */
+
+.ab-section { padding-block: clamp(4.5rem, 11vh, 8rem); }
+.ab-section--tint { background: var(--paper-2); }
+.ab-section--dark { background: var(--night); color: #fff; }
+
+.ab-head { max-width: 46rem; margin-bottom: clamp(2.5rem, 6vh, 4rem); }
+.ab-head p.t-eyebrow { color: var(--pink); margin-bottom: var(--s-4); }
+.ab-head h2 { margin-bottom: var(--s-4); }
+.ab-head .t-lead { color: var(--ink-2); }
+.ab-section--dark .ab-head .t-lead { color: rgba(255,255,255,.72); }
+
+/* ---- hero ---- */
+
+.ab-hero {
+  position: relative;
+  min-height: min(86vh, 46rem);
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  background: var(--night);
+}
+.ab-hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 50% 42%;
+}
+.ab-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top,
+    rgba(10,5,8,.88) 0%, rgba(10,5,8,.45) 46%, rgba(10,5,8,.28) 100%);
+}
+.ab-hero__body {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  padding-block-end: clamp(3rem, 8vh, 5.5rem);
+}
+.ab-hero__body p.t-eyebrow { color: var(--pink-lift); margin-bottom: var(--s-4); }
+.ab-hero__body h1 { max-width: 18ch; margin-bottom: var(--s-5); }
+.ab-hero__body .t-lead { color: rgba(255,255,255,.82); max-width: 42ch; }
+.ab-hero__body .btn { margin-top: var(--s-6); }
+
+/* ---- stats ---- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+.stats__item { border-top: 2px solid var(--pink); padding-top: var(--s-5); }
+.stats__num {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  color: var(--pink);
+  margin-bottom: var(--s-3);
+}
+.stats__label { font-weight: 600; margin-bottom: var(--s-2); }
+.stats__note  { color: var(--ink-3); }
+
+/* ---- platform triad ---- */
+
+.triad {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+.triad__card {
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  box-shadow: var(--e-2);
+  border-top: 3px solid var(--pink);
+}
+.triad__card h3 { margin-bottom: var(--s-3); }
+.triad__card p  { color: var(--ink-2); }
+
+/* ---- investors ---- */
+
+.investors {
+  /* Flex, not grid. Equal columns force every logo into the same
+     width, which clips the long wordmarks and destroys the area
+     normalisation — the whole point of it is that widths DIFFER.
+     Flex lets each take its true width and shares out the slack. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 3vh, 2rem) clamp(1rem, 2.4vw, 2.25rem);
+}
+.investors__item { flex: 0 0 auto; display: grid; place-items: center; }
+.investors__item img {
+  /* Backgrounds keyed out, trimmed to content, and scaled so every
+     logo covers the SAME AREA — the only normalisation that treats a
+     long wordmark and a square mark as equal weight. Sizes are set
+     from each file's own dimensions in JS; nothing is hardcoded.
+     Full colour: these are brand marks and belong in their own. */
+  max-width: none;   /* sized by JS; clamping here would break the normalisation */
+  height: auto;
+  object-fit: contain;
+}
+
+/* ---- board ---- */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+.board__card { margin: 0; }
+.board__card img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 20%;
+  border-radius: var(--r-md);
+  margin-bottom: var(--s-3);
+  background: var(--paper-2);
+  /* Black and white. The portraits run from 175px to 2400px across in
+     mixed aspects; flattening them to one treatment makes the set read
+     as deliberate art direction and stops the low-resolution ones
+     announcing themselves. Reversible — it is only a filter. */
+  filter: grayscale(1) contrast(1.06) brightness(1.02);
+  transition: filter var(--t-base) var(--ease-io);
+}
+.board__card:hover img { filter: none; }
+.board__name { font-weight: 600; letter-spacing: -0.012em; }
+.board__role { color: var(--ink-3); }
+
+/* ---- CEO quote ---- */
+
+.quote {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+.quote__portrait {
+  width: 100%;
+  /* His face is at about 76% across a 1200x669 frame. A square crop can
+     only reach a window centred at 865px even pushed fully right, so it
+     cannot contain him; 6/7 narrows the window to 573px, which centres
+     on 913 — within a pixel of his face. */
+  aspect-ratio: 6 / 7;
+  object-fit: cover;
+  object-position: 100% 50%;
+  border-radius: var(--r-lg);
+}
+.quote blockquote {
+  font-size: clamp(1.25rem, 2.1vw, 1.75rem);
+  line-height: 1.45;
+  letter-spacing: -0.018em;
+  font-weight: 500;
+}
+.quote__attr { margin-top: var(--s-5); color: rgba(255,255,255,.62); }
+.quote__attr strong { display: block; color: #fff; font-weight: 600; }
+
+/* ---- journey wall ---- */
+
+.wall { position: relative; height: 320vh; background: var(--night); }
+.wall__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-content: center;
+  gap: clamp(1rem, 2.5vh, 1.75rem);
+  /* Tight chrome on purpose: the artwork is 6:1, so every pixel of
+     height given back to it is six pixels of readable width. */
+  padding-block: clamp(3rem, 7vh, 4.5rem);
+}
+.wall__head { text-align: center; color: #fff; padding-inline: var(--gutter); }
+.wall__head p.t-eyebrow { color: var(--pink-lift); margin-bottom: var(--s-3); }
+
+.wall__viewport { overflow: hidden; display: flex; align-items: center; }
+.wall__track {
+  display: flex;
+  will-change: transform;
+  padding-inline: 4vw;
+}
+.wall__track img {
+  height: min(64vh, 38rem);
+  width: auto;
+  max-width: none;
+  border-radius: var(--r-md);
+}
+
+.wall__bar {
+  width: min(28rem, 62vw);
+  height: 2px;
+  margin-inline: auto;
+  background: rgba(255,255,255,.18);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+.wall__fill {
+  height: 100%;
+  background: var(--pink);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+/* ---- voices ---- */
+
+.voices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+.voices__card {
+  margin: 0;
+  padding: clamp(1.5rem, 2.6vw, 2.25rem);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  border: 1px solid var(--pink-line);
+  display: flex;
+  flex-direction: column;
+}
+/* Portrait first, so the quote has a face attached to it. */
+.voices__face {
+  width: 6.5rem;
+  height: 6.5rem;
+  border-radius: var(--r-full);
+  object-fit: cover;
+  object-position: 50% 22%;
+  margin-bottom: var(--s-5);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--pink-line);
+}
+.voices__card figcaption { display: contents; }
+.voices__tag { color: var(--pink); margin-bottom: var(--s-4); }
+.voices__card blockquote { color: var(--ink); flex: 1; }
+.voices__who { margin-top: var(--s-5); color: var(--ink-3); }
+.voices__who strong { display: block; color: var(--ink); font-weight: 600; }
+
+/* ---- careers + road ahead ---- */
+
+/* Copy beside a picture. Used by Careers; the ratio favours the copy
+   so the image reads as support rather than the subject. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+.split__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--r-lg);
+  box-shadow: var(--e-3);
+}
+
+/* The road ahead runs its illustration full-bleed beneath the copy —
+   it is a wide cinematic scene and cropping it into a column wastes it. */
+.road { padding-bottom: 0; overflow: hidden; }
+.road__head { margin-bottom: clamp(2.5rem, 6vh, 4rem); }
+.road__img {
+  width: 100%;
+  max-height: 62vh;
+  object-fit: cover;
+  object-position: 50% 42%;
+  display: block;
+}
+
+.careers__values {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  color: var(--pink);
+  margin-bottom: var(--s-5);
+}
+
+@media (max-width: 1100px) { .investors { justify-content: center; } }
+
+@media (max-width: 767px) {
+  .split { grid-template-columns: 1fr; }
+  .split__img { order: -1; aspect-ratio: 16 / 10; }
+
+  /* One column, and the portrait takes the FULL column rather than a
+     14rem block floated against it. At 14rem it left 126px of dead space
+     down its right-hand side, so the picture and the quote beneath it
+     disagreed about where the edge of the content was. Sharing one set
+     of edges is the whole fix. The 6/7 crop stays — it is what puts his
+     face in the middle of the frame, and a wider ratio to save height
+     would push him back off centre. */
+  .quote { grid-template-columns: 1fr; gap: var(--s-6); }
+  .quote__portrait { max-width: none; }
+
+  /* Two even columns instead of a wrapping flex row. space-between
+     shared out whatever each row happened to have left over — 67px,
+     48px, then 131px and 169px behind single logos stranded against the
+     left edge. A grid gives every mark the same cell and centres it in
+     it; the sizes stay area-normalised, just against the cell. */
+  .investors {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    gap: clamp(1.75rem, 6vw, 2.5rem) var(--s-5);
+  }
+  .wall { height: 260vh; }
+  .wall__track img { height: 38vh; }
+}

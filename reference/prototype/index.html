@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>bKash — Financial freedom for millions</title>
+<meta name="description" content="A secure digital account where millions store value and decide how to use it.">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/hero.css">
+<link rel="stylesheet" href="css/bird.css">
+<link rel="stylesheet" href="css/people.css">
+<link rel="stylesheet" href="css/phone.css">
+<link rel="stylesheet" href="css/footer.css">
+<link rel="stylesheet" href="css/debug.css">
+</head>
+<body>
+
+<!-- ============================== NAV ============================== -->
+<header class="nav" data-nav>
+  <a class="nav__logo" href="index.html" aria-label="bKash home">
+    <img src="assets/img/logo-bkash.png" alt="bKash">
+  </a>
+
+  <nav class="nav__links" aria-label="Primary">
+    <a class="nav__top" href="#">Consumers</a>
+    <a class="nav__top" href="#">Business</a>
+    <a class="nav__top" href="about.html">Company</a>
+  </nav>
+
+  <div class="nav__meta">
+    <div class="nav__lang">
+      <button aria-current="true">EN</button>
+      <span class="nav__lang-sep">/</span>
+      <!-- Visibly present, clearly inert. See specs/needs.md C3. -->
+      <button class="is-inert" tabindex="-1" aria-disabled="true" title="Coming soon">বাংলা</button>
+    </div>
+    <a class="btn btn--outline" href="#">Support</a>
+  </div>
+
+  <button class="nav__burger" data-drawer-open aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="nav__drawer" data-drawer>
+  <button class="btn btn--ghost" data-drawer-close style="margin-bottom:var(--s-6)">Close</button>
+  <nav class="stack" style="--flow:var(--s-4)" aria-label="Mobile">
+    <a class="t-h3 is-current" href="index.html" aria-current="page">Home</a>
+    <a class="t-h3" href="#">Consumers</a>
+    <a class="t-h3" href="#">Business</a>
+    <a class="t-h3" href="about.html">About bKash</a>
+    <a class="t-h3" href="#">Support</a>
+  </nav>
+</div>
+
+<!-- ============================== HERO ============================== -->
+<section class="hero" data-hero aria-label="Stories from one neighbourhood">
+  <div class="hero__pin">
+    <div class="hero__viewport" data-hero-viewport>
+      <div class="hero__scene" data-hero-scene>
+        <img class="hero__plate" data-hero-plate
+             src="assets/img/scene-plate-wide.webp"
+             alt="A neighbourhood market street at golden hour">
+        <img class="hero__blur" data-hero-blur
+             src="assets/img/scene-plate-wide.webp" alt="" aria-hidden="true">
+        <!-- subject cutouts injected by hero.js from SCENE -->
+      </div>
+    </div>
+
+    <div class="hero__vignette"></div>
+
+    <div class="hero__chrome">
+      <div class="hero__open" data-hero-open>
+        <h1 class="t-display">300 Transactions<br>Every&nbsp;Second</h1>
+        <p class="t-lead hero__open-lead">The Digital Rhythm of Bangladesh</p>
+        <div class="hero__open-sub t-sm">
+          <span class="hero__hint"></span>
+          Scroll to meet them
+        </div>
+      </div>
+
+      <div class="hero__caps">
+        <!-- caption blocks injected by hero.js from SCENE -->
+      </div>
+    </div>
+
+    <div class="hero__dots">
+      <span class="hero__dot is-on" data-hero-dot></span>
+      <span class="hero__dot" data-hero-dot></span>
+      <span class="hero__dot" data-hero-dot></span>
+      <span class="hero__dot" data-hero-dot></span>
+      <span class="hero__dot" data-hero-dot></span>
+    </div>
+
+    <!-- final beat: the camera pulls back and the mark is revealed -->
+    <div class="bird" data-bird style="--bird-src:url('assets/img/collage-bird.webp')"></div>
+
+    <div class="bird-copy">
+      <p class="t-eyebrow bird-copy__eyebrow">Across Bangladesh</p>
+      <h2 class="t-h1 bird-copy__title">Writing Millions of<br>Stories in Motion</h2>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PEOPLE STORIES ============================== -->
+<section class="people" data-people aria-label="People who use bKash">
+  <!-- tiles injected by people.js -->
+</section>
+
+<!-- ============================== PHONE BENTO ============================== -->
+<section class="phone" data-phone aria-label="What a bKash account can do">
+  <!-- The headline is in normal flow ABOVE the pin, so it scrolls past
+       on its own. Only the bento is held to one screen. -->
+  <header class="bento__head">
+    <p class="t-eyebrow" data-reveal>One account</p>
+    <h2 class="t-h1" data-reveal>Everything money does,<br>in one place.</h2>
+  </header>
+
+  <div class="phone__pin" data-phone-pin>
+    <div class="bento" data-bento>
+      <!-- photo cards injected here, before the slot -->
+      <!-- the slot only reserves the grid cell; the device is a sibling
+           of the grid so it can hold still while the wall falls -->
+      <div class="bento__slot" data-phone-slot></div>
+    </div>
+
+    <aside class="svc" data-svc-panel>
+      <p class="t-eyebrow svc__index" data-svc-index></p>
+      <h3 class="t-h1 svc__title" data-svc-title></h3>
+      <p class="t-lead svc__body" data-svc-body></p>
+      <p class="t-sm svc__hint">Tap any icon on the screen</p>
+    </aside>
+
+    <div class="phone__device" data-phone-device>
+      <div class="phone__notch"></div>
+      <div class="phone__screen" data-phone-screen>
+        <img class="phone__shot" data-phone-shot
+             src="assets/img/phone-screen.jpg"
+             alt="The bKash app home screen">
+        <!-- sixteen service hotspots injected here by phone.js -->
+        <div class="phone__spots" data-phone-spots></div>
+        <div class="phone__glass"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div class="foot__col">
+        <p class="t-eyebrow">Services</p>
+        <a href="#">Send Money</a><a href="#">Mobile Recharge</a>
+        <a href="#">Cash Out</a><a href="#">Payment</a><a href="#">Pay Bill</a>
+      </div>
+      <div class="foot__col">
+        <p class="t-eyebrow">Business</p>
+        <a href="#">Merchant</a><a href="#">Online Business</a>
+        <a href="#">Corporate</a><a href="#">Microfinance</a>
+      </div>
+      <div class="foot__col">
+        <p class="t-eyebrow">Company</p>
+        <a href="about.html">About bKash</a><a href="#">Media &amp; Press</a>
+        <a href="#">Careers</a><a href="#">Investor Relations</a>
+      </div>
+      <div class="foot__col">
+        <p class="t-eyebrow">Help &amp; security</p>
+        <a href="#">Help Centre</a><a href="#">Security Tips</a>
+        <a href="#">Avoid Fraud</a><a href="#">Contact Us</a>
+      </div>
+    </div>
+    <div class="foot__base">
+      <span>&copy; 2025 bKash Limited. All rights reserved.</span>
+      <a href="#">Privacy Notice</a>
+      <a href="#">Terms &amp; Conditions</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Demo page switcher — the prototype had one of these, and it saves
+     hunting for About inside a hover panel during a live demo. -->
+<nav class="pageswitch" aria-label="Switch page">
+  <a href="index.html" aria-current="page">Homepage</a>
+  <a href="about.html">About bKash</a>
+</nav>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

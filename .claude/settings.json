@@ -1,0 +1,43 @@
+{
+  "_comment": "SDD hooks, adapted from /Users/nahian/Projects/sdd-kit. Scripts live in scripts/hooks/ and run from the repo root. PreToolUse hooks return a permission decision as JSON on stdout (allow/ask/deny); PostToolUse returns {decision:block, reason} to hand a problem back to Claude. Exit codes do not control flow. Verify against /hooks inside Claude Code if a key stops working.",
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/scan-secrets.mjs",
+            "timeout": 10,
+            "statusMessage": "Checking for secrets"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/veto-dangerous-bash.mjs",
+            "timeout": 10,
+            "statusMessage": "Checking command safety"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/format-file.mjs",
+            "timeout": 60,
+            "statusMessage": "Formatting the file"
+          }
+        ]
+      }
+    ]
+  }
+}

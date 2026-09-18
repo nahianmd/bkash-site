@@ -1,0 +1,156 @@
+/* ============================================================
+   bKash — design tokens
+   The original had 21 ad-hoc font sizes and 12 letter-spacing
+   values with no relationship between them. That is the root
+   cause of both the "unbalanced typography" and the alignment
+   drift. Everything below is a closed system: if a value isn't
+   here, it doesn't go in the markup.
+   ============================================================ */
+
+:root {
+  /* ---- brand ---- */
+  --pink:        #e2136e;
+  --pink-deep:   #b70f58;
+  --pink-lift:   #ff2d87;
+  --pink-wash:   #fdf2f7;
+  --pink-line:   #f6e3ec;
+
+  /* ---- ink (warm-neutral, tuned to the pink) ---- */
+  --ink:         #191316;
+  --ink-2:       #574a50;
+  --ink-3:       #8d7f86;
+  --ink-4:       #b9adb3;
+
+  /* ---- ground ---- */
+  --paper:       #ffffff;
+  --paper-2:     #faf7f8;
+  --night:       #0b0b0b;
+  --night-2:     #171214;
+
+  /* ---- type ----
+     One family, one closed scale. Sizes are fluid via clamp but
+     the RATIO between steps is fixed, so hierarchy survives every
+     viewport. Tracking tightens as size grows — Inter is drawn for
+     text, and at display sizes it needs negative tracking or it
+     reads loose and amateur. That single omission is most of why
+     the original looked off.                                      */
+  --font: Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
+
+  --fs-display: clamp(2.5rem, 5.4vw, 4.75rem);
+  --fs-h1:      clamp(2.125rem, 4.4vw, 3.75rem);
+  --fs-h2:      clamp(1.625rem, 3.0vw, 2.5rem);
+  --fs-h3:      clamp(1.25rem, 1.9vw, 1.625rem);
+  --fs-lead:    clamp(1.0625rem, 1.5vw, 1.3125rem);
+  --fs-body:    1rem;
+  --fs-sm:      0.875rem;
+  --fs-xs:      0.75rem;
+
+  /* ---- spacing: 4px base, geometric ---- */
+  --s-1:  0.25rem;   --s-2:  0.5rem;    --s-3:  0.75rem;
+  --s-4:  1rem;      --s-5:  1.5rem;    --s-6:  2rem;
+  --s-7:  3rem;      --s-8:  4rem;      --s-9:  6rem;
+  --s-10: 8rem;      --s-11: 12rem;
+
+  /* ---- measure ---- */
+  --measure:      62ch;   /* body copy max line length */
+  --measure-tight:46ch;   /* lead paragraphs           */
+  --page:         84rem;  /* max content width         */
+  --gutter:       clamp(1.25rem, 4vw, 4rem);
+
+  /* ---- radius ---- */
+  --r-sm: 8px;  --r-md: 14px;  --r-lg: 22px;  --r-full: 999px;
+
+  /* ---- elevation: one warm shadow ramp, tinted not grey ---- */
+  --e-1: 0 1px 2px rgba(25,19,22,.06), 0 1px 3px rgba(25,19,22,.04);
+  --e-2: 0 4px 12px rgba(25,19,22,.08), 0 2px 4px rgba(25,19,22,.04);
+  --e-3: 0 12px 32px rgba(25,19,22,.12), 0 4px 8px rgba(25,19,22,.05);
+  --e-4: 0 28px 70px rgba(25,19,22,.22);
+
+  /* ---- motion ----
+     Two curves only. `--ease` for entrances and camera settles,
+     `--ease-io` for state toggles. Durations are named by intent,
+     not by number, so they stay consistent across sections.        */
+  --ease:    cubic-bezier(.22, 1, .36, 1);
+  --ease-io: cubic-bezier(.65, 0, .35, 1);
+  --t-fast:  .18s;
+  --t-base:  .32s;
+  --t-slow:  .62s;
+  --t-veil:  .85s;
+
+  --z-scene: 1;
+  --z-chrome: 20;
+  --z-nav: 50;
+  --z-modal: 90;
+}
+
+/* ============================================================
+   Type steps — size, line-height and tracking travel TOGETHER.
+   Bundling them as one class is deliberate: it makes it
+   structurally impossible for them to drift apart the way they
+   did in the original.
+   ============================================================ */
+
+.t-display {
+  font-size: var(--fs-display);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+}
+.t-h1 {
+  font-size: var(--fs-h1);
+  line-height: 1.04;
+  letter-spacing: -0.028em;
+  font-weight: 700;
+}
+.t-h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  font-weight: 600;
+}
+.t-h3 {
+  font-size: var(--fs-h3);
+  line-height: 1.24;
+  letter-spacing: -0.014em;
+  font-weight: 600;
+}
+.t-lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  letter-spacing: -0.009em;
+  font-weight: 400;
+  max-width: var(--measure-tight);
+}
+.t-body {
+  font-size: var(--fs-body);
+  line-height: 1.62;
+  letter-spacing: 0;
+  font-weight: 400;
+  max-width: var(--measure);
+}
+.t-sm {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.t-xs {
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+/* Single uppercase tracking value. The original had six. */
+.t-eyebrow {
+  font-size: var(--fs-xs);
+  line-height: 1;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Numerals: tabular everywhere they can shift — counters, stats,
+   anything that animates. Proportional figures jitter the layout
+   as digits change width, which reads as the page vibrating. */
+.t-num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}

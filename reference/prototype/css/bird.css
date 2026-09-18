@@ -1,0 +1,86 @@
+/* ============================================================
+   bKash — the bird (final hero beat)
+   See specs/sections/hero-collapse.md
+   ============================================================ */
+
+/* White ground. It is invisible at the start of the move — Rahim
+   covers the frame — and is revealed by the zoom-out, so it can
+   simply be set rather than cross-faded. */
+.hero.is-collage .hero__pin { background: var(--paper); }
+
+/* The live scene hands over to the bird's own live facet, so the
+   full-bleed viewport just goes. No dissolve: at the moment of the
+   swap the two are pixel-aligned. */
+.hero.is-collage .hero__viewport,
+.hero.is-collage .hero__vignette { visibility: hidden; }
+
+.bird {
+  position: absolute;
+  top: 0; left: 0;
+  /* The artwork's own pixel size. Everything scales from here. */
+  width: 1195px;
+  height: 1111px;
+  transform-origin: 0 0;
+  will-change: transform;
+  visibility: hidden;
+  z-index: calc(var(--z-chrome) - 1);
+}
+
+/* The mark. Already cut to shape with its own transparency — there
+   is no masking to do. */
+.bird__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Rahim's frame, clipped to the wing panel so the handover from the
+   hero is invisible. Fades out early in the zoom, revealing the
+   artwork's own photograph of the same subject underneath. */
+.bird__facet--live { position: absolute; inset: 0; overflow: hidden; }
+.bird__live { position: absolute; overflow: hidden; }
+.bird__scene { position: absolute; inset: 0; transform-origin: 0 0; }
+.bird__plate {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.bird__subject { position: absolute; height: auto; }
+
+/* ---- copy, left column ---- */
+
+.bird-copy {
+  position: absolute;
+  /* Centred in the space left of the mark, rather than pinned to the
+     far edge — otherwise a 500px void opens up between them. */
+  left: calc(var(--bird-left, 50%) / 2);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(30rem, 34vw);
+  z-index: var(--z-chrome);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-slow) var(--ease) .25s,
+              transform var(--t-slow) var(--ease) .25s;
+}
+.hero.is-collage .bird-copy {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.bird-copy__eyebrow { color: var(--pink); margin-bottom: var(--s-4); }
+.bird-copy__title   { margin-bottom: var(--s-4); }
+
+.bird-copy__body    { color: var(--ink-2); }
+
+@media (max-width: 900px) {
+  .bird-copy {
+    left: var(--gutter); right: var(--gutter);
+    top: auto; bottom: var(--s-6);
+    transform: none; width: auto; text-align: center;
+  }
+  .hero.is-collage .bird-copy { transform: none; }
+}

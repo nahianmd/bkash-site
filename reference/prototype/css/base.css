@@ -1,0 +1,145 @@
+/* ============================================================
+   bKash — reset, fonts, primitives
+   ============================================================ */
+
+/* Latin + latin-ext only. The original shipped ten subsets
+   including cyrillic, greek and vietnamese — dead weight in a
+   file that has to be opened from a USB stick. */
+@font-face {
+  font-family: Inter; font-style: normal; font-weight: 400; font-display: block;
+  src: url("../assets/fonts/inter-latin-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: Inter; font-style: normal; font-weight: 500; font-display: block;
+  src: url("../assets/fonts/inter-latin-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: Inter; font-style: normal; font-weight: 600; font-display: block;
+  src: url("../assets/fonts/inter-latin-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: Inter; font-style: normal; font-weight: 700; font-display: block;
+  src: url("../assets/fonts/inter-latin-700.woff2") format("woff2");
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: auto; /* we drive our own smoothing; native smooth fights it */
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+img, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+
+button {
+  font: inherit; color: inherit; background: none;
+  border: 0; padding: 0; cursor: pointer;
+}
+
+a { color: var(--pink); text-decoration: none; transition: color var(--t-fast) var(--ease-io); }
+a:hover { color: var(--pink-deep); }
+
+:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Respect the OS setting. Someone demoing on a machine with
+   reduced-motion on should still get a coherent page, not a
+   broken one — sections fall back to their resting state. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ---- layout primitives ---- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.stack > * + * { margin-top: var(--flow, var(--s-4)); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---- buttons ---- */
+
+.btn {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  padding: var(--s-3) var(--s-5);
+  border-radius: var(--r-full);
+  font-size: var(--fs-sm); font-weight: 600; letter-spacing: -0.005em;
+  transition: background var(--t-base) var(--ease-io),
+              color var(--t-base) var(--ease-io),
+              transform var(--t-fast) var(--ease-io);
+  will-change: transform;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn--primary { background: var(--pink); color: #fff; }
+.btn--primary:hover { background: var(--pink-deep); color: #fff; }
+
+.btn--ghost { color: var(--ink); border: 1px solid var(--pink-line); }
+.btn--ghost:hover { background: var(--pink-wash); color: var(--pink); }
+
+/* Outlined. Border and label both ride currentColor, so the one rule
+   works white on the transparent nav over the hero AND ink on the solid
+   white nav — the header already swaps its own colour and this follows.
+   Filling with pink on hover is legible against either ground. */
+.btn--outline { color: inherit; background: transparent; border: 1px solid currentColor; }
+.btn--outline:hover { background: var(--pink); border-color: var(--pink); color: #fff; }
+
+/* ---- disabled state, used by the বাংলা toggle ----
+   Visibly present but clearly inert. Hiding it entirely invites
+   "where is Bangla?"; leaving it live invites a dead click. */
+.is-inert {
+  opacity: .38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ---- scroll-reveal base ----
+   Elements start shifted; the engine adds .is-in. Transition is
+   declared here once so sections never hand-roll their own. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--t-slow) var(--ease),
+              transform var(--t-slow) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal].is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; }
+}

@@ -1,0 +1,152 @@
+/* ============================================================
+   bKash — navigation
+   ============================================================ */
+
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: var(--z-nav);
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  gap: var(--s-6);
+  padding-inline: var(--gutter);
+  color: #fff;
+  transition: background var(--t-base) var(--ease-io),
+              color var(--t-base) var(--ease-io),
+              box-shadow var(--t-base) var(--ease-io);
+}
+
+/* Over the dark hero the nav is transparent; once it passes onto
+   white sections it takes on a solid ground so the links stay
+   legible. Driven by a class, not by per-frame style writes. */
+.nav.is-solid {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--ink);
+  box-shadow: 0 1px 0 var(--pink-line);
+}
+
+/* The transparent nav sits over whatever the camera is showing, so
+   it carries its own scrim rather than trusting the artwork. */
+.nav::before {
+  content: "";
+  position: absolute; inset: 0; bottom: -2rem;
+  background: linear-gradient(to bottom, rgba(0,0,0,.5), transparent);
+  opacity: 1;
+  transition: opacity var(--t-base) var(--ease-io);
+  pointer-events: none;
+}
+.nav.is-solid::before { opacity: 0; }
+.nav > * { position: relative; }
+
+.nav__logo { flex: none; width: 6.4rem; }
+.nav__logo img { width: 100%; }
+/* The mark is dark-on-transparent, so it needs inverting while the
+   nav floats over the night-dark hero. */
+.nav:not(.is-solid) .nav__logo img { filter: brightness(0) invert(1); }
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.875rem, 2.2vw, 2rem);
+  margin-inline-start: var(--s-4);
+}
+
+/* Top-level links only. The mega panels are gone: with two real pages
+   behind them they were three hover targets promising depth that is not
+   there, and a panel that opens under the CEO's cursor mid-scroll is a
+   risk with no upside. The drawer already carries the same list flat. */
+.nav__top {
+  font-size: var(--fs-sm); font-weight: 500;
+  color: inherit;
+  opacity: .82;
+  transition: opacity var(--t-fast) var(--ease-io), color var(--t-fast) var(--ease-io);
+}
+.nav__top:hover { opacity: 1; color: var(--pink); }
+/* Where you are now. */
+.nav__top.is-current { opacity: 1; color: var(--pink); font-weight: 600; }
+
+.nav__meta {
+  margin-inline-start: auto;
+  display: flex; align-items: center; gap: var(--s-4);
+  font-size: var(--fs-sm);
+}
+
+.nav__lang { display: flex; align-items: center; gap: var(--s-2); }
+.nav__lang button { font-size: var(--fs-sm); font-weight: 500; opacity: .8; }
+.nav__lang button[aria-current="true"] { opacity: 1; color: var(--pink); font-weight: 600; }
+.nav__lang-sep { opacity: .3; }
+
+/* ---- mobile ---- */
+
+.nav__burger { display: none; margin-inline-start: auto; }
+.nav__burger span {
+  display: block; width: 20px; height: 1.5px;
+  background: currentColor; border-radius: 2px;
+}
+.nav__burger span + span { margin-top: 5px; }
+
+.nav__drawer {
+  position: fixed; inset: 0;
+  z-index: var(--z-modal);
+  background: var(--paper);
+  color: var(--ink);
+  padding: var(--gutter);
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity var(--t-base) var(--ease), transform var(--t-base) var(--ease);
+}
+.nav__drawer.is-open { opacity: 1; transform: none; pointer-events: auto; }
+
+@media (max-width: 900px) {
+  .nav__links, .nav__meta { display: none; }
+  .nav__burger { display: block; }
+}
+
+/* Current page in the mobile drawer. */
+.nav__drawer .is-current { color: var(--pink); }
+
+/* ============================================================
+   Demo page switcher
+   A pill at the bottom of the screen for moving between the two
+   pages, as the original prototype had. Deliberately reads as a
+   demo control rather than site chrome.
+   ============================================================ */
+
+.pageswitch {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: calc(var(--z-modal) + 1);
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border-radius: var(--r-full);
+  background: rgba(17, 17, 17, .88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .3);
+}
+
+.pageswitch a {
+  padding: 9px 20px;
+  border-radius: var(--r-full);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: rgba(255, 255, 255, .72);
+  white-space: nowrap;
+  transition: background var(--t-base) var(--ease-io),
+              color var(--t-base) var(--ease-io);
+}
+.pageswitch a:hover { color: #fff; }
+.pageswitch a[aria-current="page"] { background: var(--pink); color: #fff; }
+
+@media (max-width: 480px) {
+  .pageswitch a { padding: 8px 14px; font-size: var(--fs-xs); }
+}

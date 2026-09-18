@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="bKash" description="Rebuild in progress.">
+  <main>
+    <section class="scaffold">
+      <h1>bKash — rebuild</h1>
+      <p>
+        Astro + GSAP ScrollTrigger scaffold. Sections are ported from <code>src/</code> one at a
+        time under the SDD loop; the smoke test below exists to prove pinning and scrubbing work
+        end to end, and comes out with the first real section.
+      </p>
+    </section>
+
+    <!-- SMOKE TEST — delete once the first real section lands. -->
+    <section class="smoke" data-smoke>
+      <div class="smoke__pin" data-smoke-pin>
+        <div class="smoke__box" data-smoke-box></div>
+        <p class="smoke__readout" data-smoke-readout>
+          0%
+        </p>
+      </div>
+    </section>
+
+    <section class="scaffold">
+      <p>End of scaffold.</p>
+    </section>
+  </main>
+</Base>
+
+<style>
+  :root {
+    --vh: 100vh;
+  }
+
+  body {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    background: #fff;
+    color: #191316;
+  }
+
+  .scaffold {
+    max-width: 44rem;
+    margin-inline: auto;
+    padding: 6rem 1.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    letter-spacing: -0.03em;
+    margin: 0 0 1rem;
+  }
+
+  .smoke {
+    height: 300vh;
+    background: #0b0b0b;
+  }
+
+  .smoke__pin {
+    height: var(--vh, 100vh);
+    display: grid;
+    place-items: center;
+    gap: 1.5rem;
+  }
+
+  .smoke__box {
+    width: min(60vw, 18rem);
+    aspect-ratio: 1;
+    border-radius: 22px;
+    background: #e2136e;
+    will-change: transform;
+  }
+
+  .smoke__readout {
+    margin: 0;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.15em;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+</style>
+
+<script>
+  import { gsap, ScrollTrigger, reducedMotion } from '../lib/scroll';
+
+  const section = document.querySelector<HTMLElement>('[data-smoke]');
+  const pin = document.querySelector<HTMLElement>('[data-smoke-pin]');
+  const box = document.querySelector<HTMLElement>('[data-smoke-box]');
+  const readout = document.querySelector<HTMLElement>('[data-smoke-readout]');
+
+  if (section && pin && box && readout && !reducedMotion()) {
+    ScrollTrigger.create({
+      id: 'smoke',
+      trigger: section,
+      start: 'top top',
+      end: 'bottom bottom',
+      pin: pin,
+      pinSpacing: false,
+      scrub: true,
+      onUpdate(self) {
+        const p = self.progress;
+        gsap.set(box, { scale: 1 + p * 2, rotate: p * 180 });
+        readout.textContent = `${Math.round(p * 100)}%`;
+      },
+    });
+  }
+</script>

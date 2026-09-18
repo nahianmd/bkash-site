@@ -1,0 +1,243 @@
+/* ============================================================
+   bKash — hero camera sequence
+   ============================================================ */
+
+.hero {
+  position: relative;
+  /* Scroll distance for the whole sequence. Tuned against the
+     number of holds: roughly 200vh of travel per subject plus
+     an establishing beat. */
+  height: 100vh;
+  background: var(--night);
+  /* touch-action is NOT set here on purpose. The hero has to claim
+     vertical gestures to run its beats, but a stylesheet claims them
+     even when the script that releases them never ran — which would
+     leave a phone unable to scroll the page at all. So initHero sets
+     it inline instead, and a page with no working JS still scrolls. */
+}
+
+/* Native sticky. The original drove `pin.style.top` from JS every
+   tick, which means the pin is always one frame behind the scroll
+   it is trying to match — that lag is exactly what reads as
+   judder. Sticky runs on the compositor and cannot fall behind. */
+.hero__pin {
+  position: relative;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--night);
+}
+
+.hero__viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* Origin 0 0 keeps the collapse maths derivable: after
+     translate(tx,ty) scale(k) the box is exactly (tx, ty, vw*k, vh*k),
+     so the facet clip can be computed rather than measured. */
+  transform-origin: 0 0;
+  will-change: transform, opacity;
+}
+
+.hero__scene {
+  position: absolute;
+  inset: 0;
+  /* Origin 0 0 makes the camera maths clean: translating by
+     (50 - x*s)% puts plate-point x at the viewport centre. */
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.hero__plate,
+.hero__blur {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Depth of field, done as a crossfade rather than an animated
+   filter. A blur whose RADIUS changes must be re-rasterised every
+   frame — that single line was the most expensive thing in the
+   original. A blur at a FIXED radius rasterises once and is then
+   just a texture, so fading its opacity costs essentially nothing.
+   It is already blurred, so texture scaling is invisible. */
+.hero__blur {
+  filter: blur(16px) brightness(.88) saturate(.86);
+  opacity: 0;
+  will-change: opacity;
+  transform: scale(1.06); /* hide the soft edge the blur creates */
+}
+
+.hero__subject {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---- chrome: everything that sits above the scene ---- */
+
+.hero__chrome {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-chrome);
+  pointer-events: none;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: var(--gutter);
+  padding-block-start: calc(var(--gutter) + 4.5rem);
+}
+
+.hero__open {
+  /* Sits directly beneath Faisal's shop, on the open road. The shop
+     occupies 44-74% of the plate's width and bottoms out near 47% of
+     its height, so the block is anchored just below and inside that.
+     Percentages of the viewport rather than the plate — close enough
+     while the plate is cover-fitted at the establishing beat. */
+  position: absolute;
+  left: calc(44.5% + 100px);
+  top: calc(53% + 100px);
+  align-self: unset;
+  justify-self: unset;
+  text-align: left;
+  max-width: min(52vw, 44rem);
+  color: #fff;
+  text-shadow: 0 2px 30px rgba(0,0,0,.45);
+  will-change: transform, opacity;
+}
+
+/* The deck pairs every beat's figure with a supporting line; the
+   opening beat is no different, so it gets one above the scroll cue
+   rather than folding the two together. */
+.hero__open-lead {
+  margin-top: var(--s-4);
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 1px 2px rgba(0,0,0,.55), 0 2px 20px rgba(0,0,0,.6);
+}
+
+.hero__open-sub {
+  margin-top: var(--s-5);
+  color: #fff;
+  font-weight: 500;
+  /* Sits over open sunlit road, not shadow. White at 14px needs both
+     a tight shadow for edge definition and a wide one for separation. */
+  text-shadow: 0 1px 2px rgba(0,0,0,.7), 0 2px 16px rgba(0,0,0,.85);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.hero__hint {
+  width: 1px; height: 28px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,.7));
+  animation: hintDrop 2.2s var(--ease-io) infinite;
+}
+@keyframes hintDrop {
+  0%, 100% { opacity: .35; transform: translateY(0); }
+  50%      { opacity: 1;   transform: translateY(6px); }
+}
+
+/* ---- captions ---- */
+
+.hero__caps {
+  position: absolute;
+  left: var(--gutter);
+  bottom: calc(var(--gutter) + 2.5rem);
+  width: min(38rem, calc(100% - var(--gutter) * 2));
+}
+
+.hero__cap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  color: #fff;
+  cursor: pointer;
+  will-change: transform, opacity;
+}
+
+.hero__cap-role {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--pink-lift);
+  margin-bottom: var(--s-3);
+}
+.hero__cap-role::before {
+  content: "";
+  width: 1.75rem; height: 1px;
+  background: currentColor;
+}
+
+.hero__cap-name  { margin-bottom: var(--s-2); }
+.hero__cap-line  { color: rgba(255,255,255,.88); text-shadow: 0 1px 24px rgba(0,0,0,.5); }
+
+
+/* ---- progress dots ---- */
+
+.hero__dots {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: var(--s-3);
+}
+
+.hero__dot {
+  width: 6px; height: 6px;
+  border-radius: var(--r-full);
+  background: rgba(255,255,255,.45);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.18), 0 1px 3px rgba(0,0,0,.35);
+  transition: background var(--t-base) var(--ease-io),
+              transform var(--t-base) var(--ease);
+}
+.hero__dot.is-on { background: #fff; transform: scale(1.5); }
+
+/* ---- vignette: grounds the frame, hides cutout edges ---- */
+.hero__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(130% 90% at 50% 45%, transparent 44%, rgba(0,0,0,.40) 100%),
+    /* top scrim: keeps the nav legible over a bright plate */
+    linear-gradient(to bottom, rgba(0,0,0,.42) 0%, transparent 18%),
+    /* bottom scrim: earns its keep twice — captions stay readable
+       over any part of the scene, and it swallows the hard cut edge
+       at the base of each cutout as the camera pushes in. */
+    linear-gradient(to top, rgba(0,0,0,.62) 0%, rgba(0,0,0,.24) 22%, transparent 42%);
+}
+
+@media (max-width: 767px) {
+  /* Cutouts are placed in px against the portrait plate on phones,
+     so the percentage widths from the wide layout must not apply. */
+  .hero__subject { max-width: none; }
+  /* The headline is positioned against the wide plate's composition;
+     on the portrait plate it needs to come back into the frame. */
+  .hero__open { left: var(--gutter); top: auto; bottom: 22vh; max-width: none;
+                width: calc(100% - var(--gutter) * 2); }
+  .hero__caps { bottom: calc(var(--gutter) + 4rem); }
+  .hero__dots { right: calc(var(--gutter) / 2); }
+}
+
+/* Collage facets share one image, set here so the build inlines it once. */
+.collage__grid { --collage-src: url("../assets/img/collage-bird.webp"); }
+
+/* The opening line clears out once we leave the establishing shot. */
+.hero__open {
+  transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease);
+}
+.hero__open.is-out { opacity: 0; transform: translateY(-30px); pointer-events: none; }
+
+/* Captions are class-driven now that beats are discrete. */
+.hero__cap {
+  transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease);
+  pointer-events: none;
+}
+.hero__cap.is-on { opacity: 1; transform: none; pointer-events: auto; }
+
+.hero__dot { cursor: pointer; }

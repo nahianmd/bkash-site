@@ -1,0 +1,11 @@
+.DS_Store
+
+# Astro app
+web/node_modules/
+web/dist/
+web/.astro/
+web/.env
+web/.env.production
+
+# scratch
+*.log
