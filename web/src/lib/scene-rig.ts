@@ -148,7 +148,13 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
       const cut = cuts[i];
       if (cut) cut.style.opacity = f[i].toFixed(3);
     }
-    r = Math.min(1, r) * opts.recedeStrength;
+    applyRecede(Math.min(1, r));
+    return f;
+  }
+
+  /** The plate's recede alone, 0..1 of the token set. */
+  function applyRecede(amount: number) {
+    const r = Math.min(1, Math.max(0, amount)) * opts.recedeStrength;
     if (plateEl) {
       plateEl.style.opacity = (1 - r * (1 - RECEDE.opacity)).toFixed(3);
       plateEl.style.filter =
@@ -156,7 +162,6 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
           ? `saturate(${(1 - r * (1 - RECEDE.saturate)).toFixed(3)}) brightness(${(1 - r * (1 - RECEDE.brightness)).toFixed(3)})`
           : '';
     }
-    return f;
   }
 
   /** Camera along the beats for a progress in 0..1. */
@@ -189,6 +194,7 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
     measure,
     applyCam,
     applyFocus,
+    applyRecede,
     focusOf,
     camAt,
     poseAtBeat,
