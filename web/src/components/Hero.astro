@@ -13,8 +13,10 @@ import HeroScene from './HeroScene.astro';
     <HeroScene />
 
     <div class="hero__chrome">
-      <!-- Beat 0. Bottom-right on desktop: the lower right of this plate
-           is open road; everything that matters is on the left. -->
+      <!-- Beat 0. Top-right, in the sky. The plan said bottom-right; the
+           picture disagreed — Faysal rides through the lower right, and on
+           a phone the whole bottom third is where the people are. The sky
+           is the one region this plate leaves open at every width. -->
       <div class="hero__open on-photo" data-hero-open>
         <h1 class="t-hero">300 Transactions Every Second</h1>
         <p class="t-lead hero__line">The Digital Rhythm of Bangladesh</p>
@@ -55,7 +57,7 @@ import HeroScene from './HeroScene.astro';
   .hero {
     position: relative;
     /* Four beats, about one screen of travel each (plan). The pin is
-           one --vh; the section is the travel. Never 100vh. */
+             one --vh; the section is the travel. Never 100vh. */
     height: calc(var(--vh) * 4);
     background: var(--night);
   }
@@ -77,7 +79,9 @@ import HeroScene from './HeroScene.astro';
   .hero__open {
     position: absolute;
     right: var(--gutter);
-    bottom: calc(var(--gutter) + var(--s-6));
+    /* Below the nav's own scrim band; the block's scrim fades up into it. */
+    top: calc(var(--nav-h) + var(--s-9));
+    width: max-content;
     max-width: min(52vw, 44rem);
   }
 
@@ -115,10 +119,12 @@ import HeroScene from './HeroScene.astro';
   /* 390: headline in the bottom third, subjects in the middle third
      (Rule 3). Same block, moved. */
   @media (max-width: 767px) {
+    /* Top third: the sky. The people occupy the middle and bottom thirds
+         of the phone's slice (Rule 3). */
     .hero__open {
       right: auto;
       left: var(--gutter);
-      bottom: calc(var(--gutter) + var(--s-8));
+      top: calc(var(--nav-h) + var(--s-7));
       max-width: none;
       width: calc(100% - var(--gutter) * 2);
     }

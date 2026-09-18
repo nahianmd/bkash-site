@@ -36,9 +36,9 @@ export const HERO = {
 
   beats: [
     { id: 'open', cam: { x: 0.5, y: 0.5, s: 1 } },
-    { id: 'amena', cam: { x: 0.41, y: 0.5, s: 4 }, cut: { x: 0.385, y: 0.475, w: 0.045 } },
-    { id: 'rahim', cam: { x: 0.37, y: 0.74, s: 3 }, cut: { x: 0.3, y: 0.75, w: 0.17 } },
-    { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.52, y: 0.66, w: 0.075 } },
+    { id: 'amena', cam: { x: 0.41, y: 0.5, s: 4 }, cut: { x: 0.388, y: 0.47, w: 0.04 } },
+    { id: 'rahim', cam: { x: 0.37, y: 0.74, s: 3 }, cut: { x: 0.312, y: 0.745, w: 0.1 } },
+    { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.52, y: 0.71, w: 0.072 } },
   ] as Beat[],
 
   /* On a phone the caption takes the bottom third, so each subject's
@@ -156,10 +156,15 @@ export function initHero() {
      composed still at every width, JS or not. */
   measure();
   applyCam(beatCams()[0]);
-  window.addEventListener('resize', () => {
+  const remeasure = () => {
     measure();
     applyCam(beatCams()[0]);
-  });
+  };
+  window.addEventListener('resize', remeasure);
+  /* This script runs before the layout's initScroll() writes --vh from
+     visualViewport, so the first measure may see the 100vh fallback.
+     Measure again once everything has loaded. */
+  window.addEventListener('load', remeasure);
 
   void gsap;
   void ScrollTrigger;
