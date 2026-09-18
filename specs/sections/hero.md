@@ -1,7 +1,9 @@
 # Section 1: Hero — one camera through one street
 
-> Status: BUILT — 2026-09-18 (Fable). Not yet verified; SIGNED-OFF is
-> Nahian's alone. See PROGRESS.md for what measurement caught.
+> Status: BUILT — 2026-09-18 (Fable). Nahian's first look: good, with two
+> things to fix at the formula level, not by adjustment — cutout locking
+> and the feel under continuous scroll. Flagged in PROGRESS.md; next pass.
+> Not yet verified; SIGNED-OFF is Nahian's alone.
 > Model: **Fable 5.1** to specify and to build the camera and the focus
 > mechanism. **Opus 5** for the rest of the build.
 > Source: Nahian's concept (approved by the client on style), the client's

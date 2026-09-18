@@ -305,3 +305,25 @@ plate at token recede reads too dark under a focused subject (`recedeStrength`
 is the dial); Rahim's caption clearance at 390 under a moving `--vh`; AVIF
 alpha edges on the painted cutouts; a real handset for the filter cost.
 **Nahian's eye:** the four stills at both widths, and the plate recede.
+
+**Flagged after Nahian's first look (2026-09-18, late) — not fixed, by
+decision: "build the system or the formula which works right", no
+micro-adjustments.** Formula-level fixes, for the hero's next pass:
+
+- **Cutouts: cover, not match.** The cutout is a different drawing from the
+  figure in the plate; it can never align pixel-for-pixel. The rule is that
+  its box is slightly larger than the drawn figure and centred on it, so
+  nothing peeks out. Plus a dev-only drag-and-resize tool on the page that
+  prints the fractions, and the camera aiming itself at the cutout's centre —
+  place once, both lock. (`anchorPortrait()`'s good idea, with a mouse.)
+- **The parallax lead contradicts the fade.** The lead peaks mid-segment,
+  exactly when the cutout is at 50% opacity over its drawn figure — a
+  guaranteed double. Move the lead to the caption plane; cutouts stay glued.
+- **Dim should lead the fade.** Recede and cutout opacity currently share one
+  tent, so at the midpoint the street is half-dim and the cutout half-there.
+  Recede first; the cutout fades up over an already-dim figure and reads as
+  focus arriving.
+- **Plateaus at every beat.** Continuous scrolling runs straight through the
+  beats. Map the first and last ~25% of each segment's scroll distance to a
+  hold; move only in the middle half. Move–hold–move–hold at any speed; a
+  single tick still snaps forward. Plus ~1.5 screens per beat.
