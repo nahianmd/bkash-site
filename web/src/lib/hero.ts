@@ -3,32 +3,21 @@
    specs/sections/hero.md · specs/hero/plan.md
 
    Four beats over four screens of travel. ScrollTrigger hands us
-   progress; this file turns it into a pose and writes ONE transform
-   per frame on the scene.
-
-   The one idea that matters (plan, Approach): the scene is the
-   PLATE'S COVER BOX, not the viewport. Camera targets and cutout
-   positions are fractions of the plate; the box and the plate share
-   a coordinate system at every aspect, so one wide image serves a
-   phone and a desktop alike. The prototype anchored cutouts to the
-   viewport and needed a second photograph to hide the drift.
+   progress; the scene rig (scene-rig.ts) turns it into a pose and
+   writes ONE transform per frame. This file owns what is the hero's
+   alone: its config, the chrome (headline, captions), the depth
+   lead, the trigger and snap, and the dev handle.
    ============================================================ */
 
-import { gsap, ScrollTrigger, reducedMotion, isPhone } from './scroll';
-
-type Cam = { x: number; y: number; s: number };
-type Cut = { x: number; y: number; w: number };
-type Beat = { id: string; cam: Cam; cut?: Cut };
-type Box = { ox: number; oy: number; W: number; H: number };
+import { gsap, ScrollTrigger, reducedMotion } from './scroll';
+import { createSceneRig, poseFor, type Beat, type Cam } from './scene-rig';
 
 /* ---- the section's tuning, one object -------------------------
    styles/README.md: what is genuinely per-section lives here, not
    as literals in the maths. Camera targets and cutout boxes are
-   STARTING VALUES read off the plate — set by eye against the build
-   with the dev handle (spec: "set by eye, nudge() kept in dev"). */
+   STARTING VALUES read off the plate — placed against an offline
+   composite; the dev handle nudges them live. */
 export const HERO = {
-  plate: { w: 1600, h: 893 },
-
   /* Which slice of the wide plate a narrow screen shows at beat 0.
      A window centred at 46% contains Amena, the tea stall and Faysal
      (spec, 390). Desktop centres. */
@@ -60,53 +49,14 @@ export const HERO = {
   scrub: 0.6,
   snap: true,
   /* Rule 2: the cutout plane leads the plate mid-segment, zero at
-     every beat. 1 = the token rate, 0 = off. */
+     every beat. 1 = the token rate, 0 = off. FLAGGED (PROGRESS.md): the
+     lead peaks exactly when a cutout is half-visible over its drawn
+     figure; the next pass moves it to the caption plane. */
   parallaxLead: 1,
   /* The prototype's exponent on the eased scale — keeps the perceived
      zoom rate constant across a 1x→4x push. */
   scaleEase: 0.86,
 };
-
-/* ---- geometry ------------------------------------------------ */
-
-/** How the plate cover-fits a viewport, centred. Recomputed on resize only. */
-export function coverBox(vw: number, vh: number): Box {
-  const k = Math.max(vw / HERO.plate.w, vh / HERO.plate.h);
-  const W = HERO.plate.w * k;
-  const H = HERO.plate.h * k;
-  return { ox: (vw - W) / 2, oy: (vh - H) / 2, W, H };
-}
-
-/**
- * The transform that puts plate point (cam.x, cam.y) at the viewport
- * centre at scale cam.s, with the scene's origin at 0 0 — and clamped
- * so the scaled box still covers the viewport on every edge. The
- * prototype's `50/s <= cx <= 100 - 50/s` clamp, generalised to a box
- * that is not the viewport: it is a clamp on the translate itself.
- */
-export function poseFor(cam: Cam, box: Box, vw: number, vh: number) {
-  const s = cam.s;
-  let tx = vw / 2 - box.ox - s * cam.x * box.W;
-  let ty = vh / 2 - box.oy - s * cam.y * box.H;
-  tx = Math.min(-box.ox, Math.max(vw - box.ox - s * box.W, tx));
-  ty = Math.min(-box.oy, Math.max(vh - box.oy - s * box.H, ty));
-  return { tx, ty, s };
-}
-
-const cubicInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-/** Camera between two beats. Position eases; scale eases in LOG space. */
-export function camBetween(a: Cam, b: Cam, f: number): Cam {
-  const e = cubicInOut(f);
-  const es = Math.pow(e, HERO.scaleEase);
-  return {
-    x: a.x + (b.x - a.x) * e,
-    y: a.y + (b.y - a.y) * e,
-    s: Math.exp(Math.log(a.s) + (Math.log(b.s) - Math.log(a.s)) * es),
-  };
-}
-
-/* ---- the section --------------------------------------------- */
 
 export function initHero() {
   const section = document.querySelector<HTMLElement>('[data-hero]');
@@ -117,106 +67,28 @@ export function initHero() {
   const pin: HTMLElement = pinEl;
   const scene: HTMLElement = sceneEl;
 
-  const cuts = HERO.beats.map((b) =>
-    b.cut ? scene.querySelector<HTMLElement>(`[data-hero-cut="${b.id}"]`) : null,
-  );
+  const rig = createSceneRig(scene, pin, HERO);
 
-  const plateEl = scene.querySelector<HTMLElement>('.scene__plate');
   const openEl = section.querySelector<HTMLElement>('[data-hero-open]');
   const capEls = HERO.beats.map((_, i) =>
     i === 0 ? null : section.querySelector<HTMLElement>(`[data-hero-cap="${i}"]`),
   );
 
-  /* Recede from the token set, read ONCE. Written per frame as values
-     rather than toggling .is-receded, because it scrubs with the camera
-     (base.css says exactly this). No blur, ever. */
   const css = getComputedStyle(document.documentElement);
-  const tok = (name: string, fallback: number) =>
-    parseFloat(css.getPropertyValue(name)) || fallback;
-  const RECEDE = {
-    opacity: tok('--recede-opacity', 0.45),
-    saturate: tok('--recede-saturate', 0.72),
-    brightness: tok('--recede-brightness', 0.82),
-  };
-  /* Rule 2: the cutout plane leads the plate by this much of the
-     segment's travel, peaking mid-segment and exactly zero at each beat
-     so every cutout lands on its drawn figure. */
-  const LEAD = (tok('--plane-front', 1.06) - 1) * HERO.parallaxLead;
+  const LEAD =
+    ((parseFloat(css.getPropertyValue('--plane-front')) || 1.06) - 1) * HERO.parallaxLead;
 
-  let box = coverBox(1, 1);
-  let vw = 1;
-  let vh = 1;
+  const camAt = (p: number): Cam => rig.camAt(p, HERO.scaleEase);
 
-  /* The beats as they apply at this viewport: beat 0 aims at the
-     chosen slice on a phone, and every subject sits higher there so
-     the caption has the bottom third. */
-  function beatCams(): Cam[] {
-    const phone = isPhone();
-    return HERO.beats.map((b, i) => {
-      if (i === 0) return { ...b.cam, x: phone ? HERO.focusX.phone : HERO.focusX.desktop };
-      return phone
-        ? { ...b.cam, y: b.cam.y + HERO.phoneCyLift, s: b.cam.s * HERO.phoneScale }
-        : b.cam;
-    });
-  }
-
-  /* ONE layout read per resize, none per frame. The scene becomes the
-     plate's cover box in px; the plate fills it edge to edge (its
-     aspect matches, so nothing crops inside the box); each cutout is
-     placed as a fraction of it. */
-  function measure() {
-    vw = pin.clientWidth;
-    vh = pin.clientHeight;
-    box = coverBox(vw, vh);
-    scene.style.left = `${box.ox}px`;
-    scene.style.top = `${box.oy}px`;
-    scene.style.width = `${box.W}px`;
-    scene.style.height = `${box.H}px`;
-    HERO.beats.forEach((b, i) => {
-      const el = cuts[i];
-      if (!el || !b.cut) return;
-      el.style.left = `${b.cut.x * 100}%`;
-      el.style.top = `${b.cut.y * 100}%`;
-      el.style.width = `${b.cut.w * 100}%`;
-    });
-  }
-
-  function applyCam(cam: Cam) {
-    const p = poseFor(cam, box, vw, vh);
-    scene.style.transform = `translate3d(${p.tx.toFixed(2)}px, ${p.ty.toFixed(2)}px, 0) scale(${p.s.toFixed(4)})`;
-  }
-
-  /* ---- focus (Rule 4) --------------------------------------------
-     A tent per beat: focus_i = 1 − |3p − i|, clamped. The subject
-     cutout's opacity IS its focus, so a cutout fades up as the camera
-     arrives and out as it leaves, crossing the next one at the midpoint
-     — the spec's "recede crosses mid-travel". The plate's recede amount
-     is the sum, never above 1: dimming the plate is the other two
-     receding, because they are drawn in it. */
-  const focusOf = (p: number, i: number) =>
-    Math.max(0, 1 - Math.abs((HERO.beats.length - 1) * p - i));
-
-  function renderFocus(p: number) {
-    let r = 0;
+  /* ---- chrome: captions ride the focus; the headline leaves once ---- */
+  function renderChrome(p: number, focus: number[]) {
     for (let i = 1; i < HERO.beats.length; i++) {
-      const f = focusOf(p, i);
-      r += f;
-      const cut = cuts[i];
-      if (cut) cut.style.opacity = f.toFixed(3);
       const cap = capEls[i];
-      if (cap) {
-        cap.style.opacity = f.toFixed(3);
-        cap.style.transform = `translate3d(0, ${((1 - f) * 12).toFixed(1)}px, 0)`;
-        cap.style.pointerEvents = f > 0.5 ? '' : 'none';
-      }
-    }
-    r = Math.min(1, r) * HERO.recedeStrength;
-    if (plateEl) {
-      plateEl.style.opacity = (1 - r * (1 - RECEDE.opacity)).toFixed(3);
-      plateEl.style.filter =
-        r > 0.001
-          ? `saturate(${(1 - r * (1 - RECEDE.saturate)).toFixed(3)}) brightness(${(1 - r * (1 - RECEDE.brightness)).toFixed(3)})`
-          : '';
+      if (!cap) continue;
+      const f = focus[i];
+      cap.style.opacity = f.toFixed(3);
+      cap.style.transform = `translate3d(0, ${((1 - f) * 12).toFixed(1)}px, 0)`;
+      cap.style.pointerEvents = f > 0.5 ? '' : 'none';
     }
     /* The beat-0 headline leaves over the first segment and stays gone —
        not a tent, or it would return once Amena's focus passed. */
@@ -230,59 +102,47 @@ export function initHero() {
 
   /* ---- depth (Rule 2) --------------------------------------------
      The lead is a fraction of the camera's translate across the current
-     segment, shaped by 4f(1−f): zero at both beats, peak between. It is
-     applied to the cutouts in scene space (divided by the scale, since
-     they live inside the scaled scene), so it reads as the front plane
-     arriving a beat ahead of the back plane and settling exactly on it. */
+     segment, shaped by 4f(1−f): zero at both beats, peak between. Applied
+     to the cutouts in scene space (divided by the scale, since they live
+     inside the scaled scene). */
   function renderDepth(p: number) {
     if (LEAD === 0) return;
-    const cams = beatCams();
+    const cams = rig.beatCams();
     const n = cams.length - 1;
     const t = Math.min(Math.max(p, 0), 1) * n;
     const i = Math.min(Math.floor(t), n - 1);
     const f = t - i;
-    const a = poseFor(cams[i], box, vw, vh);
-    const b = poseFor(cams[i + 1], box, vw, vh);
+    const a = poseFor(cams[i], rig.box, rig.vw, rig.vh);
+    const b = poseFor(cams[i + 1], rig.box, rig.vw, rig.vh);
     const shape = 4 * f * (1 - f);
     const s = camAt(p).s;
     const lx = ((b.tx - a.tx) * LEAD * shape) / s;
     const ly = ((b.ty - a.ty) * LEAD * shape) / s;
     for (let k = 1; k < HERO.beats.length; k++) {
-      const cut = cuts[k];
+      const cut = rig.cuts[k];
       if (!cut) continue;
-      /* Only the two cutouts that can be visible in this segment move. */
       cut.style.transform =
         k === i || k === i + 1 ? `translate3d(${lx.toFixed(2)}px, ${ly.toFixed(2)}px, 0)` : '';
     }
   }
 
-  /* ---- progress → camera --------------------------------------
-     Three segments between four beats. Position eases; scale eases in
-     log space (camBetween). */
-  function camAt(p: number): Cam {
-    const cams = beatCams();
-    const n = cams.length - 1;
-    const t = Math.min(Math.max(p, 0), 1) * n;
-    const i = Math.min(Math.floor(t), n - 1);
-    return camBetween(cams[i], cams[i + 1], t - i);
-  }
-
   /* The scrubbed progress lives on a proxy tweened by a timeline that
-     ScrollTrigger drives. That is what makes `scrub: 0.6` a real
-     damping rather than a no-op — scrub smooths an ANIMATION, and the
-     camera is not a GSAP animation, so the animation is this proxy. */
+     ScrollTrigger drives. That is what makes `scrub: 0.6` a real damping
+     rather than a no-op — scrub smooths an ANIMATION, and the camera is
+     not a GSAP animation, so the animation is this proxy. */
   const proxy = { p: 0 };
   const render = () => {
-    applyCam(camAt(proxy.p));
-    renderFocus(proxy.p);
+    rig.applyCam(camAt(proxy.p));
+    const focus = rig.applyFocus(proxy.p);
+    renderChrome(proxy.p, focus);
     renderDepth(proxy.p);
   };
 
   const remeasure = () => {
-    measure();
+    rig.measure();
     render();
   };
-  measure();
+  rig.measure();
   render();
   window.addEventListener('resize', remeasure);
   /* This script runs before the layout's initScroll() writes --vh from
@@ -320,7 +180,7 @@ export function initHero() {
       : undefined,
     /* Before ScrollTrigger recomputes its own geometry (resize, load,
        --vh jump), re-measure the box so the pinned frame is right. */
-    onRefreshInit: measure,
+    onRefreshInit: rig.measure,
     onRefresh: render,
   });
 
@@ -330,10 +190,11 @@ export function initHero() {
     w.__bkash = w.__bkash ?? {};
     w.__bkash.hero = {
       config: HERO,
-      box: () => box,
+      rig,
+      box: () => rig.box,
       /** Force the cutouts visible to check they sit on their drawn figures. */
       showCuts(on = true) {
-        cuts.forEach((el) => el && (el.style.opacity = on ? '1' : ''));
+        rig.cuts.forEach((el) => el && (el.style.opacity = on ? '1' : ''));
       },
       /** Move a cutout box by fractions of the plate; returns the values to paste back. */
       nudge(i: number, dx = 0, dy = 0, dw = 0) {
@@ -344,7 +205,7 @@ export function initHero() {
           y: +(b.cut.y + dy).toFixed(4),
           w: +(b.cut.w + dw).toFixed(4),
         };
-        measure();
+        rig.measure();
         return this.values();
       },
       /** Aim a beat's camera; returns the values to paste back. */
@@ -356,7 +217,7 @@ export function initHero() {
           y: +(b.cam.y + dy).toFixed(4),
           s: +(b.cam.s + ds).toFixed(3),
         };
-        applyCam(beatCams()[i]);
+        rig.applyCam(rig.beatCams()[i]);
         return this.values();
       },
       values: () =>
@@ -368,7 +229,7 @@ export function initHero() {
           .join('\n'),
       /** Park the camera on a beat (static, no scroll) — for placing by eye. */
       park(i: number) {
-        applyCam(beatCams()[i]);
+        rig.poseAtBeat(i);
       },
       /** Force the scrubbed camera to the trigger's current progress and
           render — the hidden automation tab never ticks the damping. */
