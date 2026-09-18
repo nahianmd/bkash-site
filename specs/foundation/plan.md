@@ -641,7 +641,7 @@ Ten tasks, one commit each. Each ends with `npm run check && npm run build`.
 - [x] **3. `base.css`.** Reset, `.wrap` / `.stack` / `.sr-only`, buttons,
       `.is-inert`, `[data-reveal]`, `.on-photo`, the recede state class, and
       the token-level reduced-motion block. **No `@font-face`.**
-- [ ] **4. `/specimen`.** Every type step with its token name and computed px,
+- [x] **4. `/specimen`.** Every type step with its token name and computed px,
       palette swatches, dark tokens on `--night`, the scrim over a real
       photograph, a recede before/after pair. This is a deliverable — a
       criterion depends on it — not a scratch page.

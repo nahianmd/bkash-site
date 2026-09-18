@@ -1,0 +1,662 @@
+---
+/* The token specimen.
+
+   This is a deliverable, not a scratch page: the spec's criterion
+   "a rendered specimen page shows all the type steps at 390px and
+   1920px" is checked here, and /verify measures against it.
+
+   Every size is read live from getComputedStyle rather than printed
+   from a table, so the page cannot drift out of agreement with
+   tokens.css — if a clamp changes, this page reports the change. */
+import Base from '../layouts/Base.astro';
+
+const STEPS = [
+  { cls: 't-display', token: '--fs-display', band: 'display', px: [46, 76] },
+  { cls: 't-hero', token: '--fs-hero', band: 'display', px: [41, 68] },
+  { cls: 't-h1', token: '--fs-h1', band: 'display', px: [36, 60] },
+  { cls: 't-h2', token: '--fs-h2', band: 'display', px: [28, 40] },
+  { cls: 't-quote', token: '--fs-quote', band: 'display', px: [24, 34] },
+  { cls: 't-h3', token: '--fs-h3', band: 'text', px: [20, 26] },
+  { cls: 't-lead', token: '--fs-lead', band: 'text', px: [18, 21] },
+  { cls: 't-body', token: '--fs-body', band: 'text', px: [16, 16] },
+  { cls: 't-sm', token: '--fs-sm', band: 'text', px: [14, 14] },
+  { cls: 't-xs', token: '--fs-xs', band: 'text', px: [12, 12] },
+];
+
+/* Latin-ext is the half the prototype's fonts could not render above
+   weight 400. Every weight is shown so a fallback substitution is
+   visible as a metric break rather than having to be looked for. */
+const GLYPHS = 'Āā Ēē Īī Ōō Ūū — “quote” 0123';
+const WEIGHTS = [400, 500, 600, 700];
+
+const PINKS = [
+  ['--pink', 'brand; in the mark'],
+  ['--pink-deep', 'accent hover; CLAUDE.md'],
+  ['--pink-mid', 'from the mark'],
+  ['--pink-dark', 'from the mark'],
+  ['--pink-on-dark', 'dark grounds ONLY (was --pink-lift, audit H4)'],
+  ['--pink-wash', 'tint'],
+  ['--pink-line', 'hairline'],
+];
+const INKS = [
+  ['--ink', 'body'],
+  ['--ink-2', 'secondary'],
+  ['--ink-3', 'meta'],
+  ['--ink-4', 'disabled'],
+  ['--ink-mark', "the wordmark's own black"],
+];
+---
+
+<Base title="Token specimen" description="Foundation type scale, palette and states.">
+  <main class="wrap spec">
+    <header class="spec__head">
+      <p class="t-eyebrow">Foundation</p>
+      <h1 class="t-h1">Token specimen</h1>
+      <p class="t-lead">
+        Every value here is read from the live cascade. Resize to 390px and to 1920px: the
+        display steps stay at least 4px apart at both, and the text steps land on exact values.
+      </p>
+      <p class="t-sm spec__vp">
+        viewport <span data-vp>—</span> · root <span data-root>—</span>
+      </p>
+    </header>
+
+    <!-- ---------- type scale ---------- -->
+    <section class="spec__block" aria-labelledby="s-type">
+      <h2 class="t-h2" id="s-type">
+        Type scale
+      </h2>
+      <div class="spec__scroll">
+        <table class="spec__table t-sm">
+          <thead>
+            <tr>
+              <th scope="col">Token</th>
+              <th scope="col">Band</th>
+              <th scope="col">Now</th>
+              <th scope="col">390</th>
+              <th scope="col">1920</th>
+              <th scope="col">Δ prev</th>
+            </tr>
+          </thead>
+          <tbody>
+            {STEPS.map((s) => (
+              <tr data-step={s.token} data-band={s.band}>
+                <td>
+                  <code>{s.token}</code>
+                </td>
+                <td>{s.band}</td>
+                <td class="t-num" data-now>
+                  —
+                </td>
+                <td class="t-num">{s.px[0]}</td>
+                <td class="t-num">{s.px[1]}</td>
+                <td class="t-num" data-delta>
+                  —
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="spec__samples">
+        {STEPS.map((s) => (
+          <div class="spec__sample">
+            <p class="t-xs spec__label">
+              <code>.{s.cls}</code>
+            </p>
+            <p class={s.cls} data-sample={s.token}>
+              Financial freedom for millions
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ---------- weights and latin-ext ---------- -->
+    <section class="spec__block" aria-labelledby="s-glyph">
+      <h2 class="t-h2" id="s-glyph">
+        Weights, latin + latin-ext
+      </h2>
+      <p class="t-body">
+        One variable file per subset covers all four weights. A missing glyph shows as a metric
+        break mid-string, which is what the prototype did above weight 400.
+      </p>
+      <div class="spec__weights">
+        {WEIGHTS.map((w) => (
+          <p class="spec__weight" data-weight={w}>
+            <span class="t-xs spec__label">{w}</span>
+            <span class="spec__glyphs">{GLYPHS}</span>
+          </p>
+        ))}
+      </div>
+    </section>
+
+    <!-- ---------- palette ---------- -->
+    <section class="spec__block" aria-labelledby="s-pal">
+      <h2 class="t-h2" id="s-pal">
+        Palette
+      </h2>
+      <p class="t-body">
+        The pink ramp is anchored to <code>specs/refs/bkash-logo.svg</code>, which uses exactly
+        four fills. <code>--pink-on-dark</code> is not one of them.
+      </p>
+      <ul class="spec__swatches">
+        {[...PINKS, ...INKS].map(([t, note]) => (
+          <li class="spec__swatch">
+            <span class="spec__chip" data-chip={t}></span>
+            <code class="t-xs">{t}</code>
+            <span class="t-xs spec__note" data-hex={t}>
+              {note}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- ---------- dark ground ---------- -->
+    <section class="spec__block" aria-labelledby="s-dark">
+      <h2 class="t-h2" id="s-dark">
+        Text on a dark ground
+      </h2>
+      <div class="spec__night">
+        <p class="t-eyebrow spec__night-eyebrow">Across Bangladesh</p>
+        <p class="t-h3 spec__on-1">--on-night, for headings</p>
+        <p class="t-body spec__on-2">
+          --on-night-2, for body copy. Audit X5: these four values were hand-written in a dozen
+          places across the footer, people and phone CSS.
+        </p>
+        <p class="t-sm spec__on-3">--on-night-3, for meta</p>
+        <p class="t-sm spec__on-pink">--pink-on-dark, legible here and only here</p>
+      </div>
+    </section>
+
+    <!-- ---------- the scrim ---------- -->
+    <section class="spec__block" aria-labelledby="s-scrim">
+      <h2 class="t-h2" id="s-scrim">
+        Text on a photograph — the scrim
+      </h2>
+      <p class="t-body">
+        <code>--scrim-strength: 0.62</code> is derived against the worst case: a pure white
+        photograph. That is the first panel below, so the 5.56:1 figure is measurable here
+        rather than asserted. The caption is deliberately two lines — if the top line is fainter
+        than the bottom, the scrim is being applied to a container instead of to the text block.
+      </p>
+      <div class="spec__grounds">
+        <div class="spec__ground spec__ground--white">
+          <p class="t-xs spec__ground-tag">worst case · pure white</p>
+          <div class="on-photo spec__cap">
+            <p class="t-eyebrow">One agent every 2 km</p>
+            <p class="t-h3">
+              Your neighbourhood is the branch, and the branch is two lines deep
+            </p>
+          </div>
+        </div>
+        <div class="spec__ground spec__ground--bright">
+          <p class="t-xs spec__ground-tag">bright sand</p>
+          <div class="on-photo spec__cap">
+            <p class="t-eyebrow">One agent every 2 km</p>
+            <p class="t-h3">
+              Your neighbourhood is the branch, and the branch is two lines deep
+            </p>
+          </div>
+        </div>
+      </div>
+      <p class="t-sm spec__measured">
+        measured contrast, white panel:{' '}
+        <span class="t-num" data-contrast>
+          —
+        </span>
+      </p>
+    </section>
+
+    <!-- ---------- recede ---------- -->
+    <section class="spec__block" aria-labelledby="s-recede">
+      <h2 class="t-h2" id="s-recede">
+        Recede
+      </h2>
+      <p class="t-body">
+        One behaviour, used in the hero, the people row and the services screen. Dim,
+        desaturated, slightly darker — and no blur, because the hero scrubs this with the camera
+        and a per-frame <code>filter: blur()</code> is forbidden. Hover the row.
+      </p>
+      <ul class="spec__recede" data-recede>
+        <li class="spec__card spec__card--1">
+          <span class="t-sm">subject</span>
+        </li>
+        <li class="spec__card spec__card--2">
+          <span class="t-sm">neighbour</span>
+        </li>
+        <li class="spec__card spec__card--3">
+          <span class="t-sm">neighbour</span>
+        </li>
+      </ul>
+      <p class="t-sm spec__measured">
+        hovering one card recedes the other two; none changes size.
+      </p>
+    </section>
+
+    <!-- ---------- planes ---------- -->
+    <section class="spec__block" aria-labelledby="s-plane">
+      <h2 class="t-h2" id="s-plane">
+        Plane rates
+      </h2>
+      <p class="t-body">
+        Rule 2's "a few percent apart", made a number so no section invents its own. A section
+        multiplies its own scrub distance by these.
+      </p>
+      <ul class="spec__planes t-sm">
+        <li>
+          <code>--plane-back</code>{' '}
+          <span class="t-num" data-plane="--plane-back">
+            —
+          </span>
+        </li>
+        <li>
+          <code>--plane-mid</code>{' '}
+          <span class="t-num" data-plane="--plane-mid">
+            —
+          </span>
+        </li>
+        <li>
+          <code>--plane-front</code>{' '}
+          <span class="t-num" data-plane="--plane-front">
+            —
+          </span>
+        </li>
+      </ul>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .spec {
+    padding-block: var(--s-8) var(--s-10);
+  }
+
+  .spec__head {
+    padding-bottom: var(--s-7);
+    border-bottom: 1px solid var(--pink-line);
+  }
+
+  .spec__head > * + * {
+    margin-top: var(--s-3);
+  }
+
+  .spec__vp {
+    color: var(--ink-3);
+  }
+
+  .spec__block {
+    padding-block: var(--s-7);
+    border-bottom: 1px solid var(--pink-line);
+  }
+
+  .spec__block > * + * {
+    margin-top: var(--s-5);
+  }
+
+  /* ---- table ---- */
+  /* A table of nowrap numeric columns is wider than a 390px
+     viewport no matter what the tokens say. Tables get their own
+     scroll container so the page body never scrolls sideways. */
+  .spec__scroll {
+    overflow-x: auto;
+  }
+
+  .spec__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .spec__table th,
+  .spec__table td {
+    text-align: left;
+    padding: var(--s-2) var(--s-3);
+    border-bottom: 1px solid var(--pink-line);
+    white-space: nowrap;
+  }
+
+  .spec__table th {
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+
+  .spec__table [data-band='display'] td:first-child {
+    font-weight: 600;
+  }
+
+  .spec__table tr[data-fail] td {
+    background: var(--pink-wash);
+    color: var(--pink-deep);
+  }
+
+  /* ---- samples ---- */
+  .spec__samples > * + * {
+    margin-top: var(--s-5);
+  }
+
+  .spec__label {
+    color: var(--ink-3);
+    margin-bottom: var(--s-1);
+  }
+
+  /* ---- weights ---- */
+  .spec__weights > * + * {
+    margin-top: var(--s-4);
+  }
+
+  .spec__weight {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-4);
+  }
+
+  .spec__glyphs {
+    font-size: var(--fs-h3);
+  }
+
+  .spec__weight[data-weight='400'] .spec__glyphs {
+    font-weight: 400;
+  }
+  .spec__weight[data-weight='500'] .spec__glyphs {
+    font-weight: 500;
+  }
+  .spec__weight[data-weight='600'] .spec__glyphs {
+    font-weight: 600;
+  }
+  .spec__weight[data-weight='700'] .spec__glyphs {
+    font-weight: 700;
+  }
+
+  /* ---- swatches ---- */
+  .spec__swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: var(--s-3) var(--s-5);
+  }
+
+  .spec__swatch {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'chip code' 'chip note';
+    column-gap: var(--s-3);
+    align-items: center;
+  }
+
+  .spec__chip {
+    grid-area: chip;
+    width: var(--s-6);
+    height: var(--s-6);
+    border-radius: var(--r-sm);
+    border: 1px solid var(--pink-line);
+  }
+
+  .spec__note {
+    grid-area: note;
+    color: var(--ink-3);
+  }
+
+  .spec__chip[data-chip='--pink'] {
+    background: var(--pink);
+  }
+  .spec__chip[data-chip='--pink-deep'] {
+    background: var(--pink-deep);
+  }
+  .spec__chip[data-chip='--pink-mid'] {
+    background: var(--pink-mid);
+  }
+  .spec__chip[data-chip='--pink-dark'] {
+    background: var(--pink-dark);
+  }
+  .spec__chip[data-chip='--pink-on-dark'] {
+    background: var(--pink-on-dark);
+  }
+  .spec__chip[data-chip='--pink-wash'] {
+    background: var(--pink-wash);
+  }
+  .spec__chip[data-chip='--pink-line'] {
+    background: var(--pink-line);
+  }
+  .spec__chip[data-chip='--ink'] {
+    background: var(--ink);
+  }
+  .spec__chip[data-chip='--ink-2'] {
+    background: var(--ink-2);
+  }
+  .spec__chip[data-chip='--ink-3'] {
+    background: var(--ink-3);
+  }
+  .spec__chip[data-chip='--ink-4'] {
+    background: var(--ink-4);
+  }
+  .spec__chip[data-chip='--ink-mark'] {
+    background: var(--ink-mark);
+  }
+
+  /* ---- dark ground ---- */
+  .spec__night {
+    background: var(--night);
+    border-radius: var(--r-lg);
+    padding: var(--s-6);
+  }
+
+  .spec__night > * + * {
+    margin-top: var(--s-3);
+  }
+
+  .spec__night-eyebrow {
+    color: var(--on-night-3);
+  }
+  .spec__on-1 {
+    color: var(--on-night);
+  }
+  .spec__on-2 {
+    color: var(--on-night-2);
+  }
+  .spec__on-3 {
+    color: var(--on-night-3);
+  }
+  .spec__on-pink {
+    color: var(--pink-on-dark);
+    border-top: 1px solid var(--on-night-line);
+    padding-top: var(--s-3);
+  }
+
+  /* ---- scrim ---- */
+  .spec__grounds {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--s-5);
+  }
+
+  .spec__ground {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--pink-line);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .spec__ground--white {
+    background: #ffffff;
+  }
+
+  /* Stands in for bright sand until task 9 brings a real photograph
+     through astro:assets. */
+  .spec__ground--bright {
+    background: linear-gradient(150deg, #f6e7c8, #e8cfa0 60%, #d8b677);
+  }
+
+  .spec__ground-tag {
+    color: var(--ink-3);
+    padding: var(--s-3);
+  }
+
+  .spec__cap {
+    margin: 0 var(--s-5) var(--s-5);
+  }
+
+  .spec__cap > * + * {
+    margin-top: var(--s-2);
+  }
+
+  .spec__measured {
+    color: var(--ink-3);
+  }
+
+  /* ---- recede ---- */
+  .spec__recede {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-4);
+  }
+
+  .spec__card {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--r-md);
+    display: grid;
+    place-items: end start;
+    padding: var(--s-4);
+    color: var(--on-night);
+    transition:
+      opacity var(--recede-t) var(--ease-io),
+      filter var(--recede-t) var(--ease-io);
+  }
+
+  .spec__card--1 {
+    background: linear-gradient(160deg, var(--pink), var(--pink-dark));
+  }
+  .spec__card--2 {
+    background: linear-gradient(160deg, #2f6f5e, #17403a);
+  }
+  .spec__card--3 {
+    background: linear-gradient(160deg, #7a5a2e, #3d2c15);
+  }
+
+  /* Rule 4: the pointed-at card is full, the others recede. Size
+     never changes — the prototype grew the hovered tile and shrank
+     its neighbours, which reads as the layout convulsing. */
+  .spec__recede:hover .spec__card:not(:hover),
+  .spec__recede:focus-within .spec__card:not(:focus-within) {
+    opacity: var(--recede-opacity);
+    filter: saturate(var(--recede-saturate)) brightness(var(--recede-brightness));
+  }
+
+  .spec__planes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5);
+  }
+
+  .spec__planes span {
+    color: var(--pink);
+    margin-inline-start: var(--s-2);
+  }
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+  }
+</style>
+
+<script>
+  /* Read everything from the live cascade. The point of the page is
+     that it cannot disagree with tokens.css. */
+  const css = (name: string) =>
+    getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  const px = (v: string) => Number.parseFloat(v) || 0;
+
+  /* Relative luminance, WCAG. Used to measure the scrim rather than
+     trust the derivation in tokens.css. */
+  function lum(r: number, g: number, b: number) {
+    const f = (c: number) => {
+      c /= 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    };
+    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+  }
+
+  function parseRgb(s: string): [number, number, number, number] {
+    const n = s.match(/[\d.]+/g)?.map(Number) ?? [0, 0, 0, 1];
+    return [n[0] ?? 0, n[1] ?? 0, n[2] ?? 0, n[3] ?? 1];
+  }
+
+  function refresh() {
+    const vw = window.innerWidth;
+    document.querySelector('[data-vp]')!.textContent = `${vw}px`;
+    document.querySelector('[data-root]')!.textContent = getComputedStyle(
+      document.documentElement,
+    ).fontSize;
+
+    /* Type steps, plus the separation guard.
+
+       Measured off the RENDERED sample, not off the custom property.
+       getPropertyValue('--fs-display') hands back the unresolved
+       `clamp(...)` string — custom properties resolve lazily — so
+       parseFloat on it is NaN, and a fixed `1rem` parses as 1. The
+       only honest number is the font-size the browser actually
+       applied to an element using the step. */
+    const rows = [...document.querySelectorAll<HTMLElement>('[data-step]')];
+    let prev: number | null = null;
+    for (const row of rows) {
+      const sample = document.querySelector<HTMLElement>(`[data-sample="${row.dataset.step}"]`);
+      const size = sample ? px(getComputedStyle(sample).fontSize) : 0;
+      row.querySelector('[data-now]')!.textContent = `${size.toFixed(1)}px`;
+      const d = prev === null ? null : prev - size;
+      row.querySelector('[data-delta]')!.textContent = d === null ? '—' : `${d.toFixed(1)}`;
+      /* Display steps must stay >= 4px apart. Text steps are exact
+         values and are allowed their 2px rhythm.
+
+         Rounded to 0.1px before comparing: clamp() resolves with
+         sub-pixel error (h2 28 against quote 24.0002 gives a delta
+         of 3.9998), and a raw `< 4` turns that into a false failure.
+         The criterion is about a perceptible difference, so compare
+         at a perceptible precision. */
+      const fails = d !== null && row.dataset.band === 'display' && Math.round(d * 10) / 10 < 4;
+      if (fails) row.setAttribute('data-fail', '');
+      else row.removeAttribute('data-fail');
+      prev = size;
+    }
+
+    /* Resolve each colour token to the hex the browser computed. */
+    for (const el of document.querySelectorAll<HTMLElement>('[data-hex]')) {
+      const probe = document.querySelector<HTMLElement>(`[data-chip="${el.dataset.hex}"]`);
+      if (!probe) continue;
+      const bg = getComputedStyle(probe).backgroundColor;
+      const [r, g, b] = parseRgb(bg);
+      const hex =
+        '#' + [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
+      el.textContent = `${hex} · ${el.textContent?.split(' · ').pop() ?? ''}`.replace(
+        / · $/,
+        '',
+      );
+    }
+
+    /* Measure the scrim against the white panel, which is the case
+       0.62 was derived for. */
+    const cap = document.querySelector<HTMLElement>('.spec__ground--white .spec__cap');
+    const out = document.querySelector('[data-contrast]');
+    if (cap && out) {
+      const strength = Number.parseFloat(css('--scrim-strength')) || 0;
+      const ground = 255 * (1 - strength);
+      const [tr, tg, tb, ta] = parseRgb(getComputedStyle(cap).color);
+      const mix = (c: number) => c * ta + ground * (1 - ta);
+      const l1 = lum(mix(tr), mix(tg), mix(tb));
+      const l2 = lum(ground, ground, ground);
+      const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+      out.textContent = `${ratio.toFixed(2)}:1 (strength ${strength})`;
+    }
+
+    for (const el of document.querySelectorAll<HTMLElement>('[data-plane]')) {
+      el.textContent = css(el.dataset.plane!);
+    }
+  }
+
+  refresh();
+  window.addEventListener('resize', refresh);
+</script>

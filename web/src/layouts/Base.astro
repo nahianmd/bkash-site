@@ -8,19 +8,37 @@ import '../styles/base.css';
 interface Props {
   title: string;
   description?: string;
+  /* Every page is noindex until bKash signs off on the content. The
+     site carries live bKash branding, real board names and a real
+     executive quote, which was fine for an internal pitch; a hosted
+     URL is not. See CLAUDE.md, "Open, and Nahian's call". Flip the
+     default here once that lands — one place, both pages. */
+  noindex?: boolean;
 }
 
-const { title, description = '' } = Astro.props;
+const { title, description = '', noindex = true } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<!-- `no-js` is removed before first paint by the inline script below.
+     Anything gated on JS uses it as its fallback hook: base.css keeps
+     [data-reveal] visible while it is present, so a page with JS off
+     or broken shows content rather than a blank section (audit X3). -->
+<html lang="en" class="no-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {/* Blocking and first, so reveals never flash visible then hide.
+        A deferred module script would run after parse, which is too
+        late to prevent the flash. */}
+    <script is:inline>
+      document.documentElement.classList.remove('no-js');
+    </script>
     <Font cssVariable="--font-inter" preload />
   </head>
   <body>
