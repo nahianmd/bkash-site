@@ -1,0 +1,385 @@
+/* ============================================================
+   bKash — design tokens
+
+   Ported from `reference/prototype/css/tokens.css`, which was
+   already right about the important thing: size, line-height and
+   tracking travel TOGETHER, bundled per step, so they cannot
+   drift apart. The file it replaced had 21 ad-hoc font sizes and
+   12 letter-spacing values with no relationship between them, and
+   that is the documented root cause of both the "unbalanced
+   typography" and the alignment drift the client reacted to.
+
+   This is a CLOSED system. If a value is not here, it does not go
+   in the markup.
+
+   Alpha colours use the modern `rgb(r g b / a)` form rather than
+   `rgba(r, g, b, a)`. That is not cosmetic: the spec's own guard
+   is `grep -rn 'rgba(255, *255, *255' web/src` returning nothing,
+   and the token file has to pass its own test.
+   ============================================================ */
+
+:root {
+  /* ---- brand ----
+     Anchored to the official mark. `specs/refs/bkash-logo.svg`
+     uses exactly four fills, three of them pinks: #e2136e,
+     #d12053, #9e1638, plus #231f20 for the wordmark.
+
+     `--pink` and `--pink-deep` are the two names CLAUDE.md fixes.
+     `--pink-mid` and `--pink-dark` come straight off the mark —
+     the bird's nine facets will need brand-accurate pinks.
+
+     `--pink-on-dark` is the prototype's `--pink-lift` (#ff2d87),
+     retired under its old name and re-issued with a contract: it
+     appears on `--night`/`--night-2` grounds ONLY. On sand it was
+     the illegible hero eyebrow, audit finding H4. It is in none
+     of the mark's four colours.                                */
+  --pink: #e2136e;
+  --pink-deep: #b70f58;
+  --pink-mid: #d12053;
+  --pink-dark: #9e1638;
+  --pink-on-dark: #ff2d87;
+  --pink-wash: #fdf2f7;
+  --pink-line: #f6e3ec;
+
+  /* ---- ink (warm-neutral, tuned to the pink) ---- */
+  --ink: #191316;
+  --ink-2: #574a50;
+  --ink-3: #8d7f86;
+  --ink-4: #b9adb3;
+  --ink-mark: #231f20; /* the wordmark's own black, from the mark */
+
+  /* ---- ground ---- */
+  --paper: #ffffff;
+  --paper-2: #faf7f8;
+  --night: #0b0b0b;
+  --night-2: #171214;
+
+  /* ---- text on a dark ground ----
+     Audit X5. Dark sections hand-wrote bare white-with-alpha in a
+     dozen places across the footer, people and phone CSS — the
+     72% one most often. Same values, named once, for the ground
+     they sit on, so "text on dark" is one decision, not twelve. */
+  --on-night: rgb(255 255 255 / 92%);
+  --on-night-2: rgb(255 255 255 / 72%);
+  --on-night-3: rgb(255 255 255 / 52%);
+  --on-night-line: rgb(255 255 255 / 12%);
+
+  /* ---- type ----
+     One family, one closed scale. `--font-inter` is declared by
+     Astro's <Font> component and already carries the
+     metric-compatible fallback face plus the system stack.
+
+     Sizes are fluid, but the RATIO between steps is fixed, so
+     hierarchy survives every viewport. Tracking tightens as size
+     grows: Inter is drawn for text, and at display sizes it needs
+     negative tracking or it reads loose and amateur. That single
+     omission is most of why the original looked off.
+
+     Each clamp is DERIVED from its two endpoints, not picked:
+       slope[vw]      = (px@1920 - px@390) / (1920 - 390) x 100
+       intercept[rem] = (px@390 - slope/100 x 390) / 16
+     To add a step, choose its two endpoints and run that.
+
+     The ladder, and the guard /verify measures against:
+
+       step      390px  1920px   band
+       display     46      76    display
+       hero        41      68    display
+       h1          36      60    display
+       h2          28      40    display
+       quote       24      34    display
+       h3          20      26    text
+       lead        18      21    text
+       body        16      16    text
+       sm          14      14    text
+       xs          12      12    text
+
+     Display steps are >= 4px apart at BOTH widths. Text steps
+     land on exact values. h3 sits in the text band because at
+     20/26px it is a subheading, not a display size.            */
+  --font: var(--font-inter);
+
+  --fs-display: clamp(2.875rem, 2.3971rem + 1.9608vw, 4.75rem);
+  --fs-hero: clamp(2.5625rem, 2.1324rem + 1.7647vw, 4.25rem);
+  --fs-h1: clamp(2.25rem, 1.8676rem + 1.5686vw, 3.75rem);
+  --fs-h2: clamp(1.75rem, 1.5588rem + 0.7843vw, 2.5rem);
+  --fs-quote: clamp(1.5rem, 1.3407rem + 0.6536vw, 2.125rem);
+  --fs-h3: clamp(1.25rem, 1.1544rem + 0.3922vw, 1.625rem);
+  --fs-lead: clamp(1.125rem, 1.0772rem + 0.1961vw, 1.3125rem);
+  --fs-body: 1rem;
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.75rem;
+
+  /* ---- measure ----
+     Design language Rule 3: headlines have a measure, and never a
+     hardcoded <br>. The bird's headline broke into four lines with
+     an orphaned "of" because it had a <br> and no measure. Measure
+     is set per type step and it holds at 390px.                */
+  --measure-display: 18ch;
+  --measure-head: 24ch;
+  --measure-quote: 34ch;
+  --measure-tight: 46ch; /* lead paragraphs */
+  --measure: 62ch; /* body copy       */
+
+  /* ---- spacing: 4px base, geometric ---- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 8rem;
+  --s-11: 12rem;
+
+  /* ---- page ---- */
+  --page: 84rem;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+
+  /* ---- radius ---- */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-full: 999px;
+
+  /* ---- elevation: one warm shadow ramp, tinted not grey ---- */
+  --e-1: 0 1px 2px rgb(25 19 22 / 6%), 0 1px 3px rgb(25 19 22 / 4%);
+  --e-2: 0 4px 12px rgb(25 19 22 / 8%), 0 2px 4px rgb(25 19 22 / 4%);
+  --e-3: 0 12px 32px rgb(25 19 22 / 12%), 0 4px 8px rgb(25 19 22 / 5%);
+  --e-4: 0 28px 70px rgb(25 19 22 / 22%);
+
+  /* ---- motion ----
+     Two curves only. `--ease` for entrances and camera settles,
+     `--ease-io` for state toggles. Durations are named by intent,
+     not by number, so they stay consistent across sections.
+
+     These four are also the reduced-motion hook — see the bottom
+     of this file. Because every transition in web/ is required to
+     go through them, collapsing them collapses everything, with
+     no universal selector and no !important to fight
+     ScrollTrigger.                                             */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast: 0.18s;
+  --t-base: 0.32s;
+  --t-slow: 0.62s;
+  --t-veil: 0.85s;
+
+  /* ---- planes (design language Rule 2) ----
+     Every section is two or three flat layers at different depths,
+     each moving at its own rate on scroll. Back lags, front leads.
+     Rule 2 says "never more than a few percent apart"; these are
+     that, made a number so no section invents its own. A section
+     multiplies its own scrub distance by these.
+
+     Forbidden by the same rule: parallax INSIDE a photograph,
+     parallax between the bird's facets, more than three planes. */
+  --plane-back: 0.94;
+  --plane-mid: 1;
+  --plane-front: 1.06;
+
+  /* ---- ground for text on a photograph (Rule 3) ----
+     One rule, everywhere text sits on an image. The hero captions
+     sat directly on sand and wood and vanished; it was not the
+     typeface. `.on-photo` in base.css is the only sanctioned way.
+
+     0.62 is DERIVED. The criterion is 4.5:1 and the worst case is
+     a pure white photograph under the scrim:
+       ground = 255 x (1 - 0.62) = 96.9     -> luminance 0.1193
+       text   = --on-night over it = 242.4  -> luminance 0.8909
+       contrast = (0.8909 + 0.05)/(0.1193 + 0.05) = 5.56:1
+     The curve: 0.55 -> 4.32:1 (fails), 0.58 -> 4.80:1,
+     0.60 -> 5.16:1, 0.62 -> 5.56:1, 0.72 -> 8.12:1. So the
+     criterion passes by construction, against the brightest
+     photograph that can exist.
+
+     The CONTRACT matters more than the number: the scrim is at
+     full strength across the whole text block and fades only
+     ABOVE it. A gradient already fading behind the top line of a
+     caption is exactly how the prototype's captions vanished.  */
+  --scrim-strength: 0.62;
+  --scrim-fade: 6rem;
+  --scrim-bleed: var(--s-6);
+  --scrim-ink: var(--on-night);
+  --scrim: linear-gradient(
+    to top,
+    rgb(0 0 0 / var(--scrim-strength)) 0,
+    rgb(0 0 0 / var(--scrim-strength)) calc(100% - var(--scrim-fade)),
+    rgb(0 0 0 / 0) 100%
+  );
+
+  /* ---- recede (design language Rule 4) ----
+     When one thing is the subject, everything else quietly steps
+     back. One behaviour used three times — hero cutouts, people
+     cards, services icons — so it is one token set and the three
+     are visually identical.
+
+     NO BLUR, deliberately. design-language.md calls recede "dim,
+     soft, desaturated", but hero.md scrubs recede with the camera
+     and CLAUDE.md performance rule 2 forbids animating
+     filter: blur() per frame. Opacity, saturate and brightness
+     are cheap compositor filters and scrub safely. Where a
+     section genuinely needs softness it crossfades to a
+     PRE-RENDERED blurred copy — rule 2's own prescribed
+     technique — via --recede-soft-opacity, which stays an opacity
+     animation.
+
+     This is NOT the prototype's depth-of-field blur, which
+     blurred the whole plate and flattened the scene. Recede
+     touches only the non-subjects.                             */
+  --recede-opacity: 0.45;
+  --recede-saturate: 0.72;
+  --recede-brightness: 0.82;
+  --recede-soft-opacity: 0.55;
+  --recede-t: var(--t-base);
+
+  /* ---- layout ----
+     `--nav-h` is the single source for anything clearing the
+     fixed header. Audit X2: the bento's top row and the phone's
+     status bar sat under the 4.5rem header at both widths because
+     the offset existed nowhere.
+
+     `--vh` is a fallback only. `lib/scroll.ts` overwrites it from
+     visualViewport, because 100vh is a lie on mobile — the URL
+     bar collapses and the viewport grows under the animation.
+     Never size a pinned section against 100vh.                 */
+  --nav-h: 4.5rem;
+  --vh: 100vh;
+
+  /* ---- z-index ---- */
+  --z-scene: 1;
+  --z-chrome: 20;
+  --z-nav: 50;
+  --z-modal: 90;
+}
+
+/* ---- mobile is a composition, not an override ----
+   4.5rem of fixed header eats the top of every pinned section on
+   a 390x780 screen. The token is redefined here so the one source
+   stays one source and every section that clears the header
+   follows automatically. */
+@media (max-width: 767px) {
+  :root {
+    --nav-h: 3.5rem;
+  }
+}
+
+/* ============================================================
+   Type steps — size, line-height, tracking and measure travel
+   TOGETHER. Bundling them as one class is deliberate: it makes it
+   structurally impossible for them to drift apart the way they
+   did in the original.
+   ============================================================ */
+
+.t-display {
+  font-size: var(--fs-display);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  max-width: var(--measure-display);
+}
+.t-hero {
+  font-size: var(--fs-hero);
+  line-height: 1;
+  letter-spacing: -0.032em;
+  font-weight: 700;
+  max-width: var(--measure-display);
+}
+.t-h1 {
+  font-size: var(--fs-h1);
+  line-height: 1.04;
+  letter-spacing: -0.028em;
+  font-weight: 700;
+  max-width: var(--measure-head);
+}
+.t-h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  font-weight: 600;
+  max-width: var(--measure-head);
+}
+/* The pull-quote. Weight 400, not a heading weight, and looser
+   leading — it is speech, and at 390px it is distinguished from
+   --fs-h2 by treatment as much as by its 4px of size. */
+.t-quote {
+  font-size: var(--fs-quote);
+  line-height: 1.28;
+  letter-spacing: -0.018em;
+  font-weight: 400;
+  max-width: var(--measure-quote);
+}
+.t-h3 {
+  font-size: var(--fs-h3);
+  line-height: 1.24;
+  letter-spacing: -0.014em;
+  font-weight: 600;
+  max-width: var(--measure-head);
+}
+.t-lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  letter-spacing: -0.009em;
+  font-weight: 400;
+  max-width: var(--measure-tight);
+}
+.t-body {
+  font-size: var(--fs-body);
+  line-height: 1.62;
+  letter-spacing: 0;
+  font-weight: 400;
+  max-width: var(--measure);
+}
+.t-sm {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.t-xs {
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+/* Single uppercase tracking value. The original had six. */
+.t-eyebrow {
+  font-size: var(--fs-xs);
+  line-height: 1;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Numerals: tabular everywhere they can shift — counters, stats,
+   anything that animates. Proportional figures jitter the layout
+   as digits change width, which reads as the page vibrating. */
+.t-num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* ============================================================
+   Reduced motion — the considered answer, not a blanket override.
+
+   The prototype killed every transition globally with
+   `*, *::before, *::after { transition-duration: .01ms !important }`.
+   That would fight ScrollTrigger, and the spec rules it out.
+
+   Instead the four duration tokens collapse. Everything in web/
+   is required to transition through them, so everything
+   collapses — no universal selector, no !important.
+
+   Scroll-driven sections are handled separately, in JS, via
+   reducedMotion() in lib/scroll.ts: a section checks it and
+   renders its resting state instead of creating the ScrollTrigger
+   at all.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast: 1ms;
+    --t-base: 1ms;
+    --t-slow: 1ms;
+    --t-veil: 1ms;
+  }
+}

@@ -319,25 +319,26 @@ This is where the prototype's nav was thinnest, so it is stated in full.
 Ten steps. The two additions the spec asks for are `--fs-hero` (between `h1`
 and `display`) and `--fs-quote` (the pull-quote, distinct from `lead`).
 
-| Token | 390px | 1920px | Δ to next, 390 | Δ to next, 1920 |
-|---|---|---|---|---|
-| `--fs-display` | 42 | 76 | 4 | 8 |
-| `--fs-hero` **new** | 38 | 68 | 4 | 8 |
-| `--fs-h1` | 34 | 60 | 8 | 20 |
-| `--fs-h2` | 26 | 40 | 4 | 6 |
-| `--fs-quote` **new** | 22 | 34 | 2 | 8 |
-| `--fs-h3` | 20 | 26 | 2 | 5 |
-| `--fs-lead` | 18 | 21 | 2 | 5 |
-| `--fs-body` | 16 | 16 | 2 | 2 |
-| `--fs-sm` | 14 | 14 | 2 | 2 |
-| `--fs-xs` | 12 | 12 | — | — |
+> **Corrected at task 2** — the table below replaces the one first written
+> here, which failed its own guard. See "Task 2 correction" below.
 
-Every display step (`display`…`h3`) is ≥4px from its neighbour at both widths.
-The text steps land on exact values. That is the amended criterion, and this
-table is what `/verify` measures against.
+| Token | 390px | 1920px | Δ to next, 390 | Δ to next, 1920 | Band |
+|---|---|---|---|---|---|
+| `--fs-display` | 46 | 76 | 5 | 8 | display |
+| `--fs-hero` **new** | 41 | 68 | 5 | 8 | display |
+| `--fs-h1` | 36 | 60 | 8 | 20 | display |
+| `--fs-h2` | 28 | 40 | 4 | 6 | display |
+| `--fs-quote` **new** | 24 | 34 | 4 | 8 | display |
+| `--fs-h3` | 20 | 26 | 2 | 5 | text |
+| `--fs-lead` | 18 | 21 | 2 | 5 | text |
+| `--fs-body` | 16 | 16 | 2 | 2 | text |
+| `--fs-sm` | 14 | 14 | 2 | 2 | text |
+| `--fs-xs` | 12 | 12 | — | — | text |
 
-`--fs-lead`'s 390px floor rises from 17 to 18 so it is not 1px from body.
-`--fs-h3`'s rises from 20 to 20 (unchanged) and `--fs-h2`'s from 26 (unchanged).
+Every **display** step is ≥4px from its neighbour at both widths. The **text**
+steps land on exact values. `h3` sits in the text band because at 20/26px it is
+a subheading, not a display size. Verified numerically: all ten steps resolve to
+these exact pixels at 390 and 1920.
 
 Each clamp is derived from its two endpoints, not picked:
 
@@ -631,7 +632,7 @@ Ten tasks, one commit each. Each ends with `npm run check && npm run build`.
       Confirm in `dist/` that exactly two woff2 files are emitted and record
       the real total against the ~85KB estimate.
       **Done, with one correction — see "Task 1 correction" below.**
-- [ ] **2. `tokens.css`.** The full closed system: palette anchored to the
+- [x] **2. `tokens.css`.** The full closed system: palette anchored to the
       mark, ten type steps with derived clamps and the derivation in a comment,
       spacing, measure, radius, elevation, motion, z-index, `--nav-h` with its
       390px redefinition, `--vh: 100vh` fallback, dark tokens, scrim tokens,
@@ -721,6 +722,40 @@ Three options, Nahian's call:
    arrives later.
 
 Not blocking; the shell tasks do not depend on it.
+
+
+## Task 2 correction — the 390px ladder, 2026-09-18
+
+**The scale table first written in this plan failed the guard the same plan
+proposed.** At 390px it had `quote` 22 against `h3` 20, and `h3` 20 against
+`lead` 18 — 2px gaps inside a band the amended criterion requires to be ≥4px
+apart. The table and the criterion were written without being cross-checked
+against each other.
+
+The guard is right and the table was wrong, so the table moved. Two changes:
+
+1. **The 390px display steps widen** — 46/41/36/28/24 in place of
+   42/38/34/26/22. Every display step is now ≥4px from its neighbour at 390 as
+   well as at 1920. The 1920 column is untouched.
+2. **The band boundary moves up one step**, from "`display`…`h3`" to
+   "`display`…`quote`". `h3` renders at 20px/26px, which is a subheading, and
+   the 2px rhythm it shares with `lead`/`body`/`sm`/`xs` is the normal, correct
+   spacing for the text end of a scale — not drift. Forcing 4px there would push
+   either `h3` into `h2` or `lead` into `body`.
+
+The alternative considered and rejected: keep the narrower 390 ladder and let
+`quote` collapse onto `h2` at phone width, distinguished only by weight and
+leading. That is defensible typography, but it means the scale has a different
+number of steps at each width, which is a special case every later section would
+have to remember. Widening five numbers costs nothing by comparison.
+
+**Consequence worth watching:** `--fs-display` at 390 is now 46px, not 42px. A
+hero headline is ~15 characters per line at that size inside a 350px measure.
+`--measure-display` is 18ch, so it wraps deliberately rather than overflowing,
+but design-language Rule 3 requires copy and any human subject to occupy
+different thirds at 390px, and a taller headline makes that harder. This is the
+risk already listed below as "the type floors are a judgement dressed as
+arithmetic" — the hero's 390px composition is where it gets settled.
 
 
 ## Risks
