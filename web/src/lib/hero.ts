@@ -46,6 +46,12 @@ export const HERO = {
      thirds. Fraction of the plate's height, by eye. */
   phoneCyLift: 0.08,
 
+  /* Rule 4's tokens were sized for receding siblings; the hero applies
+     them to the whole plate, which is the largest surface on the site.
+     1 = the tokens exactly. Turn down only if the street goes too dark
+     under a focused subject — one dial, by eye. */
+  recedeStrength: 1,
+
   travelPerBeat: 1,
   scrub: 0.6,
   snap: true,
@@ -111,6 +117,24 @@ export function initHero() {
     b.cut ? scene.querySelector<HTMLElement>(`[data-hero-cut="${b.id}"]`) : null,
   );
 
+  const plateEl = scene.querySelector<HTMLElement>('.scene__plate');
+  const openEl = section.querySelector<HTMLElement>('[data-hero-open]');
+  const capEls = HERO.beats.map((_, i) =>
+    i === 0 ? null : section.querySelector<HTMLElement>(`[data-hero-cap="${i}"]`),
+  );
+
+  /* Recede from the token set, read ONCE. Written per frame as values
+     rather than toggling .is-receded, because it scrubs with the camera
+     (base.css says exactly this). No blur, ever. */
+  const css = getComputedStyle(document.documentElement);
+  const tok = (name: string, fallback: number) =>
+    parseFloat(css.getPropertyValue(name)) || fallback;
+  const RECEDE = {
+    opacity: tok('--recede-opacity', 0.45),
+    saturate: tok('--recede-saturate', 0.72),
+    brightness: tok('--recede-brightness', 0.82),
+  };
+
   let box = coverBox(1, 1);
   let vw = 1;
   let vh = 1;
@@ -152,6 +176,48 @@ export function initHero() {
     scene.style.transform = `translate3d(${p.tx.toFixed(2)}px, ${p.ty.toFixed(2)}px, 0) scale(${p.s.toFixed(4)})`;
   }
 
+  /* ---- focus (Rule 4) --------------------------------------------
+     A tent per beat: focus_i = 1 − |3p − i|, clamped. The subject
+     cutout's opacity IS its focus, so a cutout fades up as the camera
+     arrives and out as it leaves, crossing the next one at the midpoint
+     — the spec's "recede crosses mid-travel". The plate's recede amount
+     is the sum, never above 1: dimming the plate is the other two
+     receding, because they are drawn in it. */
+  const focusOf = (p: number, i: number) =>
+    Math.max(0, 1 - Math.abs((HERO.beats.length - 1) * p - i));
+
+  function renderFocus(p: number) {
+    let r = 0;
+    for (let i = 1; i < HERO.beats.length; i++) {
+      const f = focusOf(p, i);
+      r += f;
+      const cut = cuts[i];
+      if (cut) cut.style.opacity = f.toFixed(3);
+      const cap = capEls[i];
+      if (cap) {
+        cap.style.opacity = f.toFixed(3);
+        cap.style.transform = `translate3d(0, ${((1 - f) * 12).toFixed(1)}px, 0)`;
+        cap.style.pointerEvents = f > 0.5 ? '' : 'none';
+      }
+    }
+    r = Math.min(1, r) * HERO.recedeStrength;
+    if (plateEl) {
+      plateEl.style.opacity = (1 - r * (1 - RECEDE.opacity)).toFixed(3);
+      plateEl.style.filter =
+        r > 0.001
+          ? `saturate(${(1 - r * (1 - RECEDE.saturate)).toFixed(3)}) brightness(${(1 - r * (1 - RECEDE.brightness)).toFixed(3)})`
+          : '';
+    }
+    /* The beat-0 headline leaves over the first segment and stays gone —
+       not a tent, or it would return once Amena's focus passed. */
+    if (openEl) {
+      const o = Math.max(0, 1 - (HERO.beats.length - 1) * p);
+      openEl.style.opacity = o.toFixed(3);
+      openEl.style.transform = `translate3d(0, ${((1 - o) * -12).toFixed(1)}px, 0)`;
+      openEl.style.pointerEvents = o > 0.5 ? '' : 'none';
+    }
+  }
+
   /* ---- progress → camera --------------------------------------
      Three segments between four beats. Position eases; scale eases in
      log space (camBetween). */
@@ -168,7 +234,10 @@ export function initHero() {
      damping rather than a no-op — scrub smooths an ANIMATION, and the
      camera is not a GSAP animation, so the animation is this proxy. */
   const proxy = { p: 0 };
-  const render = () => applyCam(camAt(proxy.p));
+  const render = () => {
+    applyCam(camAt(proxy.p));
+    renderFocus(proxy.p);
+  };
 
   const remeasure = () => {
     measure();
