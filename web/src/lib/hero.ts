@@ -152,22 +152,61 @@ export function initHero() {
     scene.style.transform = `translate3d(${p.tx.toFixed(2)}px, ${p.ty.toFixed(2)}px, 0) scale(${p.s.toFixed(4)})`;
   }
 
-  /* Static pose for now — the camera arrives in task 3. Beat 0 is the
-     composed still at every width, JS or not. */
-  measure();
-  applyCam(beatCams()[0]);
+  /* ---- progress → camera --------------------------------------
+     Three segments between four beats. Position eases; scale eases in
+     log space (camBetween). */
+  function camAt(p: number): Cam {
+    const cams = beatCams();
+    const n = cams.length - 1;
+    const t = Math.min(Math.max(p, 0), 1) * n;
+    const i = Math.min(Math.floor(t), n - 1);
+    return camBetween(cams[i], cams[i + 1], t - i);
+  }
+
+  /* The scrubbed progress lives on a proxy tweened by a timeline that
+     ScrollTrigger drives. That is what makes `scrub: 0.6` a real
+     damping rather than a no-op — scrub smooths an ANIMATION, and the
+     camera is not a GSAP animation, so the animation is this proxy. */
+  const proxy = { p: 0 };
+  const render = () => applyCam(camAt(proxy.p));
+
   const remeasure = () => {
     measure();
-    applyCam(beatCams()[0]);
+    render();
   };
+  measure();
+  render();
   window.addEventListener('resize', remeasure);
   /* This script runs before the layout's initScroll() writes --vh from
      visualViewport, so the first measure may see the 100vh fallback.
      Measure again once everything has loaded. */
   window.addEventListener('load', remeasure);
 
-  void gsap;
-  void ScrollTrigger;
+  const tl = gsap
+    .timeline({ paused: true })
+    .to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
+
+  const st = ScrollTrigger.create({
+    id: 'hero',
+    trigger: section,
+    start: 'top top',
+    end: 'bottom bottom',
+    pin,
+    pinSpacing: false,
+    animation: tl,
+    scrub: HERO.scrub,
+    /* Snap keeps every frame a viewer rests on a composed one, without
+       taking the gesture: the scrollbar moves the whole way and any
+       position is reachable; snap only decides where it settles. */
+    snap: HERO.snap
+      ? { snapTo: [0, 1 / 3, 2 / 3, 1], duration: { min: 0.2, max: 0.6 }, ease: 'power2.inOut' }
+      : undefined,
+    /* Before ScrollTrigger recomputes its own geometry (resize, load,
+       --vh jump), re-measure the box so the pinned frame is right. */
+    onRefreshInit: measure,
+    onRefresh: render,
+  });
+
   void reducedMotion;
 
   /* Dev handle: placement is judged by eye, not measured (spec). */
@@ -215,6 +254,20 @@ export function initHero() {
       /** Park the camera on a beat (static, no scroll) — for placing by eye. */
       park(i: number) {
         applyCam(beatCams()[i]);
+      },
+      /** Force the scrubbed camera to the trigger's current progress and
+          render — the hidden automation tab never ticks the damping. */
+      settle() {
+        tl.progress(st.progress);
+        render();
+        return { progress: st.progress, cam: camAt(proxy.p) };
+      },
+      /** Scroll to a beat (0–3) and settle. */
+      goTo(i: number) {
+        const p = i / (HERO.beats.length - 1);
+        window.scrollTo(0, st.start + (st.end - st.start) * p);
+        ScrollTrigger.update();
+        return this.settle();
       },
     };
   }
