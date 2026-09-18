@@ -244,12 +244,15 @@ H1 · H2 · H3 · H4 (Rule 3) · H7 · H8 · H9 · H11. H5, H6, H10 belong to th
 1. **Layered plate and a big plate (3200px+; 4000px+ is safer for 3×
    phones)** — one request to the illustrator. The portrait extension is
    dropped: one wide plate serves both.
-2. **The agent beat needs a face.** Ask for the stall owner behind his counter
-   — in the illustration now, and in the shoot brief?
-3. **Do the names go on screen** — `Amena`, `Rahim`, `Faysal` as the caption
-   eyebrow, or the roles (`Customer` / `Agent` / `Merchant`)? The prototype
-   never showed them.
-4. **Beat 0 headline bottom-right** (open road) rather than the prototype's
-   bottom-left — confirm against the plate.
+2. ~~The agent beat needs a face~~ — **resolved 2026-09-18 (Nahian):** the
+   illustration stays as it is for the demo; the stall owner goes into the
+   shoot brief only (item 2 there already says so).
+3. ~~Do the names go on screen~~ — **resolved 2026-09-18:** roles on screen
+   (`Customer` / `Agent` / `Merchant`); the names stay in the code and the
+   shoot brief. Nahian: "it's just copy, they will change it anyway" — so
+   roles are the default, and the eyebrow is one string per beat to swap.
+4. ~~Beat 0 headline bottom-right~~ — **resolved 2026-09-18:** bottom-right on
+   desktop (open road), bottom third on mobile with the people in the middle
+   third. Nahian deferred to the recommendation.
 5. ~~The bird remake~~ — **resolved 2026-09-18:** not needed. The bird is a
    window over this frame (`bird.md`).
