@@ -1,0 +1,134 @@
+---
+/* The site footer.
+
+   Ported from `reference/prototype/index.html:153-182` and
+   `css/footer.css`. Two changes on the way across:
+
+   - Hand-written white-with-alpha becomes the --on-night tokens
+     (audit X5).
+   - The extra bottom padding that kept the legal line clear of the
+     demo page-switcher pill is gone with the pill.
+
+   On the homepage the footer also does a job beyond navigation: the
+   services section ends pinned, so without something after it there
+   is no signal whether you have reached the end of the page or the
+   scroll has jammed.
+
+   Every link label and href here is PLACEHOLDER until bKash
+   approves them.
+*/
+const YEAR = new Date().getFullYear();
+
+const COLUMNS = [
+  {
+    head: 'Services',
+    links: ['Send Money', 'Mobile Recharge', 'Cash Out', 'Payment', 'Pay Bill'],
+  },
+  {
+    head: 'Business',
+    links: ['Merchant', 'Online Business', 'Corporate', 'Microfinance'],
+  },
+  {
+    head: 'Company',
+    links: ['About bKash', 'Media & Press', 'Careers', 'Investor Relations'],
+  },
+  {
+    head: 'Help & security',
+    links: ['Help Centre', 'Security Tips', 'Avoid Fraud', 'Contact Us'],
+  },
+];
+
+/* The one link that is real. */
+const HREFS: Record<string, string> = { 'About bKash': '/about' };
+---
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid">
+      {COLUMNS.map((col) => (
+        <div class="foot__col">
+          <p class="t-eyebrow foot__head">{col.head}</p>
+          {col.links.map((l) => (
+            <a href={HREFS[l] ?? '#'}>{l}</a>
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <div class="foot__base t-sm">
+      <span>&copy; {YEAR} bKash Limited. All rights reserved.</span>
+      <a href="#">Privacy Notice</a>
+      <a href="#">Terms &amp; Conditions</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    background: var(--night);
+    color: var(--on-night-2);
+    padding-block: clamp(3rem, 7vh, 5rem);
+  }
+
+  /* Four explicit columns, not auto-fit.
+
+     auto-fit was tried and measured: at 1920 the content box is
+     1216px, which fits SIX 10rem tracks, so four columns of content
+     left two empty tracks and a band of dead space inside .wrap.
+     That is audit A5 — "auto-fill columns not filling" — reproduced
+     exactly. And at 390 it collapsed to one column, because two
+     10rem tracks plus the gap need 344px and a 15px scrollbar
+     leaves 335px. A layout that flips between one and two columns
+     on the presence of a scrollbar is not a composition.
+
+     minmax(0, 1fr) rather than 1fr so a long label cannot push a
+     track wider than its share. */
+  .foot__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 3rem);
+    margin-bottom: var(--s-8);
+  }
+
+  /* Two columns at phone width, stated rather than inferred. */
+  @media (max-width: 767px) {
+    .foot__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .foot__head {
+    color: var(--on-night);
+    margin-bottom: var(--s-4);
+  }
+
+  .foot__col a {
+    display: block;
+    color: var(--on-night-2);
+    /* A 40px+ tap row at 14px type without a visible change. */
+    padding-block: var(--s-2);
+    font-size: var(--fs-sm);
+  }
+
+  .foot__col a:hover {
+    color: var(--on-night);
+  }
+
+  .foot__base {
+    border-top: 1px solid var(--on-night-line);
+    padding-top: var(--s-5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4) var(--s-6);
+    align-items: center;
+    color: var(--on-night-3);
+  }
+
+  .foot__base a {
+    color: var(--on-night-2);
+  }
+
+  .foot__base a:hover {
+    color: var(--on-night);
+  }
+</style>

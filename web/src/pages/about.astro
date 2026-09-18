@@ -1,0 +1,66 @@
+---
+/* The About shell.
+
+   Exists so the nav's two-page behaviour is real and testable — the
+   spec asks for exactly that and nothing more. About's own sections
+   (stats, board, the CEO quote, the Journey Wall) come later, after
+   the homepage.
+
+   Note it does NOT place a [data-nav-dark-end] marker, so it gets a
+   solid nav from the first paint. When its photographic banner is
+   built, the banner opts in by placing that marker at the end of its
+   dark region — the nav state follows the composition, not the page.
+*/
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="About bKash — Financial freedom for millions"
+  description="A secure digital account where millions store value and decide how to use it."
+  current="company"
+>
+  <main class="shell">
+    <div class="wrap shell__in">
+      <p class="t-eyebrow">About bKash</p>
+      <h1 class="t-h1">Empowering 85M Bangladeshis with financial freedom</h1>
+      <p class="t-lead">
+        Bridging the everyday economy and digital finance, bKash brought millions into the
+        formal economy who now have controls on their own money.
+      </p>
+      <p class="t-body">
+        This page is a shell. It proves the nav renders its current state on a second page and
+        that the Support button is present on both, which the prototype's hand-duplicated markup
+        got wrong (audit A7).
+      </p>
+      <blockquote class="t-quote shell__quote">
+        The pull-quote step exists for the CEO quote, which was the least-designed moment on the
+        page. This is a placeholder using it, not the quote itself.
+      </blockquote>
+      <p class="t-sm shell__link">
+        <a href="/">Back to the homepage</a>
+      </p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .shell {
+    padding-top: calc(var(--nav-h) + var(--s-8));
+    padding-bottom: var(--s-10);
+  }
+
+  .shell__in > * + * {
+    margin-top: var(--s-4);
+  }
+
+  .shell__quote {
+    margin-top: var(--s-6);
+    padding-inline-start: var(--s-5);
+    border-inline-start: 2px solid var(--pink);
+    color: var(--ink-2);
+  }
+
+  .shell__link {
+    margin-top: var(--s-6);
+  }
+</style>

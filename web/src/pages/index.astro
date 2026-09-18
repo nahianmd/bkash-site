@@ -1,110 +1,59 @@
 ---
+/* The homepage shell.
+
+   The pin-and-scrub smoke test that lived here is gone, as the spec
+   and START-HERE both require: it existed to prove the scroll
+   infrastructure end to end, and it has done that.
+
+   The four real sections — hero, bird, people, services — land here
+   one at a time under the SDD loop. Nothing below is final content.
+*/
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="bKash" description="Rebuild in progress.">
-  <main>
-    <section class="scaffold">
-      <h1>bKash — rebuild</h1>
-      <p>
-        Astro + GSAP ScrollTrigger scaffold. Sections are ported from <code>src/</code> one at a
-        time under the SDD loop; the smoke test below exists to prove pinning and scrubbing work
-        end to end, and comes out with the first real section.
+<Base
+  title="bKash — Financial freedom for millions"
+  description="A secure digital account where millions store value and decide how to use it."
+  current="home"
+>
+  <main class="shell">
+    <div class="wrap shell__in">
+      <p class="t-eyebrow">Foundation</p>
+      <h1 class="t-display">Financial freedom for millions</h1>
+      <p class="t-lead">
+        The shell is built: tokens, fonts, nav and footer. The hero, the bird, the people and
+        the services sections land here one at a time.
       </p>
-    </section>
-
-    <!-- SMOKE TEST — delete once the first real section lands. -->
-    <section class="smoke" data-smoke>
-      <div class="smoke__pin" data-smoke-pin>
-        <div class="smoke__box" data-smoke-box></div>
-        <p class="smoke__readout" data-smoke-readout>
-          0%
-        </p>
-      </div>
-    </section>
-
-    <section class="scaffold">
-      <p>End of scaffold.</p>
-    </section>
+      <p class="t-body">
+        Every label in the nav and the footer is placeholder until bKash approves it, and the
+        page is <code>noindex</code> until the content is signed off.
+      </p>
+      <p class="t-sm shell__link">
+        <a href="/specimen">Token specimen</a> · <a href="/about">About shell</a>
+      </p>
+    </div>
   </main>
 </Base>
 
 <style>
-  :root {
-    --vh: 100vh;
+  /* Clears the fixed header from the single source, --nav-h. Audit
+     X2: the prototype's sections sat under the header because the
+     offset existed nowhere. */
+  .shell {
+    padding-top: calc(var(--nav-h) + var(--s-8));
+    padding-bottom: var(--s-10);
   }
 
-  body {
-    margin: 0;
-    font-family: ui-sans-serif, system-ui, sans-serif;
-    background: #fff;
-    color: #191316;
+  .shell__in > * + * {
+    margin-top: var(--s-4);
   }
 
-  .scaffold {
-    max-width: 44rem;
-    margin-inline: auto;
-    padding: 6rem 1.5rem;
+  .shell__link {
+    margin-top: var(--s-6);
   }
 
-  h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    letter-spacing: -0.03em;
-    margin: 0 0 1rem;
-  }
-
-  .smoke {
-    height: 300vh;
-    background: #0b0b0b;
-  }
-
-  .smoke__pin {
-    height: var(--vh, 100vh);
-    display: grid;
-    place-items: center;
-    gap: 1.5rem;
-  }
-
-  .smoke__box {
-    width: min(60vw, 18rem);
-    aspect-ratio: 1;
-    border-radius: 22px;
-    background: #e2136e;
-    will-change: transform;
-  }
-
-  .smoke__readout {
-    margin: 0;
-    color: #fff;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.15em;
-    font-size: 0.75rem;
-    text-transform: uppercase;
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
   }
 </style>
-
-<script>
-  import { gsap, ScrollTrigger, reducedMotion } from '../lib/scroll';
-
-  const section = document.querySelector<HTMLElement>('[data-smoke]');
-  const pin = document.querySelector<HTMLElement>('[data-smoke-pin]');
-  const box = document.querySelector<HTMLElement>('[data-smoke-box]');
-  const readout = document.querySelector<HTMLElement>('[data-smoke-readout]');
-
-  if (section && pin && box && readout && !reducedMotion()) {
-    ScrollTrigger.create({
-      id: 'smoke',
-      trigger: section,
-      start: 'top top',
-      end: 'bottom bottom',
-      pin: pin,
-      pinSpacing: false,
-      scrub: true,
-      onUpdate(self) {
-        const p = self.progress;
-        gsap.set(box, { scale: 1 + p * 2, rotate: p * 180 });
-        readout.textContent = `${Math.round(p * 100)}%`;
-      },
-    });
-  }
-</script>

@@ -30,11 +30,19 @@ Do this:
    - run `npm run check` and `npm run build` in `web/`;
    - make one small, focused commit (`type(scope): summary`);
    - tick the task off in `plan.md`.
-4. Set `Status: BUILT` when the checklist is done, and say which acceptance
-   items you verified yourself and which need Nahian's eye.
+4. Set `Status: BUILT` when the checklist is done, and hand off to `/verify`.
+   Do not walk the acceptance criteria yourself — that is the verify phase, on
+   Sonnet. Say which criteria you *expect* to pass and which you are unsure of,
+   so verify knows where to look first.
 
 Hard rules:
 
+- **No browser during implement.** Screenshots and DOM checks belong to
+  `/verify`. `npm run check` and `npm run build` are the gates here. The one
+  exception: a task whose done-state genuinely cannot be judged from build
+  output (a composite alignment, a crop set by eye) gets *one* look to finish
+  the task — never a check-fix-check loop, and never walking acceptance
+  criteria.
 - Stay strictly scoped to the approved plan.
 - If the plan turns out to be wrong or incomplete, **STOP and say so.** Do not
   silently redesign — that is the failure this process exists to prevent.

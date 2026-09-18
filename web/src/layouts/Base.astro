@@ -2,6 +2,9 @@
 /* The shell both pages share. Sections are composed into the slot. */
 import { Font } from 'astro:assets';
 
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
 import '../styles/tokens.css';
 import '../styles/base.css';
 
@@ -14,9 +17,11 @@ interface Props {
      URL is not. See CLAUDE.md, "Open, and Nahian's call". Flip the
      default here once that lands — one place, both pages. */
   noindex?: boolean;
+  /* Passed through to Nav so it can mark the current entry. */
+  current?: 'home' | 'consumers' | 'business' | 'company';
 }
 
-const { title, description = '', noindex = true } = Astro.props;
+const { title, description = '', noindex = true, current } = Astro.props;
 ---
 
 <!doctype html>
@@ -42,7 +47,11 @@ const { title, description = '', noindex = true } = Astro.props;
     <Font cssVariable="--font-inter" preload />
   </head>
   <body>
+    <Nav current={current} />
+
     <slot />
+
+    <Footer />
 
     <script>
       import { initScroll } from '../lib/scroll';

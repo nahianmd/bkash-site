@@ -1,0 +1,386 @@
+---
+/* The site header.
+
+   Ported from `reference/prototype/index.html:20-56` and
+   `css/nav.css`, with the mega-panels and the demo page-switcher
+   pill dropped, and the two inline `style=""` attributes removed.
+
+   All link labels are PLACEHOLDER until bKash approves them.
+*/
+import Logo from './Logo.astro';
+
+interface Props {
+  /* Which top-level entry is current. Drives aria-current on both
+     the bar and the drawer. */
+  current?: 'home' | 'consumers' | 'business' | 'company';
+}
+
+const { current } = Astro.props;
+
+/* One list, rendered twice — the bar and the drawer cannot drift
+   apart the way the prototype's two hand-written copies did. Audit
+   A7 was exactly that: the About nav lost its Support button
+   because the markup was duplicated by hand. */
+interface NavLink {
+  id: NonNullable<Props['current']>;
+  label: string;
+  href: string;
+  /* The drawer has room for a fuller label than the bar. */
+  drawerLabel?: string;
+}
+
+const LINKS: NavLink[] = [
+  { id: 'consumers', label: 'Consumers', href: '#' },
+  { id: 'business', label: 'Business', href: '#' },
+  { id: 'company', label: 'Company', href: '/about', drawerLabel: 'About bKash' },
+];
+---
+
+<header class="nav" data-nav>
+  <a class="nav__logo" href="/" aria-label="bKash home">
+    <Logo class="nav__mark" />
+  </a>
+
+  <nav class="nav__links" aria-label="Primary">
+    {LINKS.map((l) => (
+      <a
+        class:list={['nav__top', { 'is-current': current === l.id }]}
+        href={l.href}
+        aria-current={current === l.id ? 'page' : undefined}
+      >
+        {l.label}
+      </a>
+    ))}
+  </nav>
+
+  <div class="nav__meta">
+    <div class="nav__lang">
+      <button type="button" aria-current="true">
+        EN
+      </button>
+      <span class="nav__lang-sep" aria-hidden="true">
+        /
+      </span>
+      {/* Visibly present, clearly inert. Hiding it invites "where is
+          Bangla?"; leaving it live invites a dead click. Not
+          focusable and announced as disabled. specs/needs.md C3. */}
+      <button type="button" class="is-inert" tabindex="-1" aria-disabled="true">
+        বাংলা
+      </button>
+    </div>
+    <a class="btn btn--outline nav__support" href="#">
+      Support
+    </a>
+  </div>
+
+  <button
+    class="nav__burger"
+    type="button"
+    data-drawer-open
+    aria-expanded="false"
+    aria-controls="nav-drawer"
+  >
+    <span class="sr-only">Open menu</span>
+    <span class="nav__burger-bar" aria-hidden="true"></span>
+    <span class="nav__burger-bar" aria-hidden="true"></span>
+    <span class="nav__burger-bar" aria-hidden="true"></span>
+  </button>
+</header>
+
+{/* A native <dialog>: focus trap, Escape and focus restore come for
+    free. The prototype hand-rolled a div and got none of them. */}
+<dialog class="nav__drawer" id="nav-drawer" data-drawer aria-label="Menu">
+  <div class="nav__drawer-in">
+    <button class="btn btn--ghost nav__drawer-close" type="button" data-drawer-close>
+      Close
+    </button>
+
+    <nav class="nav__drawer-nav" aria-label="Menu">
+      <a
+        class:list={['t-h3', { 'is-current': current === 'home' }]}
+        href="/"
+        aria-current={current === 'home' ? 'page' : undefined}
+      >
+        Home
+      </a>
+      {LINKS.map((l) => (
+        <a
+          class:list={['t-h3', { 'is-current': current === l.id }]}
+          href={l.href}
+          aria-current={current === l.id ? 'page' : undefined}
+        >
+          {l.drawerLabel ?? l.label}
+        </a>
+      ))}
+    </nav>
+
+    {/* At 390px this is where Support lives — a full-width tap
+        target rather than a cramped pill in the bar. The criterion
+        is that Support is present on both pages, and it is. */}
+    <a class="btn btn--primary nav__drawer-support" href="#">
+      Support
+    </a>
+
+    <div class="nav__drawer-lang">
+      <button type="button" aria-current="true">
+        EN
+      </button>
+      <span class="nav__lang-sep" aria-hidden="true">
+        /
+      </span>
+      <button type="button" class="is-inert" tabindex="-1" aria-disabled="true">
+        বাংলা
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* ---- the bar ----
+     SOLID IS THE DEFAULT. The prototype had it inverted — white
+     links on a transparent ground, with `.is-solid` as the override
+     — which means a JS failure leaves white on white. Here a page
+     with no dark header, or with JS broken, is legible. */
+  .nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-nav);
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    gap: var(--s-6);
+    padding-inline: var(--gutter);
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 1px 0 var(--pink-line);
+    transition:
+      background var(--t-base) var(--ease-io),
+      color var(--t-base) var(--ease-io),
+      box-shadow var(--t-base) var(--ease-io);
+  }
+
+  /* Transparent, and ONLY when JS has positively established that a
+     dark full-bleed header is under the nav band. The state needs
+     its own class rather than `:not(.is-solid)`: the default state
+     has no class at all, so a `:not()` rule would match it and make
+     the default transparent — which is the white-on-white failure
+     this file is meant to prevent. */
+  .nav.is-over-dark {
+    background: transparent;
+    color: var(--paper);
+    box-shadow: none;
+  }
+
+  /* The transparent nav sits over whatever the camera is showing, so
+     it carries its own scrim rather than trusting the artwork. */
+  .nav::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 calc(-1 * var(--s-6));
+    background: linear-gradient(to bottom, rgb(0 0 0 / 50%), rgb(0 0 0 / 0));
+    opacity: 0;
+    transition: opacity var(--t-base) var(--ease-io);
+    pointer-events: none;
+  }
+
+  .nav.is-over-dark::before {
+    opacity: 1;
+  }
+
+  .nav > * {
+    position: relative;
+  }
+
+  /* ---- logo ---- */
+  .nav__logo {
+    flex: none;
+    display: block;
+    width: 6.4rem;
+  }
+
+  .nav__mark {
+    width: 100%;
+    height: auto;
+  }
+
+  /* ---- top-level links ----
+     The mega panels are gone: with two real pages behind them they
+     were three hover targets promising depth that is not there. */
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.875rem, 2.2vw, 2rem);
+    margin-inline-start: var(--s-4);
+  }
+
+  .nav__top {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: inherit;
+    opacity: 0.82;
+    transition:
+      opacity var(--t-fast) var(--ease-io),
+      color var(--t-fast) var(--ease-io);
+  }
+
+  .nav__top:hover {
+    opacity: 1;
+    color: var(--pink);
+  }
+
+  .nav__top.is-current {
+    opacity: 1;
+    color: var(--pink);
+    font-weight: 600;
+  }
+
+  /* On the transparent nav, pink-on-photograph is the H4 mistake.
+     The current item stays white and carries its weight instead. */
+  .nav.is-over-dark .nav__top.is-current,
+  .nav.is-over-dark .nav__top:hover {
+    color: var(--paper);
+  }
+
+  /* ---- meta ---- */
+  .nav__meta {
+    margin-inline-start: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    font-size: var(--fs-sm);
+  }
+
+  .nav__lang {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .nav__lang button {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  .nav__lang button[aria-current='true'] {
+    opacity: 1;
+    font-weight: 600;
+  }
+
+  .nav__lang-sep {
+    opacity: 0.3;
+  }
+
+  /* ---- burger ---- */
+  .nav__burger {
+    display: none;
+    margin-inline-start: auto;
+    /* 44px tap target without changing the visual mark. */
+    padding: var(--s-3);
+    margin-inline-end: calc(-1 * var(--s-3));
+  }
+
+  .nav__burger-bar {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 2px;
+  }
+
+  .nav__burger-bar + .nav__burger-bar {
+    margin-top: 5px;
+  }
+
+  /* ---- the drawer ----
+     A full-screen dialog on paper. At 390px this IS the primary
+     navigation, not a fallback for a bar that did not fit. */
+  .nav__drawer {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .nav__drawer::backdrop {
+    background: rgb(0 0 0 / 40%);
+  }
+
+  .nav__drawer-in {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-5);
+    padding: var(--gutter);
+    /* Clear the notch and the home indicator. */
+    padding-top: calc(var(--gutter) + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Same side as the burger, so the thumb does not travel. */
+  .nav__drawer-close {
+    align-self: flex-end;
+  }
+
+  .nav__drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .nav__drawer-nav a {
+    color: var(--ink);
+  }
+
+  .nav__drawer-nav a.is-current {
+    color: var(--pink);
+  }
+
+  .nav__drawer-support {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .nav__drawer-lang {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: var(--fs-sm);
+  }
+
+  /* ---- 390px is a composition, not an override ----
+     Three things in the bar and no more: logo, language, burger.
+     Support moves into the drawer, where it is a full-width tap
+     target instead of a cramped pill. */
+  @media (max-width: 900px) {
+    .nav__links,
+    .nav__support {
+      display: none;
+    }
+
+    .nav__burger {
+      display: block;
+    }
+
+    .nav__meta {
+      /* The burger takes the auto margin at this width. */
+      margin-inline-start: auto;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .nav {
+      gap: var(--s-4);
+    }
+  }
+</style>
+
+<script>
+  import { initNav } from '../lib/nav';
+  initNav();
+</script>

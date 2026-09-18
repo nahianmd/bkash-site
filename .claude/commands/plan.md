@@ -42,7 +42,10 @@ Do this:
    - how it behaves at 390px, stated separately from desktop. Mobile is a
      composition in its own right here, not a set of overrides — if the plan
      only has desktop in it, it is not finished;
-   - an ordered task checklist small enough to commit one task at a time;
+   - an ordered task checklist small enough to commit one task at a time.
+     Tasks are *build* steps. No "screenshot and confirm" tasks — visual
+     checks go in the Verification section, which `/verify` runs on Sonnet
+     after the build is done;
    - risks and what you would check first if it looks wrong.
 
 Hard rules:
