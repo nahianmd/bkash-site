@@ -1,6 +1,9 @@
 # Spec: Foundation
 
 > Status: DRAFT
+> Model: **Opus 5**. A port of a token system that already exists plus two
+> additions. Every answer is determinable from `reference/`. Do not spend
+> Fable credit here.
 > Source: Claude, 2026-09-18, written from the prototype audit and the frozen
 > reference rather than from an interview. Nahian approves or corrects.
 

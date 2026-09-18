@@ -119,6 +119,38 @@ redundant and one of them should go. Decide while specifying the bird.
 - Bangla: out of scope until asked. The toggle stays visibly disabled, never
   silently dead.
 
+## Model assignment
+
+$100 of Fable 5.1 promotional credit is available. **Check first that Claude
+Code is billing against it** — on a subscription plan, API credit does not apply
+and this table is academic.
+
+Each spec carries its own `> Model:` line; this is the overview. The rule behind
+it is in `CLAUDE.md` -> Model selection.
+
+| Work | Model | Why | Est. Fable |
+|---|---|---|---|
+| `foundation` | Opus 5 | A port of tokens that already exist plus two additions. Fully determinable. | — |
+| `bird-collage` spec | **Fable 5.1** | Mechanism genuinely open, got wrong twice, signature moment. Conversational — the answer is not on disk. | ~$12 |
+| `hero` spec | **Fable 5.1** | Camera framing, the 1px handover contract, the AI-imagery decision. | ~$5 |
+| `hero` + `bird` camera build | **Fable 5.1** | Log-space interpolation and fixed-point derivation fail quietly. | ~$30 |
+| Journey Wall, mobile form | **Fable 5.1** | A 6:1 artwork that cannot pan on a phone. Open creative problem. | ~$8 |
+| `phone-bento` mobile composition | **Fable 5.1** (that call only) | A real design decision; the rest of the revision is written. | ~$5 |
+| Everything else — bento build, phone-services, About's static sections | Opus 5 | Execution against written answers. | — |
+| All `/verify` | Sonnet 5 | Mechanical. | — |
+
+**~$60 of $100**, leaving headroom for the bird running long — which it may,
+and should.
+
+**Do not spend Fable credit on `foundation`.** It is the clearest waste
+available: every answer in it is already written down in `reference/`.
+
+**Give Fable the disk, not a chat handoff.** Start it in a fresh session pointed
+at this file and the specs. Inheriting a long conversation means paying premium
+rates for it to re-derive another model's framing — and to inherit that model's
+mistakes. The one exception is the bird mechanism, which is not on disk and
+needs Nahian in the room.
+
 ## Starting a session
 
 ```

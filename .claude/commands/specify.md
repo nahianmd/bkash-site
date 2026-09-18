@@ -7,6 +7,16 @@ process (see SDD-WORKFLOW.md).
 
 Feature: $ARGUMENTS
 
+**Before you start — check the model.**
+
+Every spec carries a `> Model:` line naming which model that work is meant to
+run on, and why. You know which model you are. Compare them, and if they differ,
+say so in one line and let Nahian switch or wave you on — do not just proceed,
+and do not switch anything yourself.
+
+If the spec does not exist yet, check `START-HERE.md` -> Model assignment for
+the slug, and add the `> Model:` line as you write the spec.
+
 Do this:
 
 1. Read `CLAUDE.md` to load the mission, stack and conventions.

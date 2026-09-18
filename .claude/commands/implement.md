@@ -10,6 +10,17 @@ Slug: $ARGUMENTS
 Spec: `specs/sections/$ARGUMENTS.md` or `specs/$ARGUMENTS/spec.md`
 Plan: `specs/$ARGUMENTS/plan.md`
 
+**Before you start — check the model.**
+
+Every spec carries a `> Model:` line naming which model that work is meant to
+run on, and why. You know which model you are. Compare them, and if they differ,
+say so in one line and let Nahian switch or wave you on — do not just proceed,
+and do not switch anything yourself.
+
+Watch for a split tag — several specs name one model for the section and
+another for a specific task inside it (the hero's camera, the Journey Wall's
+mobile form). Raise it when you reach that task, not only at the start.
+
 Do this:
 
 1. Read `CLAUDE.md`, the spec and the plan. Read any nested `CLAUDE.md` in a

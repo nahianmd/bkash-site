@@ -1,6 +1,9 @@
 # Section: Hero — one camera through one street
 
 > Status: DRAFT
+> Model: **Fable 5.1 to specify and to build the camera.** The framing, the
+> 1px handover contract and the mobile re-anchoring fail quietly — almost-right
+> is the expensive outcome here. **Opus 5** for the rest of the build.
 > Source: Claude, 2026-09-18, from the prototype's `SCENE` data, the client
 > deck copy already in it, and `specs/prototype-audit.md` H1–H11.
 > **New spec.** The prototype's four story beats were built but never written

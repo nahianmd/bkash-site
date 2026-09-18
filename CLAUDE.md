@@ -154,6 +154,33 @@ with Nahian approving at every boundary. `/clear` between phases.
   history.
 - Update `PROGRESS.md` as sections land.
 
+## Model selection
+
+Each spec carries a `> Model:` line. The four commands check it before starting
+and say so if the session is on the wrong one — they never switch it themselves.
+
+The test, when tagging new work:
+
+- **Fable 5.1** when the answer is **not determinable from what is written
+  down** — deciding *what* to build rather than *how*, or where being subtly
+  wrong would not be caught by looking at it. The camera maths and the bird's
+  scale derivation fail quietly; almost-right is the expensive outcome.
+- **Opus 5** when the work is **execution against a written answer** — the spec
+  says what, the plan says how, and the job is building and checking.
+- **Sonnet 5** for `/verify` throughout: driving the browser, measuring values,
+  grepping. Mechanical, and the judgement calls are Nahian's anyway.
+
+This maps onto the phases loosely and deliberately not rigidly — `foundation`
+does not need Fable to specify, and `hero` does need it to build its camera.
+
+Two practical notes:
+
+- Fable costs **2x Opus and 5x Sonnet**, and output is 5x input with thinking
+  billed as output. It has to earn it.
+- Fable cache reads are **$0.25/MTok against $10 fresh**, so one long session on
+  one hard problem is much cheaper than three short ones that re-read the
+  prototype each time. Clear between *sections*, not mid-problem.
+
 ## Order of work
 
 `foundation` → `hero` → `bird-collage` → `phone-bento` → `about`.

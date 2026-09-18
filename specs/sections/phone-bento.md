@@ -1,6 +1,9 @@
 # Section: Phone — bento grid that collapses into the device
 
 > Status: APPROVED — Nahian, 2026-09-17
+> Model: **Opus 5.** The revision is written and the work is execution.
+> Exception: the mobile composition decision (fewer larger cards vs. a
+> different mechanic) is a real design call — **Fable 5.1** for that alone.
 > Source: Nahian, 2026-09-17, with an Insta360 "Luna Ultra" reference screenshot
 > Replaces: the current split-screen phone section (phone left, copy right)
 

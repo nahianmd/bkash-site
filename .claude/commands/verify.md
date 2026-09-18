@@ -15,6 +15,17 @@ and looking at it**, backed by measured DOM values wherever a number can settle
 an argument. A measured number beats an impression; a screenshot beats a
 measured number when the criterion is about how it *reads*.
 
+**Before you start — check the model.**
+
+Every spec carries a `> Model:` line naming which model that work is meant to
+run on, and why. You know which model you are. Compare them, and if they differ,
+say so in one line and let Nahian switch or wave you on — do not just proceed,
+and do not switch anything yourself.
+
+Verification is mechanical and is tagged **Sonnet 5** across the board,
+whatever the section's own build model was. Say so if you are on something
+more expensive.
+
 Do this:
 
 1. Re-read the spec's acceptance criteria and its "Explicitly NOT this" list.

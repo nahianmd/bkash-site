@@ -1,6 +1,9 @@
 # Section: Bird collage — the mark is made of people
 
 > Status: DRAFT
+> Model: **Fable 5.1**, spec and build. The mechanism is genuinely open, it has
+> been got wrong twice, and it is the signature moment of the site. Specify it
+> in conversation with Nahian, not from files — the answer is not on disk.
 > Source: Nahian, 2026-09-18, in conversation — the MacBook Pro performance
 > section as the pacing reference. Facet geometry measured from the artwork the
 > same day. Written by Claude; open questions at the foot.

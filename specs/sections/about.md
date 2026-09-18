@@ -1,6 +1,9 @@
 # Page: About bKash
 
 > Status: BUILT — needs Nahian's eye
+> Model: **Opus 5.** Exception: **Fable 5.1** for the Journey Wall on mobile —
+> a 6:1 artwork that cannot pan on a phone is an open creative problem with no
+> existing answer.
 > Source: Nahian, 2026-09-17 — "all of them, it's pretty straightforward"
 
 ## Sections, in order

@@ -9,6 +9,16 @@ Slug: $ARGUMENTS
 Spec: `specs/sections/$ARGUMENTS.md`, or `specs/$ARGUMENTS/spec.md` for
 infrastructure work. Read whichever exists.
 
+**Before you start — check the model.**
+
+Every spec carries a `> Model:` line naming which model that work is meant to
+run on, and why. You know which model you are. Compare them, and if they differ,
+say so in one line and let Nahian switch or wave you on — do not just proceed,
+and do not switch anything yourself.
+
+The tag may name different models for specifying and for building. You are
+planning, so the spec's model applies unless it says otherwise.
+
 Do this:
 
 1. Read `CLAUDE.md` and the spec. If the spec still has Open questions, resolve
