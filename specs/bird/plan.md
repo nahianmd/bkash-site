@@ -5,6 +5,26 @@
 > Model: **Fable 5.1** — the mask, the start-scale solver, the handover.
 > Written 2026-09-18 against the hero as BUILT (`a46767d`).
 
+## Revised 2026-09-19 — one pin, not two
+
+The plan below was built as written and Nahian saw the seam: "after hero
+ends, scroll scrolls down to another section which is again Faysal in the
+hero's last frame, and then the bird does its thing." The frames were equal
+at rest — measured, string for string — but at the instant the hero unpins
+its camera is still catching up on the 0.6s scrub lag, so for a beat the two
+frames differ and one slides over the other. Pixel-matching two pins cannot
+fix a timing seam.
+
+**Now:** `BirdOverlay.astro` (the sheet, the hole, the lines, the copy) sits
+inside the hero's pin; the hero's section carries both travels
+(`--hero-screens` = 1 + 3 + 2.5); one ScrollTrigger drives one render, the
+hero's beats over the first `share` and the bird's `q` over the rest. No
+second scene, no second pin. The snap is a function: directional within the
+share, none past beat 3. `Bird.astro` becomes the static poster shown only
+without JS or under reduced motion — the plate clipped to the mark in an SVG
+`viewBox`, no machinery. The seam rows in Verification are moot by
+construction; the solver, the pull-back and `content: 'wide'` are unchanged.
+
 ## What exists today
 
 **In `web/` (hero, built):**

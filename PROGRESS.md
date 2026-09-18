@@ -371,3 +371,14 @@ mask is thousands of px across); AVIF alpha on the painted cutouts; the first
 edge at p≈0.1 reading as an edge and not an artefact. **Nahian's eye:** the
 rest poster at both widths; at 390 the lower third is empty below the copy
 (mark centred at 34% — the spec's number); the `'wide'` vs `'hold'` choice.
+
+**Revised 2026-09-19 — one pin.** Nahian saw the seam the measurement
+could not: at the instant the hero unpins, its camera is still catching up
+on the scrub lag, so the two "identical" frames differ for a beat and one
+slides over the other. The bird's overlay now lives inside the hero's pin;
+one trigger, one render (`share` = 3/5.5 for the beats, the rest for the
+bird); the snap is directional within the share and off past beat 3;
+`Bird.astro` is the static poster for no-JS / reduced motion only. Measured:
+the beats land at their scaled positions with exact scene scales; the mask
+is fully open through the beats; a forward tick from beat 0 snaps to beat 1,
+back from beat 1 to 0, and past beat 3 there is no snap.

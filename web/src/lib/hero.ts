@@ -11,6 +11,7 @@
 
 import { gsap, ScrollTrigger, reducedMotion } from './scroll';
 import { createSceneRig, poseFor, type Beat, type Cam } from './scene-rig';
+import { BIRD, createBirdOverlay } from './bird';
 
 /* ---- the section's tuning, one object -------------------------
    styles/README.md: what is genuinely per-section lives here, not
@@ -46,6 +47,12 @@ export const HERO = {
   recedeStrength: 1,
 
   travelPerBeat: 1,
+  /* The bird rides the same pin: its travel is appended to the hero's,
+     and the hero's beats occupy the first `share` of the trigger. */
+  get share() {
+    const hero = this.travelPerBeat * (this.beats.length - 1);
+    return hero / (hero + BIRD.travelScreens);
+  },
   scrub: 0.6,
   snap: true,
   /* Rule 2: the cutout plane leads the plate mid-segment, zero at
@@ -68,6 +75,16 @@ export function initHero() {
   const scene: HTMLElement = sceneEl;
 
   const rig = createSceneRig(scene, pin, HERO);
+
+  const marker = section.querySelector<HTMLElement>('[data-nav-dark-end]');
+  const birdRoot = section.querySelector<HTMLElement>('[data-bird-live]');
+  const bird = birdRoot ? createBirdOverlay(birdRoot, pin, rig, marker, HERO.scaleEase) : null;
+
+  /* One pin for both: the section's travel is the hero's beats plus the
+     bird's, and the CSS fallback height is overwritten from the configs
+     so there is one source. */
+  const heroScreens = HERO.travelPerBeat * (HERO.beats.length - 1);
+  section.style.setProperty('--hero-screens', String(1 + heroScreens + BIRD.travelScreens));
 
   const openEl = section.querySelector<HTMLElement>('[data-hero-open]');
   const capEls = HERO.beats.map((_, i) =>
@@ -131,15 +148,32 @@ export function initHero() {
      rather than a no-op — scrub smooths an ANIMATION, and the camera is
      not a GSAP animation, so the animation is this proxy. */
   const proxy = { p: 0 };
+  /* One render for the whole travel. In the hero's share, the camera,
+     focus, chrome and depth; the bird's mask stays fully open (q = 0).
+     In the tail, the bird owns the scene — it pulls the camera back and
+     lifts the recede — and the hero only fades its last caption with it. */
   const render = () => {
-    rig.applyCam(camAt(proxy.p));
-    const focus = rig.applyFocus(proxy.p);
-    renderChrome(proxy.p, focus);
-    renderDepth(proxy.p);
+    const P = proxy.p;
+    const share = HERO.share;
+    if (P <= share || !bird) {
+      const p = share > 0 ? Math.min(P / share, 1) : 0;
+      rig.applyCam(camAt(p));
+      const focus = rig.applyFocus(p);
+      renderChrome(p, focus);
+      renderDepth(p);
+      bird?.renderAt(0);
+    } else {
+      const q = (P - share) / (1 - share);
+      const e = bird.renderAt(q);
+      const lastCap = capEls[capEls.length - 1];
+      if (lastCap) lastCap.style.opacity = (1 - e).toFixed(3);
+      if (openEl) openEl.style.opacity = '0';
+    }
   };
 
   const remeasure = () => {
     rig.measure();
+    bird?.measure();
     render();
   };
   rig.measure();
@@ -176,11 +210,31 @@ export function initHero() {
        taking the gesture: the scrollbar moves the whole way and any
        position is reachable; snap only decides where it settles. */
     snap: HERO.snap
-      ? { snapTo: [0, 1 / 3, 2 / 3, 1], duration: { min: 0.2, max: 0.6 }, ease: 'power2.inOut' }
+      ? {
+          /* Directional, and only within the hero's share: a forward tick
+             lands on the NEXT beat, a backward one on the previous; past
+             beat 3 the bird's reveal is left unsnapped — one rest at the
+             end of the scrub is its composed frame. */
+          snapTo: (value: number, self?: { direction: number }) => {
+            const share = HERO.share;
+            if (value > share + 1e-6) return value;
+            const n = HERO.beats.length - 1;
+            const beats = Array.from({ length: n + 1 }, (_, i) => (i / n) * share);
+            const dir = self?.direction ?? 0;
+            if (dir > 0) return beats.find((b) => b >= value - 1e-4) ?? share;
+            if (dir < 0) return [...beats].reverse().find((b) => b <= value + 1e-4) ?? 0;
+            return beats.reduce((a, b) => (Math.abs(b - value) < Math.abs(a - value) ? b : a));
+          },
+          duration: { min: 0.2, max: 0.6 },
+          ease: 'power2.inOut',
+        }
       : undefined,
     /* Before ScrollTrigger recomputes its own geometry (resize, load,
        --vh jump), re-measure the box so the pinned frame is right. */
-    onRefreshInit: rig.measure,
+    onRefreshInit: () => {
+      rig.measure();
+      bird?.measure();
+    },
     onRefresh: render,
   });
 
@@ -236,15 +290,27 @@ export function initHero() {
       settle() {
         tl.progress(st.progress);
         render();
-        return { progress: st.progress, cam: camAt(proxy.p) };
+        const p = Math.min(proxy.p / HERO.share, 1);
+        return { progress: st.progress, heroP: p, cam: camAt(p) };
       },
       /** Scroll to a beat (0–3) and settle. */
       goTo(i: number) {
-        const p = i / (HERO.beats.length - 1);
+        const p = (i / (HERO.beats.length - 1)) * HERO.share;
         window.scrollTo(0, st.start + (st.end - st.start) * p);
         ScrollTrigger.update();
         return this.settle();
       },
+      /** Scroll to the bird's own progress q (0–1) and settle. */
+      goToBird(q: number) {
+        const p = HERO.share + q * (1 - HERO.share);
+        window.scrollTo(0, st.start + (st.end - st.start) * p);
+        ScrollTrigger.update();
+        return {
+          ...this.settle(),
+          bird: bird ? { rest: bird.rest(), start: bird.start() } : null,
+        };
+      },
+      bird: () => (bird ? { rest: bird.rest(), start: bird.start(), config: BIRD } : null),
     };
   }
 }

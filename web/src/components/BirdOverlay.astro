@@ -1,0 +1,104 @@
+---
+/* The bird's live overlay — lives INSIDE the hero's pinned frame.
+   specs/sections/bird.md · specs/bird/plan.md (revised 2026-09-19)
+
+   The white sheet with the mark as its hole, plus the copy. No scene
+   of its own: the content under it is the hero's scene, and the hero's
+   single ScrollTrigger drives both. That is what makes the handover
+   not exist — there is no second frame to hand over to. Nahian,
+   2026-09-19: "could we not do it so that bird does its thing where
+   hero ends, not scrolling down to another section?" */
+import { FACETS, facetPath } from '../lib/bird-shape';
+
+const paths = FACETS.map((_, i) => facetPath(i));
+---
+
+<div class="bird" data-bird-live>
+  <svg class="bird__mask" aria-hidden="true" focusable="false">
+    <defs>
+      <mask id="bird-hole" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+        <rect width="100%" height="100%" fill="#fff"></rect>
+        <g data-bird-hole fill="#000">
+          {paths.map((d) => (
+            <path d={d}></path>
+          ))}
+        </g>
+      </mask>
+    </defs>
+    <rect class="bird__sheet" width="100%" height="100%" mask="url(#bird-hole)"></rect>
+    <g class="bird__lines" data-bird-lines fill="none">
+      {paths.map((d) => (
+        <path d={d} vector-effect="non-scaling-stroke"></path>
+      ))}
+    </g>
+  </svg>
+
+  <div class="bird__copy" data-bird-copy>
+    <p class="t-eyebrow bird__eyebrow">Across Bangladesh</p>
+    <h2 class="t-h1 bird__title">Writing Millions of Stories in Motion</h2>
+  </div>
+</div>
+
+<style>
+  .bird {
+    position: absolute;
+    inset: 0;
+    z-index: calc(var(--z-chrome) + 1);
+    pointer-events: none;
+  }
+
+  .bird__mask {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .bird__sheet {
+    fill: var(--paper);
+  }
+
+  .bird__lines path {
+    stroke: var(--paper);
+    stroke-width: 2;
+  }
+
+  /* Centred beneath the mark; --bird-bottom is written on resize by
+     bird.ts: the mark's bottom edge at rest, in px. Ink on paper — no
+     photograph under this copy, so no scrim. */
+  .bird__copy {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: calc(var(--bird-bottom, 71%) + var(--s-6));
+    text-align: center;
+    color: var(--ink);
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+
+  .bird__eyebrow {
+    color: var(--ink-3);
+    margin-bottom: var(--s-4);
+  }
+
+  .bird__title {
+    margin-inline: auto;
+  }
+
+  @media (max-width: 767px) {
+    .bird__title {
+      font-size: var(--fs-h2);
+      line-height: 1.12;
+      letter-spacing: -0.022em;
+      font-weight: 600;
+    }
+  }
+
+  /* When the hero renders its static still, the overlay is not part of
+     it — the static poster is Bird.astro. */
+  :global(.no-js) .bird,
+  :global(.hero--static) .bird {
+    display: none;
+  }
+</style>

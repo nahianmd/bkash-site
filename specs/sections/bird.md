@@ -1,9 +1,11 @@
 # Section 2: Bird — the street, seen through the mark
 
-> Status: BUILT — 2026-09-19 (Fable). One deviation from the spec's option (a),
-> made on the picture and flagged: the street pulls back with the window
-> (`content: 'wide'`); `'hold'` is one flag away. Not yet verified;
-> SIGNED-OFF is Nahian's alone.
+> Status: BUILT — 2026-09-19 (Fable), **revised the same day to one pin**: the
+> bird's window lives inside the hero's pinned frame and the hero's single
+> trigger drives both. Nahian saw the two-pin seam; one frame cannot seam
+> with itself. `content: 'wide'` (the street pulls back with the window) is
+> a deviation from option (a), flagged; `'hold'` is one flag away. Not yet
+> verified; SIGNED-OFF is Nahian's alone.
 > Model: **Fable 5.1**, spec and build.
 > Source: Nahian, 2026-09-18 (evening): "drop the scenes inside the bird — it
 > will be closing on the whole display, zooming out." Confirmed as a **mask

@@ -93,8 +93,9 @@ on approach; the phone emerges from it into the sixteen services. See
    **`hero.md` was re-specified the same evening around four illustrated
    assets** (`reference/assets/img/hero.jpeg`, `amena.png`, `Rahim.png`,
    `Faysal.png`) — previs for a real shoot. It carries the photographer's brief
-   The bird is now a **mask window** over the hero's last frame (`bird.md`,
-   same evening) — no collage remake, handover exact by construction.
+   The bird is a **mask window over the hero's own frame, on the hero's
+   own pin** (`bird.md`, revised 2026-09-19 after a visible two-pin seam) —
+   no collage remake, no handover at all.
 
 4. **Transitions** — designed against composed states, once those exist.
 
