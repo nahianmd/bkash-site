@@ -80,12 +80,10 @@ Sections depend on each other, so this order is not arbitrary.
    story beats were built but never specified; `hero-collapse.md` only ever
    covered the bird. Six open questions, the first being the AI imagery.
 
-3. **`bird-collage`** — no spec yet, deliberately. An earlier attempt was
-   written and binned for weak context; do not reconstruct it. Spec this fresh
-   from Nahian's own description of the move, once the hero exists to hand over
-   from. The verified facts it will need — nine facets, their geometry, and the
-   opening-frame resolution problem — are in `reference/README.md`, measured
-   from the artwork rather than inferred.
+3. **`bird-collage`** — **spec written**, `specs/sections/bird-collage.md`.
+   Four open questions; the first (pull-back vs grow-over) inverts the motion
+   table if it is wrong. Its facet geometry and the opening-frame resolution
+   problem are measured, not inferred — see also `reference/README.md`.
 
 4. **`phone-bento`** / **`phone-services`** — Nahian approved these on
    2026-09-17 and they are largely right. Each now carries a **Revision:
