@@ -187,8 +187,8 @@ Two practical notes:
 **still-first** (`hero`, `bird-collage`, `people`, `services`) → transitions →
 `about`.
 
-The page is four sections, one arc: story → proof → product. The bento is
-retired. Every section must look good standing still before its transition is
+The page is four sections, one arc: story → proof → product. The bento stays,
+made beautiful with parallax on approach; the phone emerges from it. Every section must look good standing still before its transition is
 designed, and its 390px composition is part of "designed", not a follow-up.
 See `specs/design-language.md`.
 

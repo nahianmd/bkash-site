@@ -49,14 +49,17 @@ Four sections and a footer. One arc: **story → proof → product.**
 | 1 | **Hero** | The claim, then three lives in one street. Beats 1–4. | Rendered |
 | 2 | **Bird** | Beat 5. The brand mark, revealed to be made of those lives. The end of the story. | Rendered |
 | 3 | **People** | The hero's three *types* become three *named individuals*. "Scroll to meet them" pays off here. | Documentary |
-| 4 | **Services** | The product: sixteen services, each selectable, each described, each evidenced by a real photograph of it in use. The phone is the transition *into* this section. | Documentary |
+| 4 | **Bento → phone → services** | The product. A bento of six real photographs — bKash everywhere — from which a 3D phone emerges, grows, and lands as the sixteen services: each selectable, each described. | Documentary |
 
-**The bento is gone.** (Nahian, 2026-09-18: "bento isn't mandatory. it was
-there to setup the ground for a phone to emerge.") It was scaffolding for the
-phone. The phone stays as the transition; the six bento photographs move into
-the services as evidence — `sendmoney.jpg` for Send Money, `boatman.jpg` for QR
-payment, `agent.jpg` for Cash Out, and so on. Two weak sections become one with
-a job.
+**The bento stays — with a job, and made beautiful.** (Nahian, 2026-09-18.)
+It was retired for an hour on the grounds that it was scaffolding for the
+phone; the alternative — a 3D phone lifting out of a photographed hand — is
+heavy 3D work with a composite that has to match lens perspective, and the
+bento was the pragmatic choice for a reason. It also has a strength the hand
+does not: six real photographs on screen at once is the strongest "bKash is
+everywhere" still on the site. Its job is exactly that, and to be the ground
+the phone emerges from. What "beautiful" means for it is in Rule 2 and in
+`services.md`.
 
 ## Rule 1 — the seam is the structure
 
@@ -94,13 +97,32 @@ cheap — a ScrollTrigger per plane.
 | Hero | the plate | the cutouts | captions |
 | Bird | the white ground | the mark | copy |
 | People | a context field (see below) | the portrait card | name and role |
-| Services | ground | the evidence photograph | icon, title, copy |
+| Bento / services | ground | the bento tiles (one rigid grid) | captions; later the device and the panel |
 
 Rates: back slowest, front fastest, never more than a few percent apart. Depth
 should be felt, not noticed.
 
 What this forbids: parallax *inside* a photograph. Parallax *between* the
 bird's facets — the mark is one rigid object, always. More than three planes.
+
+**The bento's parallax, so it stays consistent with the approved fall.** On
+approach — the section scrolling into view, not yet pinned — the tiles sit in
+two or three depth groups and drift at slightly different rates, so the grid
+has depth as you arrive. The drift is a function of the section's distance
+from centre and reaches **zero exactly as it pins**: every tile is at its rest
+position at the moment the fall begins, and the fall is one rigid plane, as
+Nahian approved on 2026-09-17. Depth on the way in, one object on the way
+out — no discontinuity, and no per-tile animation during the fall.
+
+What makes the bento a composition rather than photos in boxes: it fits the
+viewport on both axes (the prototype's `84vh` formula rendered it at 43% of a
+16:9 screen); the asymmetric column rhythm is kept on purpose; every caption
+sits on the same scrim (Rule 3); the one non-photo card — the stat, pink,
+typographic — is the grid's focal point; the phone tile is indistinguishable
+from its neighbours at rest; and on hover a tile is full while the others
+recede (Rule 4). At 390px it is **four photographs, the stat and the phone**,
+chosen for the story they tell together — not the desktop seven with three
+hidden.
 
 **On mobile the planes hold.** Touch scroll drives ScrollTrigger the same way.
 The rates may be smaller; the structure is the same.
@@ -187,8 +209,9 @@ and the two missing type steps. Its acceptance criteria stand; these are added:
 The five section specs written on 2026-09-18 are **port-forward** — they
 assume the prototype's compositions and specify fixes. Under this document each
 is rewritten **still-first**: the composition at rest at 1920 and at 390 comes
-first, the transition into and out of it second. `phone-bento.md` is retired;
-its approved phone behaviour moves into `services.md`.
+first, the transition into and out of it second. `phone-bento.md` stands as
+the approved baseline for the fall and the emergence; `services.md` covers the
+bento's still, its parallax, and the sixteen services with their panel.
 
 ## Acceptance — for the language, not for any section
 
@@ -210,7 +233,6 @@ its approved phone behaviour moves into `services.md`.
 - **NOT one unified look across the whole site.** The seam is the structure.
   Filtering the real photographs to match the rendered ones was considered and
   rejected.
-- **NOT a bento grid** anywhere, under any name.
 - **NOT parallax inside a photograph**, and not between the bird's facets.
 - **NOT the prototype's depth-of-field blur.** Focus is the non-subjects
   receding, not the plate blurring.
@@ -225,12 +247,8 @@ its approved phone behaviour moves into `services.md`.
 1. **Ground: scrim or clear zone?** One choice, applied everywhere. A scrim is
    safer on unpredictable photographs; a clear zone is cleaner but needs every
    composition to reserve it, including at 390px.
-2. **What does the phone emerge from,** now that the bento is gone? It needs a
-   still state. Candidates: at rest on the white ground, small and centred; or
-   — since the brief for it is "imitating the actual app in the user's hand" —
-   emerging from `sendmoney.jpg`, which is literally a real hand holding a real
-   phone, with the app's home screen composited onto its display. The second is
-   stronger and fiddlier. Services spec decides.
+2. **Resolved (Nahian, 2026-09-18): the phone emerges from the bento.** The
+   hand-composite alternative is recorded above and not pursued.
 3. **The people section's back plane.** A "context field" is named above but
    not designed — a soft version of each person's environment, a colour field,
    or nothing. This is where the documentary register first appears, so it sets

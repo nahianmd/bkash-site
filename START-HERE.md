@@ -71,10 +71,10 @@ Reset on 2026-09-18 (evening), after Nahian's principle: **every section must
 look good standing still, with no animation; transitions come second and can
 only be as good as the two states they connect. Mobile is non-negotiable.**
 
-The page is now four sections — **hero → bird → people → services** — one arc,
-story → proof → product. The bento is retired; the phone stays as the
-transition into services; the six bento photographs become per-service
-evidence. See `specs/design-language.md`.
+The page is four sections — **hero → bird → people → bento/phone/services** —
+one arc, story → proof → product. The bento stays, made beautiful with parallax
+on approach; the phone emerges from it into the sixteen services. See
+`specs/design-language.md`.
 
 1. **`design-language`** — **written**, `specs/design-language.md`, DRAFT.
    Four rules: the seam is the structure; every section is 2–3 planes; text on
@@ -88,16 +88,18 @@ evidence. See `specs/design-language.md`.
 3. **Section specs, rewritten still-first** — `hero`, `bird-collage`,
    `people`, `services`. Composition at rest at 1920 and 390 first, the
    transition second. The five specs written earlier today are port-forward
-   and are the *baseline*, not the target; `phone-bento.md` is retired and its
-   approved phone behaviour moves into `services.md`.
+   and are the *baseline*, not the target; `phone-bento.md` stays as the approved
+   baseline for the fall and emergence; `services.md` covers the bento's still
+   and the sixteen services.
 
 4. **Transitions** — designed against composed states, once those exist.
 
 5. **`about`** — after the homepage. Voices are text-only until originals
    arrive.
 
-**Decisions taken 2026-09-18 evening (Nahian):** seam-as-structure, yes. Bento,
-not mandatory — scaffolding for the phone. "Mechanism that focuses each story"
+**Decisions taken 2026-09-18 evening (Nahian):** seam-as-structure, yes. Bento
+stays — made beautiful, with parallax; the hand-composite alternative was too
+much 3D work. "Mechanism that focuses each story"
 = non-subjects recede, not the stepped gesture. Voices, later. Mobile,
 non-negotiable.
 
