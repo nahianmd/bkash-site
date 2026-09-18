@@ -78,3 +78,32 @@ written from the earlier build and can reuse it, but it is mine, not bKash's.
 - Clicking icon 7 gives "07 / 16 — Savings" with exactly one ring lit.
 - Picking NGO then scrolling up returns the panel to Send Money.
 - Page height ends flush with the section.
+
+
+---
+
+## Revision: rebuild (DRAFT, 2026-09-18)
+
+> Closes audit rows **P8** and **P9**.
+
+### The panel covers the icons it describes
+
+On mobile the description panel is a gradient over the foot of the device, and
+it lands **on top of row 4** — Toll Pay, Request Money, Remittance and Donation
+are all obscured by the copy explaining them (**P8**). At full-bleed width there
+is nowhere for a panel to go, so this is a composition problem, not a spacing
+one. Options: the panel becomes a sheet the selected icon pushes up into with
+the grid shifted, or selection scrolls the chosen icon clear first.
+
+### Desktop composition is left-heavy
+
+Phone at 28% across, panel starting beside it, ~200px of dead space at the
+right edge (**P9**). The panel is also text-only and carries no visual tie back
+to the hotspot that is lit — nothing connects the ring on the screen to the
+words. Both worth fixing while it is being rebuilt anyway.
+
+### Carried forward unchanged
+
+Click-to-lock only, first service auto-selected, hotspots derived as fractions
+of the screen box, panel holds its height so copy length cannot shift the
+layout. All verified working in the prototype and all still right.

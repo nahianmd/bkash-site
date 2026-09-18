@@ -76,12 +76,9 @@ Sections depend on each other, so this order is not arbitrary.
    (sections currently hand-write `rgba(255,255,255,.72)`) and the **missing
    scale step** between `--fs-h1` and `--fs-display`.
 
-2. **`hero`** — four beats now, not five: wide → customer → agent → merchant.
-   Scroll-driven on a pinned ScrollTrigger with snap, replacing the wheel
-   interception. Establishes the ScrollTrigger patterns every later section
-   inherits. **Must state precisely where it ends** — the merchant framed so
-   the bird's wing facet can take over without a cut. That framing is the
-   contract between hero and bird.
+2. **`hero`** — **spec written**, `specs/sections/hero.md`. New file: the four
+   story beats were built but never specified; `hero-collapse.md` only ever
+   covered the bird. Six open questions, the first being the AI imagery.
 
 3. **`bird-collage`** — no spec yet, deliberately. An earlier attempt was
    written and binned for weak context; do not reconstruct it. Spec this fresh
@@ -90,9 +87,13 @@ Sections depend on each other, so this order is not arbitrary.
    opening-frame resolution problem — are in `reference/README.md`, measured
    from the artwork rather than inferred.
 
-4. **`phone-bento`** — independent. Carries its own bug list.
+4. **`phone-bento`** / **`phone-services`** — Nahian approved these on
+   2026-09-17 and they are largely right. Each now carries a **Revision:
+   rebuild** section covering ScrollTrigger, the mobile composition, and its
+   audit rows. Two questions from 2026-09-17 are still unanswered.
 
-5. **`about`** — its own set of sections.
+5. **`about`** — carries a **Revision: rebuild** section. The Journey Wall on
+   mobile is the biggest single piece of design work on the page.
 
 `people-stories` is deliberately not in that list. If the bird carries nine
 selectable stories, a three-tile row of stories directly beneath it is

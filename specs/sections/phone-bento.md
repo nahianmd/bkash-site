@@ -141,3 +141,63 @@ a deliberate contrast with the AI hero (needs.md A0).
 2. **Where does "zoom to a point" stop?** Assuming the phone ends roughly
    filling the viewport height with margin — large enough to dominate, not
    cropped. Say if you want it bigger or cropped to the screen edges.
+
+
+---
+
+## Revision: rebuild on ScrollTrigger (DRAFT, 2026-09-18)
+
+> Everything above stays. Nahian approved it on 2026-09-17 and the built
+> section proved the idea works. This records only what changes in `web/`, and
+> the audit rows it has to close: **P1–P7**.
+
+### The grid only fills the screen on a tall window
+
+`padding-inline: max(gutter, (100% - min(92vw, 84vh))/2)` sizes the bento off
+viewport **height**. At 1920x992 that is 833px of content with **543px of dead
+white on each side** — audit **P1**, and the most visible defect in the whole
+build. The intent it came from is right (drive the layout off height so the
+phone tile lands at a true 360/760), but it cannot be the only constraint.
+
+Fit the grid to `min(available width, available height x aspect)` so height
+governs *the tile*, not the page margins.
+
+### Pinning
+
+ScrollTrigger replaces the sticky pin and the `ANIM_SPAN` workaround
+(**P4**) — that constant existed only because a sticky pin unsticks the instant
+its container runs out, so the animation finished exactly as the section began
+leaving. A trigger with an explicit end and a hold does this without a fudge
+factor.
+
+Also gone: the six layout-triggering properties written per frame on the device
+(**P2**) and `will-change` on `width`/`height` (**P3**).
+
+### Mobile, as its own composition
+
+The current mobile is desktop with overrides and it breaks three ways:
+
+- top card clipped under the nav, bottom two past the fold — the "one screen"
+  promise fails (**P5**);
+- **three of seven cards are `display:none`** (**P6**), so a phone viewer gets a
+  thinner argument than a desktop one;
+- at full width the device loses its bezel and stops reading as a phone,
+  especially with the site nav sitting above the app's own status bar (**P7**).
+
+This needs a decision, not a patch. Two candidates:
+
+- **(a) Fewer, larger cards by design** — pick four that carry the argument,
+  compose for the phone, keep the device inset so the bezel survives.
+- **(b) A different mechanic on mobile** — cards stack and pass behind the
+  device as it grows, rather than a grid tipping away.
+
+Recommend (a): it keeps one idea across both widths, and (b) is a second
+animation to build and debug for the harder platform.
+
+### Still open from 2026-09-17, never answered
+
+1. **Screen scrub.** The app screenshot is 720x4730 — the whole home screen.
+   Move the visible window down it as the phone grows, or hold on the top?
+2. **Where does the zoom stop?** The spec says "roughly filling viewport height
+   with margin". The build ended at 520px wide and slid left to make room for
+   the services panel. Which is right for the rebuild?

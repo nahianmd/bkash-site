@@ -45,3 +45,48 @@ whole thing is one CSS line to remove.
       there are no bios to put in them.
 - [ ] `needs.md` A2: four portraits remain low-resolution. Duotone covers it;
       better sources would still be better.
+
+
+---
+
+## Revision: rebuild (DRAFT, 2026-09-18)
+
+> Closes audit rows **A1–A8**. The section list and the two "notes worth
+> keeping" above are unchanged — the duotone reasoning and the Journey Wall
+> rasteriser both still hold.
+
+### Mobile is where this page falls down
+
+Two findings are severe enough to need design decisions, not fixes:
+
+- **The board is 6,190px tall on a phone** — one column, twelve near-full-width
+  portraits, **38% of the entire page height** (**A1**). Two columns and a
+  tighter crop.
+- **The Journey Wall is unreadable on a phone** (**A2**). At 6:1 it renders as a
+  ~290px strip with milestone text at roughly 5px, with dead space above and
+  below. A horizontal pan cannot work at that aspect on a phone. It needs a
+  different form — a vertical timeline, or swipeable per-milestone cards built
+  from the same artwork. **This is the biggest single piece of design work on
+  the About page.**
+
+Also: the hero headline overflows the gutter at 390px (**A6**).
+
+### Desktop
+
+- **The CEO quote is the least-designed moment on the page** (**A3**) — eight
+  lines of body copy in a dark band beside a small portrait. It is the only
+  first-person voice on the site and should carry the most weight. Foundation
+  adds a pull-quote type step for exactly this.
+- The Journey section is **centre-aligned** while every other section is
+  left-aligned (**A4**).
+- Board grid and investor row **leave trailing space** inside `.wrap` —
+  auto-fill columns not filling (**A5**).
+- **No Support button** in the nav, though the homepage has one (**A7**) —
+  fixed in `foundation`.
+- Board portrait **exposure is inconsistent** across the set even under the
+  duotone (**A8**). Normalising luminance before the filter would settle it.
+
+### Pinning
+
+The Journey Wall's pin moves to ScrollTrigger like every other pinned section,
+and sizes against `--vh` rather than `100vh`.
