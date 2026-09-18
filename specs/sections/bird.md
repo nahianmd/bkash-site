@@ -91,7 +91,8 @@ Two sources, one choice:
 - **The collage's nine-facet layout** — the geometry measured from the
   artwork's alpha. What the client saw in the demo. Not the real mark.
 
-Open question 2. Either way it is a vector, so the mask is crisp at any size.
+**Decided 2026-09-18: the official mark.** A vector, so the mask is crisp at
+any size. The nine-facet geometry in `reference/` stays only as a record.
 
 ### After the pin — future, not now
 
@@ -104,7 +105,7 @@ Recorded so it is not reinvented; not designed here.
 A bird-shaped window onto the street, on white, with the line. Poster at 1920
 and at 390.
 
-**Rest pose — still open.** A: bird right, copy left (your 09-17 decision).
+**Rest pose — B, decided 2026-09-18 (Nahian).** For the record: A: bird right, copy left (your 09-17 decision).
 B: mark centred, copy beneath. Recommended B on the still-first principle — a
 centred mark with a line beneath is a poster — and because the fixed point
 then sits near the middle of the screen, which keeps the reveal a pure scale.
@@ -137,7 +138,7 @@ The still, not pinned.
 |---|---|---|
 | The shape | official SVG or the nine-facet geometry | **VECTOR** — decision pending |
 | The content | the hero's final frame | **HERO** — nothing new |
-| Eyebrow / headline | `Across Bangladesh` / `Writing Millions of Stories in Motion` | **CLIENT DECK**, split reorders the sentence — Open question 3 |
+| Eyebrow / headline | `Across Bangladesh` / `Writing Millions of Stories in Motion` | **CLIENT DECK**, split reorders the sentence — kept, flag at copy review |
 | Alt text | "The bKash mark, framing a neighbourhood street" | **PLACEHOLDER** |
 
 ## Audit rows closed
@@ -180,6 +181,9 @@ artifacts) · H10 mobile dead air and clipped copy.
 
 ## Open questions
 
-1. **Rest pose — A or B?**
-2. **The shape — the official mark (recommended) or the collage's layout?**
-3. **The deck line — keep the eyebrow/headline split, or set it as written?**
+1. ~~Rest pose — A or B?~~ — **resolved 2026-09-18 (Nahian): B**, centred,
+   copy beneath, at both widths.
+2. ~~The shape~~ — **resolved 2026-09-18: the official mark**,
+   `specs/refs/bkash-logo.svg`. The collage layout is retired with the collage.
+3. ~~The deck line~~ — **resolved 2026-09-18: keep the split**, and flag the
+   reordering to the client in one line at copy review.
