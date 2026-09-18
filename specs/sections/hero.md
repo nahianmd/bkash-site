@@ -94,17 +94,37 @@ those were framed to a different photograph and are dead.
 | 2 | 37, 74 | 3× | Frame the table *and* the banner above it |
 | 3 | 55, 78 | 3.5× | Faysal right of centre, road and skyline open to the right |
 
-### 390 — the same beats, a portrait plate
+### 390 — one wide plate, a small window, and the camera slides
 
-The plate is 16:9; a portrait crop shows a quarter of it. The prototype's
-answer stands — a second, portrait plate and `anchorPortrait()` re-placing the
-cutouts and re-deriving the targets. **The illustrated plate makes this
-cheap:** ask the illustrator for a portrait extension of the same scene (more
-sky above, more road below) rather than a different picture. And for the
-shoot, a second frame in portrait from the same spot.
+*Nahian, 2026-09-18: the phone loads the whole picture, shows the slice that
+fits, and when a beat focuses something outside the slice the picture slides
+to bring it in.* That is the camera as already specified — translate is the
+slide, scale is the zoom — so **there is no portrait plate.** One wide picture
+serves every screen shape.
+
+Why the prototype needed a second photograph: a bug, not a limit. It placed
+the cutouts as percentages of the *viewport* while the plate underneath was
+cover-cropped, so on a phone the plate shifted and the people did not. The fix
+is to **anchor the cutouts to the plate's rendered box**, not the viewport.
+`anchorPortrait()` and the portrait plate are retired; the re-derivation of
+camera targets from where cutouts land is kept, because it is the same idea
+applied to one plate at any aspect.
+
+**Beat 0 at 390 is a chosen slice.** Cover-fit to 780 tall shows ~28% of the
+plate's width at full height. Amena is at ~41% across, the table at ~37%,
+Faysal at ~55%: a window centred at **~46%** contains all three. That is the
+still — the building, the banner, the three people. The tree and the skyline
+are the trade. `object-position` sets it once.
 
 Composition at 390: headline in the bottom third on the scrim; subjects in the
 middle third (Rule 3). Captions at a measure that fits.
+
+**Resolution on a phone.** Cover-fit on a 3× handset shows the plate at ~2.6×
+its pixels before the camera moves, ~10× when zoomed on Amena — survivable
+only because (a) the cutouts carry the zoomed beats, and (b) the plate recedes
+when a subject is focused (Rule 4), so its softness is masked by the softness
+applied on purpose. The plate has to survive beat 0 unzoomed, nothing more.
+Big file, one requirement.
 
 ## Depth (Rule 2)
 
@@ -165,7 +185,8 @@ illustration does:
    scooter. **Same light, same ten minutes.** These are the "cutouts": the
    camera lands on the close-up as it arrives, and the light has to match or
    the swap shows.
-3. **A portrait frame from the same spot**, for mobile.
+3. **A portrait frame from the same spot** is optional — one wide plate serves
+   both, see the 390 section — but costs nothing on the day and is insurance.
 4. **Foreground elements as separate plates** if at all practical — the tree,
    the near building — so the parallax has real layers. If not, the depth is
    subjects-versus-plate only, which still works.
@@ -181,7 +202,6 @@ illustration does:
 | Slot | Content | Status |
 |---|---|---|
 | Plate, cutouts | the four illustrated files | **ILLUSTRATED — previs.** Real photography to follow. Old AI assets stay in `reference/` for the record only. |
-| Portrait plate | — | **NEEDED** from the illustrator, then from the shoot |
 | Layered plate | — | **REQUESTED** |
 | Copy, beats 0–3 | the client's lines | **CLIENT DECK** |
 | Scroll cue | `Scroll to meet them` | **PLACEHOLDER** |
@@ -223,8 +243,9 @@ H1 · H2 · H3 · H4 (Rule 3) · H7 · H8 · H9 · H11. H5, H6, H10 belong to th
 
 ## Open questions
 
-1. **Layered plate, portrait extension, and a 3200px+ plate** — one request
-   to the illustrator. Yes to all three?
+1. **Layered plate and a big plate (3200px+; 4000px+ is safer for 3×
+   phones)** — one request to the illustrator. The portrait extension is
+   dropped: one wide plate serves both.
 2. **The agent beat needs a face.** Ask for the stall owner behind his counter
    — in the illustration now, and in the shoot brief?
 3. **Do the names go on screen** — `Amena`, `Rahim`, `Faysal` as the caption
