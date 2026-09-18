@@ -188,7 +188,7 @@ Two practical notes:
 ## Order of work
 
 `design-language` → `foundation` (implements it) → section specs rewritten
-**still-first** (`hero`, `bird-collage`, `people`, `services`) → transitions →
+**still-first** (`hero`, `bird`, `people`, `services`) → transitions →
 `about`.
 
 The page is four sections, one arc: story → proof → product. The bento stays,

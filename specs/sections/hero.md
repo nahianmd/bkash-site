@@ -141,15 +141,15 @@ the camera, crossing at the midpoint between two subjects. The caption for the
 beat being approached resolves as the camera arrives. About one screen per
 beat; tune against the build.
 
-### The handover — and what it does to the bird
+### The handover
 
 At progress 1 the frame is beat 3: Faysal on the scooter, riding into the
-city. The bird's first frame must be the same pixels. **The current collage's
-largest facet is the old AI pink stall. It no longer matches.** The bird has
-to be remade in the same hand as these four assets — nine facets, painterly,
-`f0` being Faysal's frame — or the handover is a cut. This is a content
-dependency, not a build one; it goes to the illustrator with the portrait
-plate and the layered plate. `bird-collage.md` carries the note.
+city. The bird section (`bird.md`) is a **mask window over this very frame**
+— it retains the hero's final pose as its content and shrinks a bird-shaped
+mask over it. The handover is exact by construction: same element, same
+pixels. No remake, no matching. (An earlier version of this spec required the
+collage to be redrawn to match; Nahian's window mechanism, 2026-09-18 evening,
+removed that dependency.)
 
 ### Reduced motion
 
@@ -237,8 +237,6 @@ H1 · H2 · H3 · H4 (Rule 3) · H7 · H8 · H9 · H11. H5, H6, H10 belong to th
 - **NOT text-shadow as legibility.** The scrim is the ground.
 - **NOT the old camera targets.** Framed to a different photograph.
 - **NOT the same composition narrowed for a phone.**
-- **NOT the current bird collage as the handover target.** It has to be
-  remade to match; until then the handover is known-broken, not "close enough."
 - **NOT owning the bird.**
 
 ## Open questions
@@ -253,5 +251,5 @@ H1 · H2 · H3 · H4 (Rule 3) · H7 · H8 · H9 · H11. H5, H6, H10 belong to th
    never showed them.
 4. **Beat 0 headline bottom-right** (open road) rather than the prototype's
    bottom-left — confirm against the plate.
-5. **The bird remake** — same illustrator, nine facets, `f0` = Faysal's frame.
-   Commission now, since the handover cannot be tested without it?
+5. ~~The bird remake~~ — **resolved 2026-09-18:** not needed. The bird is a
+   window over this frame (`bird.md`).

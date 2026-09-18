@@ -86,14 +86,15 @@ on approach; the phone emerges from it into the sixteen services. See
    tokens). Opus.
 
 3. **Section specs, rewritten still-first — written**, all four DRAFT:
-   `hero.md`, `bird-collage.md`, `people.md`, `services.md`. Composition at
+   `hero.md`, `bird.md`, `people.md`, `services.md`. Composition at
    rest at 1920 and 390 first, the transition second. `phone-bento.md` and
    `phone-services.md` are superseded by `services.md` and kept as the record.
    Each carries its open questions at the foot; none blocks `foundation`.
    **`hero.md` was re-specified the same evening around four illustrated
    assets** (`reference/assets/img/hero.jpeg`, `amena.png`, `Rahim.png`,
    `Faysal.png`) — previs for a real shoot. It carries the photographer's brief
-   and a content dependency: the bird collage must be remade to match.
+   The bird is now a **mask window** over the hero's last frame (`bird.md`,
+   same evening) — no collage remake, handover exact by construction.
 
 4. **Transitions** — designed against composed states, once those exist.
 
@@ -140,7 +141,7 @@ it is in `CLAUDE.md` -> Model selection.
 | Work | Model | Why | Est. Fable |
 |---|---|---|---|
 | `foundation` | Opus 5 | A port of tokens that already exist plus two additions. Fully determinable. | — |
-| `bird-collage` spec | **Fable 5.1** | Mechanism genuinely open, got wrong twice, signature moment. Conversational — the answer is not on disk. | ~$12 |
+| `bird` spec | **Fable 5.1** | Mechanism genuinely open, got wrong twice, signature moment. Conversational — the answer is not on disk. | ~$12 |
 | `hero` spec | **Fable 5.1** | Camera framing, the 1px handover contract, the AI-imagery decision. | ~$5 |
 | `hero` + `bird` camera build | **Fable 5.1** | Log-space interpolation and fixed-point derivation fail quietly. | ~$30 |
 | Journey Wall, mobile form | **Fable 5.1** | A 6:1 artwork that cannot pan on a phone. Open creative problem. | ~$8 |

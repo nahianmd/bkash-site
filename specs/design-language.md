@@ -49,7 +49,7 @@ Four sections and a footer. One arc: **story → proof → product.**
 | # | Section | Job | Photographic register |
 |---|---|---|---|
 | 1 | **Hero** | The claim, then three lives in one street. Beats 1–4. | Rendered |
-| 2 | **Bird** | Beat 5. The brand mark, revealed to be made of those lives. The end of the story. | Rendered |
+| 2 | **Bird** | Beat 5. The brand mark as a **window** that closes in on the hero's last frame: the street was inside the mark all along. The end of the story. | Rendered (the hero's own frame) |
 | 3 | **People** | The hero's three *types* become three *named individuals*. "Scroll to meet them" pays off here. | Documentary |
 | 4 | **Bento → phone → services** | The product. A bento of six real photographs — bKash everywhere — from which a 3D phone emerges, grows, and lands as the sixteen services: each selectable, each described. | Documentary |
 
@@ -69,7 +69,8 @@ the phone emerges from. What "beautiful" means for it is in Rule 2 and in
 
 There are two kinds of photograph on this site and they do not match:
 
-- **Rendered** — the hero plate, the cutouts, the bird's nine facets. As of
+- **Rendered** — the hero plate and the cutouts (the bird shows the hero's own
+  frame through the mark, so it has no imagery of its own). As of
   2026-09-18 evening these are **illustrated** — a painterly street, previs for
   a real photo shoot on a real set. A storybook, literally. After the shoot the
   hero becomes *staged* real photography and the seam against the candid
