@@ -6,6 +6,9 @@
    task 2. Everything per-section lives here as one object each.
    ============================================================ */
 
+import { gsap, ScrollTrigger, reducedMotion, isPhone } from './scroll';
+import { cubicInOut } from './scene-rig';
+
 /* ---- the sixteen, in the app's order ---------------------------
    Names are the app's; NGO is the app's word for the Microfinance
    icon. Lines are PLACEHOLDER, written here, not bKash's. */
@@ -147,7 +150,8 @@ const P = (photo: string, crop: Crop, pos: string): WallTile => ({
 
 /* Columns top→bottom. Ten photographs repeated at different crops —
    PLACEHOLDER density until the client's twenty arrive. The phone tile
-   is LAST in its column, and its column is the fastest. */
+   rides the fastest column, with tiles after it so the column never runs
+   out beneath it at arrival. */
 export const COLUMNS: { desktop: WallTile[][]; phone: WallTile[][] } = {
   desktop: [
     [
@@ -181,6 +185,8 @@ export const COLUMNS: { desktop: WallTile[][]; phone: WallTile[][] } = {
       P('anisul', 'square', '50% 35%'),
       P('boatman', 'tall', '50% 45%'),
       { kind: 'phone' },
+      P('munni', 'wide', '50% 40%'),
+      P('ferry', 'square', '45% 40%'),
     ],
     [
       P('ferry', 'tall', '45% 40%'),
@@ -215,10 +221,127 @@ export const COLUMNS: { desktop: WallTile[][]; phone: WallTile[][] } = {
       P('banner', 'square', '50% 50%'),
       P('boatman', 'tall', '50% 45%'),
       { kind: 'phone' },
+      P('merchant', 'square', '60% 50%'),
+      P('train', 'wide', '55% 45%'),
     ],
   ],
 };
 
+type Col = { el: HTMLElement; rate: number };
+
 export function initServices() {
-  /* Task 2 brings the scrub. */
+  const section = document.querySelector<HTMLElement>('[data-services]');
+  const pinEl = section?.querySelector<HTMLElement>('[data-services-pin]');
+  if (!section || !pinEl) return;
+  const pin: HTMLElement = pinEl;
+
+  /* One pin, the travel from config, one source. */
+  section.style.setProperty('--svc-screens', String(1 + WALL.travelScreens));
+
+  let vw = 1;
+  let vh = 1;
+  let cols: Col[] = [];
+  let fastRate = 1;
+  /* The fastest column's total translate at arrival — DERIVED from where
+     the phone tile sits, so it lands at centre exactly at wallEnd. */
+  let D = 0;
+
+  /* The wall that is on screen at this width; the other is display:none. */
+  function activeWall(): HTMLElement | null {
+    for (const w of section!.querySelectorAll<HTMLElement>('[data-wall]'))
+      if (getComputedStyle(w).display !== 'none') return w;
+    return null;
+  }
+
+  function measure() {
+    vw = pin.clientWidth;
+    vh = pin.clientHeight;
+    const wall = activeWall();
+    if (!wall) return;
+    const rates = isPhone() ? WALL.rates.phone : WALL.rates.desktop;
+    cols = [...wall.querySelectorAll<HTMLElement>('[data-wall-col]')].map((el, i) => ({
+      el,
+      rate: rates[i] ?? 1,
+    }));
+    fastRate = Math.max(...cols.map((c) => c.rate));
+    const tile = wall.querySelector<HTMLElement>('[data-tile="phone"]');
+    if (!tile) return;
+    /* offsetTop is relative to the wall (the columns are not positioned);
+       the wall's top is the pin's top. One layout read per resize. */
+    D = tile.offsetTop + tile.offsetHeight / 2 - vh / 2;
+  }
+
+  /* ---- the wall: three rates, one transform each ------------------ */
+  function renderWall(p: number) {
+    const w = Math.min(Math.max(p / WALL.wallEnd, 0), 1);
+    for (const c of cols) {
+      const y = -(c.rate / fastRate) * D * w;
+      c.el.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+    }
+  }
+
+  const proxy = { p: 0 };
+  const render = () => {
+    renderWall(proxy.p);
+  };
+  const remeasure = () => {
+    measure();
+    render();
+  };
+  measure();
+  render();
+  window.addEventListener('resize', remeasure);
+  window.addEventListener('load', remeasure);
+
+  /* Reduced motion: the wall with the phone tile at centre, no travel. */
+  if (reducedMotion()) {
+    section.classList.add('svc--static');
+    proxy.p = WALL.wallEnd;
+    remeasure();
+    return;
+  }
+
+  const tl = gsap
+    .timeline({ paused: true })
+    .to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
+
+  const st = ScrollTrigger.create({
+    id: 'services',
+    trigger: section,
+    start: 'top top',
+    end: 'bottom bottom',
+    pin,
+    pinSpacing: false,
+    animation: tl,
+    scrub: WALL.scrub,
+    onRefreshInit: measure,
+    onRefresh: render,
+  });
+
+  void cubicInOut;
+
+  if (import.meta.env.DEV) {
+    const w = window as any;
+    w.__bkash = w.__bkash ?? {};
+    w.__bkash.services = {
+      config: WALL,
+      geometry: () => ({
+        vw,
+        vh,
+        D,
+        fastRate,
+        cols: cols.map((c) => ({ rate: c.rate, h: c.el.scrollHeight })),
+      }),
+      settle() {
+        tl.progress(st.progress);
+        render();
+        return { progress: st.progress };
+      },
+      goTo(p: number) {
+        window.scrollTo(0, st.start + (st.end - st.start) * p);
+        ScrollTrigger.update();
+        return this.settle();
+      },
+    };
+  }
 }
