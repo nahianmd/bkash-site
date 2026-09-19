@@ -16,8 +16,10 @@
    no signal whether you have reached the end of the page or the scroll
    has jammed.
 */
+import { Picture } from 'astro:assets';
 import Logo from './Logo.astro';
-import { FOOTER_COLUMNS, SOCIAL } from '../lib/nav-data';
+import { AMAR_SOCIAL, FOOTER_COLUMNS, SOCIAL } from '../lib/nav-data';
+import amarBkash from '../assets/img/brand/amar-bkash.png';
 
 const YEAR = new Date().getFullYear();
 
@@ -33,6 +35,10 @@ const ICONS: Record<string, string> = {
     'M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.9 5.9 0 0 0-2.13 1.38A5.9 5.9 0 0 0 .63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91a5.9 5.9 0 0 0 1.38 2.13 5.9 5.9 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.13-1.38 5.9 5.9 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.38-2.13A5.9 5.9 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0Zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84Zm0 10.16A4 4 0 1 1 16 12a4 4 0 0 1-4 4Zm7.85-10.4a1.44 1.44 0 1 1-1.44-1.44 1.44 1.44 0 0 1 1.44 1.44Z',
   LinkedIn:
     'M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13Zm1.78 13.02H3.55V9h3.57v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0Z',
+  /* Wikipedia's W — the wordmark's letter, not the puzzle globe, which
+     does not survive being drawn at 20px in one colour. */
+  Wikipedia:
+    'M12.09 13.119c-.936 1.932-2.217 4.548-2.853 5.728-.616 1.074-1.127.931-1.532.029-1.406-3.321-4.293-9.144-5.651-12.409-.251-.601-.441-.987-.619-1.139-.181-.15-.554-.24-1.122-.271C.103 5.033 0 4.982 0 4.898v-.455l.052-.045c.924-.005 5.401 0 5.401 0l.51.045v.434c0 .119-.075.176-.226.176l-.564.031c-.485.029-.727.164-.727.436 0 .135.053.33.166.601 1.082 2.646 4.818 10.521 4.818 10.521l.136.046 2.411-4.81-.482-1.067-1.658-3.264s-.318-.654-.428-.872c-.728-1.443-.712-1.518-1.447-1.617-.207-.023-.313-.05-.313-.149v-.468l.06-.045h4.292l.113.037v.451c0 .105-.076.15-.227.15l-.308.047c-.792.061-.661.381-.136 1.422l1.582 3.252 1.758-3.504c.293-.64.233-.801.111-.947-.07-.084-.305-.22-.812-.24l-.201-.021a.228.228 0 0 1-.148-.055.168.168 0 0 1-.068-.131v-.436l.064-.05c1.043-.005 4.02 0 4.02 0l.06.05v.438c0 .106-.083.17-.243.191-.71.075-.821.4-1.19 1.106-.75 1.485-1.628 3.111-2.431 4.617l2.583 5.291.185.047 4.352-10.478c.181-.483.161-.815-.045-.994-.211-.18-.383-.293-1.023-.324l-.503-.031c-.121 0-.181-.044-.181-.135v-.45l.061-.045h4.669l.061.045v.45c0 .091-.076.135-.227.135l-.302.031c-.622.06-.879.264-1.086.729-.18.417-5.265 11.966-6.087 13.83-.407.925-.815.856-1.264-.06-.647-1.324-1.833-3.884-2.446-5.226z',
 };
 ---
 
@@ -44,7 +50,7 @@ const ICONS: Record<string, string> = {
         <a class="foot__logo" href="/" aria-label="bKash home">
           <Logo class="foot__mark" />
         </a>
-        <ul class="foot__social" aria-label="bKash on social media">
+        <ul class="foot__social" aria-label="bKash Limited elsewhere">
           {SOCIAL.map((s) => (
             <li>
               <a
@@ -61,6 +67,42 @@ const ICONS: Record<string, string> = {
             </li>
           ))}
         </ul>
+
+        {/* #AmarbKash, beneath the company's own mark and links. The
+            supplied lockup was dark ink on white; `tools/two-tone.mjs`
+            trimmed it, keyed the white out and recoloured the dark half
+            to the light ink this ground needs, keeping the pink. */}
+        <Picture
+          src={amarBkash}
+          alt="#আমারবিকাশ"
+          widths={[amarBkash.width]}
+          sizes="10rem"
+          formats={['avif', 'webp']}
+          fallbackFormat="webp"
+          layout="none"
+          loading="lazy"
+          pictureAttributes={{ class: 'foot__amar' }}
+        />
+
+        {AMAR_SOCIAL.length > 0 && (
+          <ul class="foot__social" aria-label="Amar bKash elsewhere">
+            {AMAR_SOCIAL.map((s) => (
+              <li>
+                <a
+                  class="foot__social-link"
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Amar bKash on ${s.label}`}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d={ICONS[s.label]}></path>
+                  </svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {FOOTER_COLUMNS.map((col) => (
@@ -169,6 +211,25 @@ const ICONS: Record<string, string> = {
   .foot__social-link:focus-visible {
     outline: 2px solid var(--pink);
     outline-offset: 2px;
+  }
+
+  /* The second mark sits under the first at the same left edge. Its
+     source is only 260px of ink, so it is held to a size it can carry.
+
+     Scoped through .foot, and :global on the picture itself: <Picture>
+     renders its own elements and they do not carry this component's
+     scope attribute, so a bare `.foot__amar` rule matches nothing. */
+  .foot :global(.foot__amar) {
+    display: block;
+    width: 9.5rem;
+    max-width: 100%;
+    margin-top: var(--s-6);
+  }
+
+  .foot :global(.foot__amar img) {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   /* ---- the link columns ---- */

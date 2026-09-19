@@ -892,3 +892,28 @@ The disk had the new rules, `curl` of the compiled stylesheet had the
 old ones, and the page measured the old layout — HMR does not always
 pick up a full replacement. Restarting the dev server fixed it. Measure
 the served CSS, not the file, when a change appears not to land.
+
+**Footer, second brand and Wikipedia (Nahian, 2026-09-20).**
+- Wikipedia joins bKash Limited's row (`https://en.wikipedia.org/wiki/BKash`,
+  checked — the lowercase `Bkash` spelling 404s). Its icon is the
+  wordmark's **W**, not the puzzle globe, which does not survive being
+  drawn at 20px in one colour.
+- `#আমারবিকাশ` sits beneath the company's mark and links. The supplied
+  file was **dark ink on an opaque white square**, 447×447 with only
+  260×57 of actual artwork — invisible on the night footer as supplied.
+  `tools/two-tone.mjs` trims it, takes alpha from each pixel's distance
+  from white (so the anti-aliased edge survives) and recolours by
+  **hue**: pixels meaningfully redder than they are green keep the brand
+  pink, the rest become the light ink. Saturation was tried first and
+  put a white fringe on every pink letter — an anti-aliased pink edge is
+  desaturated but still red-dominant.
+- **`AMAR_SOCIAL` is empty and its row does not render.** The sheet
+  carries no Amar bKash URLs and a social account under bKash's brand is
+  not something to guess. Waiting on Nahian.
+
+**Gotcha: a scoped rule cannot style what `<Picture>` renders.** Astro's
+image components emit their own `<picture>`/`<img>`, which do not carry
+the component's `data-astro-cid-*`, so `.foot__amar { … }` matched
+nothing and the mark took the column's full width. Scope through a
+parent that does carry it: `.foot :global(.foot__amar)`. HeroScene hit
+the same thing and solved it with a global block.

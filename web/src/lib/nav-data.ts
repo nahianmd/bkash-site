@@ -38,12 +38,25 @@ const list = (base: string, labels: string[]): NavItem[] =>
    and Company. Hrefs are the header's, so the two cannot send the same
    label to two different places. Social URLs are the sheet's own
    (Header, rows 111–114) and are the only real links on this site. */
-export const SOCIAL = [
+export type Social = { label: string; href: string };
+
+/* Two brands in the footer's left column: bKash Limited, then
+   #AmarbKash (Nahian, 2026-09-20). Wikipedia rides with the company's
+   own links — it is an encyclopedia article, not an account, but it
+   belongs in the same row.
+
+   AMAR_SOCIAL is EMPTY and the row does not render until it is filled:
+   the client's sheet carries no Amar bKash URLs, and a social account
+   under bKash's brand is not something to guess at. */
+export const SOCIAL: Social[] = [
   { label: 'Facebook', href: 'https://www.facebook.com/bkashlimited' },
   { label: 'YouTube', href: 'https://www.youtube.com/bkashlimited' },
   { label: 'Instagram', href: 'https://www.instagram.com/bkashlimited' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/bkash' },
-] as const;
+  { label: 'Wikipedia', href: 'https://en.wikipedia.org/wiki/BKash' },
+];
+
+export const AMAR_SOCIAL: Social[] = [];
 
 export const FOOTER_COLUMNS: { label: string; items: NavItem[] }[] = [
   {
