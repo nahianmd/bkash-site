@@ -768,3 +768,16 @@ eyebrows (Meet three of them, Sixteen services, Our journey, About bKash,
 The Revolution, Backed by, Leadership, Careers at bKash); the three
 people's names, roles and CTAs; the sixteen service names and lines; and
 About's voices, board, investors and CEO quote.
+
+**About — the Revolution gets the collage mark (2026-09-20).** Nahian
+supplied the bKash mark built from customer photographs. The file came
+with an opaque `#f7f7f7` ground, so `tools/key-out.mjs` floods the
+background from the border only — whites *inside* the photographs (a
+laptop, shirts) survive — and mattes the anti-aliased ring by
+un-premultiplying it, which is what stops a grey halo on the section's
+tint. 75.1% cleared, 4002px matted. Layout: copy left / mark right on a
+1.1fr–1fr grid, the triad full width beneath; at 390 the mark stacks
+under the copy, capped at 22rem and centred. Measured at 1920: copy
+345–944, mark 1016–1561 at 545², triad below, no overflow at 390.
+**Resolution:** the source is 797² and displays at 545 CSS px, so a 2×
+screen wants ~1090 — a larger export would help.

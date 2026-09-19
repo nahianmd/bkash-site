@@ -16,6 +16,7 @@ import ceo from '../assets/img/about/kamal-quadir.jpg';
 import journey from '../assets/img/about/journey-wall.jpg';
 import careers from '../assets/img/about/careers.jpg';
 import road from '../assets/img/about/road-ahead.jpg';
+import collage from '../assets/img/about/collage-bird.png';
 
 const boardImgs = import.meta.glob<{ default: ImageMetadata }>('../assets/img/about/board/*.jpg', {
   eager: true,
@@ -86,17 +87,33 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     <!-- ============================== PLATFORM ============================== -->
     <section class="ab-section ab-section--tint" aria-label="Our platform">
       <div class="wrap">
-        <div class="ab-head">
-          <p class="t-eyebrow ab-head__eyebrow" data-reveal>The Revolution</p>
-          <h2 class="t-h1" data-reveal>
-            bKash started with one core idea: everyone should have the power to control their own
-            money.
-          </h2>
-          <p class="t-lead ab-head__lead" data-reveal>
-            With its unmatched last-mile reach, that one idea changed how Bangladesh transacts.
-            Today, millions use bKash to access crucial financial services, turning everyday
-            inclusion into an entire financial ecosystem.
-          </p>
+        {/* Copy left, the mark right — the mark drawn from the faces the
+            copy is about, which is the same idea the homepage's bird
+            ends on. Documentary photographs, so Rule 1 holds. */}
+        <div class="revolution">
+          <div class="ab-head revolution__copy">
+            <p class="t-eyebrow ab-head__eyebrow" data-reveal>The Revolution</p>
+            <h2 class="t-h1" data-reveal>
+              bKash started with one core idea: everyone should have the power to control their own
+              money.
+            </h2>
+            <p class="t-lead ab-head__lead" data-reveal>
+              With its unmatched last-mile reach, that one idea changed how Bangladesh transacts.
+              Today, millions use bKash to access crucial financial services, turning everyday
+              inclusion into an entire financial ecosystem.
+            </p>
+          </div>
+          <Picture
+            src={collage}
+            alt="The bKash mark, made from photographs of customers across Bangladesh"
+            widths={[400, 640, collage.width]}
+            sizes="(max-width: 767px) 80vw, 45vw"
+            formats={['avif', 'webp']}
+            fallbackFormat="webp"
+            layout="none"
+            loading="lazy"
+            pictureAttributes={{ class: 'revolution__mark', 'data-reveal': '' }}
+          />
         </div>
         <div class="triad">
           {TRIAD.map((t) => (
@@ -409,6 +426,28 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     max-width: 28ch;
   }
 
+  /* ---- the revolution: copy beside the mark ---- */
+  .revolution {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    margin-bottom: clamp(2.5rem, 6vh, 4rem);
+  }
+  /* The head fills its column here and the section spaces the pair. */
+  .revolution__copy {
+    max-width: none;
+    margin-bottom: 0;
+  }
+  .revolution :global(.revolution__mark) {
+    display: block;
+  }
+  .revolution :global(.revolution__mark img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   /* ---- platform triad ---- */
   .triad {
     display: grid;
@@ -698,6 +737,15 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   }
 
   @media (max-width: 767px) {
+    /* The mark under the copy, and not so large it becomes the section. */
+    .revolution {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+    .revolution :global(.revolution__mark) {
+      max-width: 22rem;
+      margin-inline: auto;
+    }
     .split {
       grid-template-columns: 1fr;
     }
