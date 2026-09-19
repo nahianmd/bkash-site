@@ -6,8 +6,8 @@
    Camera targets and cutout boxes are fractions of the PLATE. The
    plate (2748×1536, 2026-09-19) has the three figures removed; the
    cutouts are the only people, always visible, sitting where the
-   figures were painted. Placed against an offline composite; the dev
-   handle nudges them live.
+   figures were painted. Placed by Nahian with the placement panel
+   (`?place`), 2026-09-19.
    ============================================================ */
 
 export type Cam = { x: number; y: number; s: number };
@@ -20,7 +20,7 @@ export const PLATE = { w: 2748, h: 1536 };
 
 export const BEATS: Beat[] = [
   { id: 'open', cam: { x: 0.5, y: 0.5, s: 1 } },
-  { id: 'amena', cam: { x: 0.41, y: 0.5, s: 4 }, cut: { x: 0.388, y: 0.47, w: 0.04 } },
-  { id: 'rahim', cam: { x: 0.37, y: 0.74, s: 3 }, cut: { x: 0.312, y: 0.745, w: 0.1 } },
-  { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.52, y: 0.71, w: 0.072 } },
+  { id: 'amena', cam: { x: 0.41, y: 0.5, s: 4 }, cut: { x: 0.3951, y: 0.4737, w: 0.027, soft: 0 } },
+  { id: 'rahim', cam: { x: 0.37, y: 0.74, s: 3 }, cut: { x: 0.312, y: 0.745, w: 0.1, soft: 0 } },
+  { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.4958, y: 0.7112, w: 0.102, soft: 0 } },
 ];
