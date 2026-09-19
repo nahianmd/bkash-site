@@ -5,8 +5,8 @@
    and START-HERE both require: it existed to prove the scroll
    infrastructure end to end, and it has done that.
 
-   The four real sections — hero, bird, people, services — land here
-   one at a time under the SDD loop. Nothing below is final content.
+   The sections land here one at a time under the SDD loop; people is
+   still to come. Copy across the page is placeholder until bKash's.
 */
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
@@ -26,45 +26,5 @@ import ServicesDetail from '../components/ServicesDetail.astro';
     <Services />
     <ServicesDetail />
 
-    <div class="shell">
-      <div class="wrap shell__in">
-        <p class="t-eyebrow">Next</p>
-        <h2 class="t-h1">The people</h2>
-        <p class="t-lead">
-          The hero, the bird and the services are in. The remaining sections land here one at a
-          time.
-        </p>
-        <p class="t-body">
-          Every label in the nav and the footer is placeholder until bKash approves it, and the
-          page is <code>noindex</code> until the content is signed off.
-        </p>
-        <p class="t-sm shell__link">
-          <a href="/specimen">Token specimen</a> · <a href="/about">About shell</a>
-        </p>
-      </div>
-    </div>
   </main>
 </Base>
-
-<style>
-  /* Clears the fixed header from the single source, --nav-h. Audit
-     X2: the prototype's sections sat under the header because the
-     offset existed nowhere. */
-  .shell {
-    padding-top: calc(var(--nav-h) + var(--s-8));
-    padding-bottom: var(--s-10);
-  }
-
-  .shell__in > * + * {
-    margin-top: var(--s-4);
-  }
-
-  .shell__link {
-    margin-top: var(--s-6);
-  }
-
-  code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.9em;
-  }
-</style>

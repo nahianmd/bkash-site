@@ -136,9 +136,6 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
 
   </div>
 
-  <!-- Transparent nav over the dark wall; services.ts hides the marker
-       once the ground has turned white under the phone. -->
-  <div data-nav-dark-end data-svc-marker></div>
 </section>
 
 <style is:global set:html={posCss}></style>
@@ -148,14 +145,14 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     position: relative;
     /* One screen of pin plus the travel (config: travelScreens). */
     height: calc(var(--vh) * var(--svc-screens, 6.5));
-    background: var(--night);
+    background: var(--paper);
   }
 
   .svc__pin {
     position: relative;
     height: var(--vh);
     overflow: hidden;
-    background: var(--night);
+    background: var(--paper);
     perspective: 1500px;
     perspective-origin: 50% 42%;
   }
@@ -201,7 +198,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     margin: 0;
     border-radius: var(--r-lg);
     overflow: hidden;
-    background: var(--night-2);
+    background: var(--paper-2);
   }
   .tile--tall {
     aspect-ratio: 4 / 5;
@@ -221,11 +218,11 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     object-fit: cover;
   }
 
-  /* The one typographic tile. Paper on the dark. */
+  /* The one typographic tile. Night on the paper. */
   .tile--title {
     aspect-ratio: 1;
-    background: var(--paper);
-    color: var(--ink);
+    background: var(--night-2);
+    color: var(--paper);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -236,7 +233,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     margin-bottom: var(--s-3);
   }
   .tile__line {
-    color: var(--ink-3);
+    color: var(--on-night-2);
     margin-top: var(--s-3);
   }
 

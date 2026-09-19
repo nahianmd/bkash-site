@@ -69,6 +69,33 @@ export function initServicesDetail() {
   }
 
   cells.forEach((c, i) => c.addEventListener('click', () => select(i)));
+  /* On a phone the sixteen are a row that slides: settling picks the
+     item nearest the centre. */
+  if (gridIn) {
+    let t: number | null = null;
+    gridIn.addEventListener(
+      'scroll',
+      () => {
+        if (!isPhone()) return;
+        if (t) clearTimeout(t);
+        t = window.setTimeout(() => {
+          const mid = gridIn.getBoundingClientRect().left + gridIn.clientWidth / 2;
+          let best = 0;
+          let bd = Infinity;
+          cells.forEach((c, k) => {
+            const r = c.getBoundingClientRect();
+            const d = Math.abs(r.left + r.width / 2 - mid);
+            if (d < bd) {
+              bd = d;
+              best = k;
+            }
+          });
+          select(best);
+        }, 120);
+      },
+      { passive: true },
+    );
+  }
   measure();
   window.addEventListener('resize', measure);
   window.addEventListener('load', measure);

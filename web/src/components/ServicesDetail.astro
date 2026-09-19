@@ -65,9 +65,9 @@ const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
   }
   .svcd__in {
     display: grid;
-    grid-template-columns: 5fr 7fr;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    gap: var(--s-8);
+    gap: var(--s-10);
   }
 
   /* ---- the stage ---------------------------------------------------- */
@@ -200,8 +200,36 @@ const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
       line-height: 1.12;
       letter-spacing: -0.022em;
     }
+    /* The sixteen as a row that slides: 56px icons, snap to item, the
+       chosen one centred; a swipe selects. Labels off — the card names
+       the service. */
+    .grid {
+      width: 100vw;
+      margin-inline: calc(-1 * var(--gutter));
+    }
+    .grid__in {
+      display: flex;
+      gap: var(--s-4);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding-inline: calc(50vw - 28px);
+      padding-block: var(--s-3);
+    }
+    .grid__in::-webkit-scrollbar {
+      display: none;
+    }
+    .cell {
+      flex: 0 0 56px;
+      height: 56px;
+      scroll-snap-align: center;
+      --col: 56px;
+    }
+    .cell .cell__icon {
+      width: 56px;
+    }
     .cell__label {
-      font-size: var(--fs-xs, 0.75rem);
+      display: none;
     }
   }
 </style>

@@ -603,3 +603,27 @@ none on the subject; no cutout transform mid-segment.
 about its bottom-centre, height from the box's own CSS aspect — from the
 panel's `w`, shift-drag, or `[` / `]` (shift ×10). Measured: feet drift
 0 / −0.1px across a 0.10 → 0.13 → 0.12 resize.
+
+## Nitty-gritty pass — 2026-09-20 (Fable)
+
+Nahian's list after a full scroll: the wall on white; the detail grid
+smaller and further from the copy; the sliding row back on mobile; the
+placeholder block gone; a softer ground under the transparent nav; the
+hero copies' ground softer.
+- `.on-photo` is now a soft-edged rectangle: full strength (0.62, the
+  derived contract) over the text block + `--scrim-bleed` (2rem), then a
+  static blurred shadow in the scrim's own colour feathers the edge over
+  `--scrim-feather` (5rem). One rule, every section.
+- The nav's `::before` reaches 8rem below the band with an eased stop
+  list (55 → 40 → 18 → 0%).
+- The wall: `--paper` ground, `--paper-2` tiles, the title tile night on
+  paper; the `[data-nav-dark-end]` marker removed (the nav is solid
+  through the section).
+- `ServicesDetail`: columns 1fr/1fr, gap `--s-10` (544px columns and
+  128px at 1920); on a phone the sixteen are the 56px sliding row again,
+  snap to item, a settle selects the nearest (measured: scrolling to
+  item 5 selected 5; no page overflow at 390).
+- `index.astro`: the "Next: the people" block is gone.
+- **Open — Nahian's call:** where the hero copies sit (headline top-right
+  in the sky, captions bottom-left). Two alternatives offered in
+  conversation.

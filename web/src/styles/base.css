@@ -200,10 +200,10 @@ a:hover {
    The ONLY sanctioned way text sits on an image anywhere in web/.
 
    The contract: the scrim is at full strength across the whole
-   text block and fades only ABOVE it, over --scrim-fade. Apply
-   this to the TEXT BLOCK, never to a whole container — a gradient
-   already fading behind the top line of a caption is exactly how
-   the prototype's hero captions vanished into sand.
+   text block (plus --scrim-bleed) and fades only OUTSIDE it, over
+   --scrim-feather. Apply this to the TEXT BLOCK, never to a whole
+   container — a gradient already fading behind the top line of a
+   caption is exactly how the prototype's hero captions vanished.
 
    `isolation: isolate` keeps the negative z-index pseudo-element
    behind the text but in front of the photograph, without needing
@@ -217,9 +217,13 @@ a:hover {
 .on-photo::before {
   content: '';
   position: absolute;
-  inset: calc(-1 * var(--scrim-fade)) calc(-1 * var(--scrim-bleed))
-    calc(-1 * var(--scrim-bleed));
-  background: var(--scrim);
+  inset: calc(-1 * var(--scrim-bleed));
+  background: var(--scrim-color);
+  border-radius: var(--r-lg);
+  /* The feather: a blurred shadow in the scrim's own colour, so the
+     edge fades over --scrim-feather instead of stopping. Static, so
+     it costs nothing per frame. */
+  box-shadow: 0 0 var(--scrim-feather) calc(var(--scrim-feather) / 2) var(--scrim-color);
   z-index: -1;
   pointer-events: none;
 }

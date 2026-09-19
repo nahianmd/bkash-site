@@ -199,19 +199,20 @@
      photograph that can exist.
 
      The CONTRACT matters more than the number: the scrim is at
-     full strength across the whole text block and fades only
-     ABOVE it. A gradient already fading behind the top line of a
-     caption is exactly how the prototype's captions vanished.  */
+     full strength across the whole text block, and fades only
+     OUTSIDE it. A gradient already fading behind the top line of a
+     caption is exactly how the prototype's captions vanished.
+
+     2026-09-20: the hard-edged box read as harsh (Nahian). The
+     ground is now a soft-edged rectangle: full strength over the
+     text block plus --scrim-bleed on every side, then feathered out
+     over --scrim-feather. The number and the contract are unchanged;
+     only the edge is.  */
   --scrim-strength: 0.62;
-  --scrim-fade: 6rem;
   --scrim-bleed: var(--s-6);
+  --scrim-feather: 5rem;
   --scrim-ink: var(--on-night);
-  --scrim: linear-gradient(
-    to top,
-    rgb(0 0 0 / var(--scrim-strength)) 0,
-    rgb(0 0 0 / var(--scrim-strength)) calc(100% - var(--scrim-fade)),
-    rgb(0 0 0 / 0) 100%
-  );
+  --scrim-color: rgb(0 0 0 / var(--scrim-strength));
 
   /* ---- recede (design language Rule 4) ----
      When one thing is the subject, everything else quietly steps
