@@ -594,6 +594,13 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     text-align: center;
     padding-inline: var(--gutter);
   }
+  /* The type step caps the headline at --measure-head, and a capped block
+     sits at the start of its container — only the text inside it was
+     centring, which pushed the headline to the left of the section while
+     the eyebrow stayed in the middle. Centre the BOX too. */
+  .wall__head h2 {
+    margin-inline: auto;
+  }
   .wall__eyebrow {
     color: var(--pink-lift);
     margin-bottom: var(--s-3);

@@ -798,3 +798,11 @@ left. Measured at 1920: eleven lines → **nine**, and nine is the floor —
 narrowing the portrait further changes nothing. Justified on desktop
 only: at 390 the column carries ~26 characters a line, where justifying
 opens rivers, so the phone stays left-aligned (`text-align: start`).
+**About — the journey headline was off to the left (2026-09-20).** Not a
+drift: `.t-h2` carries `max-width: var(--measure-head)`, and a capped
+block sits at the START of its container, so `text-align: center` was
+only centring the text inside a left-hung box while the eyebrow (no cap)
+sat in the middle. `margin-inline: auto` on the box. The bird's centred
+titles already did this; nothing else on the site centres a capped
+heading. Measured at 1920: headline box 636–1269, midpoint 952.5 —
+exactly the eyebrow's.
