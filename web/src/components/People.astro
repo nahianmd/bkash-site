@@ -6,8 +6,11 @@
    NAMED people in real photographs — the page's turn from story to
    proof (Rule 1). Three portrait cards of equal size at one 4:5 crop,
    one caption block on one scrim (Rule 3), the hovered or tapped one
-   full while the others recede (Rule 4). No card changes size — the
-   prototype's hover-expand row is exactly what this is not. */
+   full while the others recede (Rule 4). On desktop the row behaves as
+   the prototype's did (Nahian, 2026-09-20): the pointed-at card takes
+   three shares of the row, its neighbours drop to just over a half
+   share and shed everything but a small name; the row always sums to
+   the same width. On a phone the three are stacked. */
 import { Picture } from 'astro:assets';
 
 const portraits = import.meta.glob<{ default: ImageMetadata }>('../assets/img/people/*.jpg', {
@@ -50,7 +53,9 @@ const posCss = PEOPLE.map((p) => `.people__card[data-people-card="${p.id}"] img{
             <p class="t-eyebrow people__tag">{p.tag}</p>
             <p class="t-h3 people__name">{p.name}</p>
             <p class="t-sm people__role">{p.role}</p>
-            <a class="btn btn--outline people__cta" href="#">{p.cta} →</a>
+            <div class="people__cta-wrap">
+              <a class="btn btn--outline people__cta" href="#">{p.cta} →</a>
+            </div>
           </div>
         </article>
       ))}
@@ -68,31 +73,48 @@ const posCss = PEOPLE.map((p) => `.people__card[data-people-card="${p.id}"] img{
     padding-block: var(--s-10);
   }
   .people__head {
-    max-width: var(--measure-head);
     margin-bottom: var(--s-8);
+  }
+  /* The title on one line; the measure is the frame's. */
+  .people__title {
+    max-width: none;
   }
   .people__eyebrow {
     color: var(--pink-lift);
     margin-bottom: var(--s-4);
   }
 
-  /* Three objects on a field: inside the gutter, equal, one crop. */
+  /* Three objects on a field: inside the gutter, one row, one crop.
+     Each card is a flex share; the whole expansion is the share. */
   .people__cards {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
     gap: var(--s-5);
+    height: min(calc(var(--vh) * 0.62), 40rem);
     will-change: transform;
   }
   .people__card {
     position: relative;
-    aspect-ratio: 4 / 5;
+    flex: 1 1 0%;
+    min-width: 0;
     border-radius: var(--r-lg);
     overflow: hidden;
     background: var(--night);
     cursor: pointer;
     transition:
+      flex var(--t-slow) var(--ease),
       opacity var(--recede-t) var(--ease-io),
       filter var(--recede-t) var(--ease-io);
+  }
+  /* The pointed-at card takes three shares; the neighbours just over a
+     half. Written at the same depth as the collapse so the open rule
+     wins on order, not specificity. */
+  .people__cards:has(.people__card:hover) .people__card,
+  .people.is-picked .people__card {
+    flex: 0.55 1 0%;
+  }
+  .people__cards:has(.people__card:hover) .people__card:hover,
+  .people.is-picked .people__card.is-on {
+    flex: 3 1 0%;
   }
   .people__card:focus-visible {
     outline: 2px solid var(--pink);
@@ -106,6 +128,13 @@ const posCss = PEOPLE.map((p) => `.people__card[data-people-card="${p.id}"] img{
     height: 100%;
     object-fit: cover;
   }
+  .people :global(.people__pic img) {
+    transition: transform var(--t-veil) var(--ease);
+  }
+  .people__card:hover :global(.people__pic img),
+  .people__card.is-on :global(.people__pic img) {
+    transform: scale(1.04);
+  }
 
   /* One caption block, one scrim (Rule 3), bottom-left of every card. */
   .people__cap {
@@ -118,38 +147,112 @@ const posCss = PEOPLE.map((p) => `.people__card[data-people-card="${p.id}"] img{
   .people__tag {
     color: var(--pink-lift);
     margin-bottom: var(--s-3);
+    max-height: 2rem;
+    overflow: hidden;
+    transition:
+      opacity var(--t-base) var(--ease-io),
+      max-height var(--t-base) var(--ease-io),
+      margin var(--t-base) var(--ease-io);
+  }
+  .people__name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition:
+      font-size var(--t-base) var(--ease-io),
+      opacity var(--t-base) var(--ease-io);
   }
   .people__role {
     color: var(--on-night-2);
     margin-top: var(--s-1);
+    max-height: 2.5rem;
+    overflow: hidden;
+    transition:
+      opacity var(--t-base) var(--ease-io),
+      max-height var(--t-base) var(--ease-io);
+  }
+  /* The CTA appears only on the open card. */
+  .people__cta-wrap {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      max-height var(--t-slow) var(--ease),
+      opacity var(--t-base) var(--ease-io);
+  }
+  .people__card:hover .people__cta-wrap,
+  .people__card.is-on .people__cta-wrap {
+    max-height: 5rem;
+    opacity: 1;
   }
   .people__cta {
     margin-top: var(--s-4);
     color: var(--on-night);
   }
+  /* Collapsed neighbours shed everything but a smaller, dimmer name. */
+  .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__tag,
+  .people.is-picked .people__card:not(.is-on) .people__tag {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+  }
+  .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__name,
+  .people.is-picked .people__card:not(.is-on) .people__name {
+    font-size: var(--fs-body);
+    opacity: 0.65;
+  }
+  .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__role,
+  .people.is-picked .people__card:not(.is-on) .people__role {
+    opacity: 0;
+    max-height: 0;
+  }
 
   /* Focus (Rule 4): the pointed-at card is full, the other two recede by
-     the token set. Hover is CSS; tap and keyboard set .is-on / .is-picked
-     from people.ts. No card changes size. */
+     the token set as well as shrinking. Hover is CSS; tap and keyboard
+     set .is-on / .is-picked from people.ts. */
   .people__cards:has(.people__card:hover) .people__card:not(:hover),
   .people.is-picked .people__card:not(.is-on) {
     opacity: var(--recede-opacity);
     filter: saturate(var(--recede-saturate)) brightness(var(--recede-brightness));
   }
 
-  /* 390: the three stacked, full width, the same crop and caption. */
+  /* 390: the three stacked, full width, one 4:5 crop, every caption
+     whole, the CTA always there — the expand row cannot exist here. */
   @media (max-width: 767px) {
     .people {
       padding-block: var(--s-9);
     }
     .people__cards {
-      grid-template-columns: 1fr;
+      flex-direction: column;
+      height: auto;
       gap: var(--s-5);
+    }
+    .people__card,
+    .people__cards:has(.people__card:hover) .people__card,
+    .people.is-picked .people__card,
+    .people__cards:has(.people__card:hover) .people__card:hover,
+    .people.is-picked .people__card.is-on {
+      flex: none;
+      aspect-ratio: 4 / 5;
     }
     .people__cap {
       left: var(--s-5);
       right: var(--s-5);
       bottom: var(--s-5);
+    }
+    .people__cta-wrap,
+    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__tag,
+    .people.is-picked .people__card:not(.is-on) .people__tag,
+    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__role,
+    .people.is-picked .people__card:not(.is-on) .people__role {
+      max-height: 5rem;
+      opacity: 1;
+      margin-bottom: var(--s-3);
+    }
+    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__name,
+    .people.is-picked .people__card:not(.is-on) .people__name {
+      font-size: var(--fs-h3);
+      opacity: 1;
     }
   }
 </style>

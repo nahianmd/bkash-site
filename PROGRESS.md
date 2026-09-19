@@ -722,3 +722,8 @@ Journey Wall on a ScrollTrigger pin with `--vh`). Assets copied to
 block on `.on-photo`, hover/tap/keyboard = the rest recede (tokens), no
 size change; three planes drifting at the token rates on a scrub, no pin.
 Copy placeholder; the CTA goes nowhere; names need the client's clearance.
+**Then:** Nahian asked for the prototype's row behaviour back on desktop
+(three shares / 0.55, captions collapsing to a small name, CTA on the open
+card, image scale 1.04) and the title on one line. Done with the tokens;
+recede kept on the neighbours; the phone stays stacked. Measured at 1920:
+389/389/389 at rest → 157/855/157 open; title one line.

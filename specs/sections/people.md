@@ -151,3 +151,15 @@ motion: no drift. Crops per photograph as `object-position` from data.
    the reference project. If not, the section needs three others.
 3. **CTA target.** `Know her story` goes nowhere. Cut the CTA, or is there a
    story page coming?
+
+## Revised 2026-09-20 — the original row behaviour, on desktop
+
+Nahian: the title on one line (the measure lifted on `.people__title`);
+the images and stories "adapt the original behaviour". So on desktop the
+row is the prototype's again: the pointed-at card takes three shares,
+its neighbours 0.55 (measured 855 / 157 / 157 at 1920, the row's sum
+unchanged), the neighbours shed tag, role and CTA and keep a small dim
+name, the open card's image scales 1.04 and its CTA appears — with the
+site's tokens and scrim, and the recede on the neighbours kept (Rule 4).
+"Explicitly NOT the hover-expand row" is withdrawn for desktop by that
+decision. On a phone the three stay stacked with every caption whole.
