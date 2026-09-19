@@ -1,230 +1,168 @@
-# Section 4: Bento → phone → sixteen services
+# Section 4: A thousand more stories → the phone → sixteen services
 
 > Status: DRAFT
-> Model: **Fable 5.1** to specify and to build the emergence and the mobile
-> panel; **Opus 5** for the bento layout, the grid, the panel content.
-> Source: Nahian, 2026-09-17 (`phone-bento.md` and `phone-services.md`,
-> both approved) and 2026-09-18 (bento reinstated, made beautiful, parallax on
-> approach; the phone as the transition into the sixteen services);
-> `specs/design-language.md`. New spec, 2026-09-18, absorbing both earlier
-> ones. They stand as the record of what was approved and why; this file is
-> the still-first version.
+> Model: **Fable 5.1** to specify and to build the wall's parallax arithmetic,
+> the emergence, the zoom-to-grid handover and the card; **Opus 5** for the
+> grid, the copy and the picker.
+> Source: Nahian, 2026-09-19, in conversation — replaces the bento entirely.
+> `specs/design-language.md`. Rewritten still-first the same day.
+> Supersedes `phone-bento.md` and `phone-services.md` (kept as the record of
+> what was approved on 2026-09-17: the tile-becomes-device emergence and the
+> click-to-lock selection survive; everything else here is new).
 
 ## Job
 
-The product. Three states in one section:
+After three named people, **a thousand more**. A full-width wall of real
+photographs — bKash in a thousand lives — scrolling in depth while the frame
+holds. Out of that wall a tile rises, becomes the phone, and the camera pushes
+through its screen into the sixteen services: a grid you can touch, and a 3D
+card that flips to whichever one you pick. Proof of scale, then the product.
 
-1. **The bento** — six real photographs and a stat, bKash everywhere. The
-   strongest "it is in every corner of life" still on the site, and the ground
-   the phone emerges from.
-2. **The emergence** — the phone tile becomes a device and comes forward in 3D
-   as the wall falls away. The flashy transition. Approved 2026-09-17.
-3. **The services** — the phone, large, showing the real app home screen;
-   sixteen services, each selectable, each with a title, a line, and evidence.
+Documentary register throughout (Rule 1). The last section before the footer.
 
-Documentary register throughout (Rule 1). This is the last section on the
-page; the footer follows.
+## Decisions (Nahian, 2026-09-19)
 
-## The still — the bento
+Pinterest-style masonry, **full viewport width, not the container**. Title as
+a tile in the wall: _A thousand more stories_. No captions on photographs.
+Photographs **repeated at different crops for now** — a request for more goes
+to the client. Column rates 0.85 / 1.0 / 1.15 — a recorded exception to the
+plane tokens, because here the motion is the content, not a depth cue. Then:
+the phone tile slides up from beneath as part of the parallax, becomes the
+phone, the camera zooms _past_ the phone into the grid, selection is a state
+(not a section), the grid rests on white, copy is placeholder, the label is
+**NGO** (the app's word; the icon file is `Microfinance.svg`).
 
-### 1920
+## The stills
 
-Eight cells on the dark ground shared with the people section: **six
-photographs, one stat card, the phone tile.** The approved 3-column, 12-row
-grid, with the right column offset against the left — the asymmetry is the
-rhythm, kept on purpose.
+### Still A — the wall (1920)
 
-```
-col 1            col 2                 col 3
-+----------+  +------------------------------------+
-|  a       |  |  d   (wide, spans cols 2-3)         |
-+----------+  +------------------+------------------+
-|  b       |  |                  |  e  (stat)       |
-+----------+  |     [ PHONE ]    +------------------+
-|  c       |  |                  |  f               |
-+----------+  |                  +------------------+
-              |                  |  g               |
-              +------------------+------------------+
-```
+Full-bleed, dark ground. **Four columns**, one gap token, edge to edge. Tiles
+at **varied crops** — tall (4:5), square, wide (3:2) — chosen per photograph
+so the subject sits right; that variety is the masonry's rhythm. One
+**typographic tile**, paper on the dark, carries the title and the line:
 
-**It fits the viewport on both axes.** The middle column is sized from the row
-height so the phone tile is a true 360/760 — that is right and stays. But the
-grid's *width* is then fit to `min(available width, height × aspect)`, so
-height governs the tile and not the page margins. The prototype sized the
-whole grid from `84vh` and rendered it at 43% of a 16:9 screen with 543px of
-white either side. That is the one thing not to repeat.
+> A thousand more stories
+> 85 million of them, actually.
 
-Per tile: photograph at `cover`, crop set by eye, **one caption on one scrim**
-(Rule 3), one type step, corners from one token. **The stat card is the focal
-point** — pink, typographic, the one thing that is not a photograph. The phone
-tile at rest is indistinguishable from its neighbours: same corners, no bezel,
-the app screen at the tile's aspect so the sixteen icons are whole.
+The phone tile is below the fold at pin start — it is not in Still A. At
+390: **two columns**, same rules.
 
-Headline above the grid, in normal flow, so it scrolls past before the pin.
+### Still B — the phone (1920)
 
-### 390
+Face-on, centred, ~90% of `--vh` tall, bezel and notch present, the home
+screen with sixteen services legible. The wall tipped back and receded behind
+it, nearly gone. At 390: 92% of the width, bezel visible — the handset frames
+the bKash phone.
 
-**Four photographs, the stat, and the phone** — two columns, three rows,
-sized to `--vh` minus the nav. Not the desktop seven with three hidden: four
-chosen for what they say together. Proposed: `boatman` (payment on a boat),
-`agent` (cash at a counter), `train` (money on the move), `sendmoney` (the app
-in a hand). The phone tile keeps its aspect. Top row clears the nav (the
-prototype's did not).
+### Still C — the grid (1920)
 
-## Depth (Rule 2) — parallax on approach, one object on the fall
+White ground. **Sixteen tiles, 4×4, in the app's order**, real SVG icons,
+real labels beneath, spanning the content width (capped at 56rem so it is a
+grid, not a wall). Nothing selected — for about half a second. At 390: four
+across, ~85px tiles, full width minus gutters.
 
-As the section scrolls into view, not yet pinned, the tiles sit in **three
-depth groups** — say `a d g` back, `b e f` middle, `c` and the phone front —
-and drift at slightly different rates. The drift is a function of distance
-from the pin point and is **exactly zero when the section pins**, so every
-tile is at rest the moment the fall begins. Depth on the way in; one rigid
-plane on the way out; no discontinuity.
+### Still D — one service (1920) — the resting still
 
-Rule 4 on hover: the pointed-at tile is full, the others recede. Not on the
-phone tile — it has no hover state at rest; it is just a tile.
+**Stage left, grid right.** A 3D square card, ~24rem, the service's icon on
+its face, breathing a few degrees; beneath it the title (`.t-h1`) and one
+line (`.t-lead`). On the right the grid, compacted (~4.5rem tiles), the chosen
+one full and the other fifteen receded (Rule 4). At 390: the card on top
+(~60% width), title and line beneath, and the sixteen as a **horizontal
+picker strip** — 56px icons, snap to item, the chosen one centred.
 
-## Motion
+## Motion — one pin, one scrub
 
-One pinned ScrollTrigger. Progress is scrubbed across a **fraction** of the
-travel and the rest holds, so the services are readable before the section
-releases — the prototype learned this the hard way.
+| Phase           | Progress    | What happens                                                                                                                                                                                                                                                      |
+| --------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Wall            | 0 → 0.40    | Columns rise at 0.85 / 1.0 / 1.15 of the scroll (outer two share a rate). The phone tile, last in a fast column, rises into view from below.                                                                                                                      |
+| Arrival         | 0.40 → 0.50 | The phone tile reaches centre; the wall **holds**. The arrival is a landing, not a pass-through.                                                                                                                                                                  |
+| Emergence       | 0.50 → 0.65 | The tile becomes the device — already phone-aspect, so it is one transform: scale and translate from the tile's rect to Rest B; bezel and notch fade in — while the wall tips back as one plane and recedes.                                                      |
+| Rest B          | 0.65 → 0.70 | Hold.                                                                                                                                                                                                                                                             |
+| Zoom to grid    | 0.70 → 0.90 | The camera pushes into the screen until the 4×4 icon block lands **exactly under the real grid's tiles** (computed — the real grid defines the zoom's end); the real tiles fade up over the screenshot's icons, the screenshot fades out, the ground turns white. |
+| Grid, then card | 0.90 → 1    | Rest C, then after ~0.5s the first service auto-selects: the grid compacts, the card flips in. Hold.                                                                                                                                                              |
 
-| Phase | Progress | What happens |
-|---|---|---|
-| Approach | before pin | Parallax drift → zero at the pin. |
-| Fall + emergence | 0 → ~70% | **As approved.** The grid falls as one rigid plane, hinged at its bottom edge, tipping away and receding. Simultaneously the phone tile separates: its aspect narrows to a true phone, a bezel grows, the notch arrives late, and it comes forward — scaled about a fixed point — as the wall goes back. The wall is gone before the phone finishes. |
-| Slide | ~70 → ~80% | Desktop only: the phone slides left to make the right column for the panel. |
-| Services | ~80 → 100% | The phone at its final size. Hotspots live. Panel resolves. Hold. |
+Selection thereafter is interaction, not scroll: click a tile (desktop) or
+tap/swipe the strip (mobile) and the card **flips** — 180° on its vertical
+axis, the new icon on the far face — and the copy crosses over. The flip is
+the swap: one animation for any pair.
 
-Ported from `reference/prototype/js/phone.js`: the rigid-plane transform, the
-tile-to-device interpolation, the derived hotspot geometry, the measure-once
-slot caching. Dropped: the six layout properties written per frame — the
-device's box is a transform now (P2); `will-change` on layout props (P3); the
-`ANIM_SPAN` fudge (P4), which ScrollTrigger's explicit end replaces.
+**What does not move:** the frame, once pinned; the tiles relative to their
+column; the sixteen relative to each other in either layout.
 
-### The services state
+**The phone's arrival is computed.** Its column's rate and its offset in the
+column are known, so the progress at which its centre reaches the viewport
+centre is `p_arrive = (tileOffset − target) / (rate × travel)`. No tuning.
 
-**Desktop.** Phone ~520px wide, slid left to ~28% across; panel to its right,
-anchored to the phone's edge, holding its height so copy length cannot shift
-it. The dead space right of the panel in the prototype (P9) is closed by the
-panel's measure and by the family photograph (below) giving it a second column.
-
-Sixteen hotspots as fractions of the screen box — columns at 12.5 / 37.5 /
-62.5 / 87.5%, rows at 26.3 / 40.3 / 54.2 / 68.1% — so they scale with the
-device and cannot drift off their icons. **Click to lock**, first service
-auto-selected, no hover preview. **Rule 4:** the selected icon is full; the
-other fifteen recede on the screen itself, so the ring is no longer the only
-thing connecting the selection to the panel.
-
-Panel: index (`07 / 16`), title, one line, and the **family photograph**.
-
-**Mobile.** The phone grows until it is **~92% of the viewport width — not
-edge to edge.** The bezel survives, so it reads as a phone and not a screenshot
-under the site's nav (P7). Your handset frames the bKash phone.
-
-The panel is a **bottom sheet** over the lower ~35% of the screen, and it may
-**never cover the selected row** (P8 — the prototype's covered all of row 4).
-When a service is tapped, the screen *inside the device* shifts up as needed
-so the selected icon sits just above the sheet — the app screenshot is
-720×4730, the whole home screen, so there is room to shift. Tap outside, or
-the sheet's handle, to close. This is the one piece of this section that has
-to be judged on a real handset.
+**The zoom's end is computed.** The screenshot's icon block has a 25% column
+pitch and a 13.9%-of-screen-height row pitch; the real grid is built with the
+same pitch ratio, so one scale and one translate land every icon under its
+tile.
 
 ### Reduced motion
 
-The bento still, not pinned, followed in normal flow by the phone at its final
-size with the panel beside or beneath it. The services are fully usable
-without the fall.
+The wall static with the phone tile in place; beneath it, in flow, the grid
+with the first card selected. No pin. Everything readable.
 
-## The sixteen and their families
+## Depth (Rule 2)
 
-Sixteen services, six documentary photographs, and Rule 1 keeps the rendered
-set out — so not one photograph per service. **Five families, one photograph
-each,** and the panel shows the family's.
-
-| Family | Services | Photograph |
-|---|---|---|
-| Send | Send Money, Request Money, bKash to Bank, Remittance | `sendmoney.jpg` |
-| Pay | Make Payment, Pay Bill, Mobile Recharge, Toll Pay, Education Fee | `boatman.jpg` (QR on the hull) |
-| Cash | Cash Out, Add Money | `agent.jpg` (the counter) |
-| Grow | Savings, Loan, Insurance | `train.jpg` |
-| Give | Donation, NGO | `ferry.jpg` |
-
-`merchant.jpg` is the sixth and sits in the bento only. The Grow and Give
-pairings are the weakest — `train` is not obviously savings — and are the
-first thing to swap if the client can supply two more photographs. Open
-question 2.
+The wall's three column rates _are_ the planes — the recorded exception.
+After the wall recedes: ground / device / the grid; then ground / grid / card.
+The card is real 3D (perspective, `preserve-3d`, two faces).
 
 ## Content slots
 
-| Slot | Content | Status |
-|---|---|---|
-| Six photographs | `bento/*.jpg`, 1400×932, one shoot | **DOCUMENTARY**, real bKash branding in frame |
-| App home screen | `phone-screen.jpg` (720×4730) | **REAL** app UI |
-| Sixteen names | in the app's order, as the prototype has them | **APP** — `NGO` vs the icon set's `Microfinance` is an open content gap |
-| Sixteen lines | one each | **PLACEHOLDER** — written here, not bKash's |
-| Stat card | `85 million` + line | **CLIENT DECK** (the About page's figure) |
-| Bento captions | one per photograph | **PLACEHOLDER** |
-| Section headline | `Everything money does, in one place.` | **PLACEHOLDER** |
+| Slot             | Content                                                                                                | Status                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| Wall photographs | the six ex-bento, the three people portraits, the About banner — at varied crops, **repeated** to fill | **DOCUMENTARY, REPEATED** — placeholder density; ~20 more requested |
+| Title tile       | `A thousand more stories` / `85 million of them, actually.`                                            | **PLACEHOLDER** (the figure is the deck's)                          |
+| Home screen      | `phone-screen.jpg`, 720×4730                                                                           | **REAL** app UI                                                     |
+| Sixteen icons    | `reference/assets/img/*.svg`                                                                           | **REAL** — client SVGs                                              |
+| Sixteen names    | the app's order and words; `NGO`                                                                       | **APP**                                                             |
+| Sixteen lines    | one each                                                                                               | **PLACEHOLDER**                                                     |
 
 ## Audit rows closed
 
-P1 the `84vh` width · P2 six layout writes per frame · P3 `will-change` on
-layout props · P4 `ANIM_SPAN` · P5 mobile one-screen promise · P6 three cards
-hidden on mobile · P7 bezel lost at full width · P8 panel covering row 4 ·
-P9 left-heavy desktop end pose.
+P1 (width by formula, full-bleed) · P2 (one transform for the emergence — the
+tile is phone-aspect already) · P3 · P4 · P5 · P6 (mobile has its own wall) ·
+P7 (bezel at 92%) · P8 (no panel over icons — no panel) · P9 (no dead column).
 
 ## Acceptance
 
-- [ ] The bento at 1920 and at 390, motion disabled, reads as a composed still
-      on the dark ground. **Nahian's eye.**
-- [ ] At 1920×992 and 1920×1080 the grid fills at least 80% of the viewport
-      width and fits within `--vh` minus the nav. No 543px margins.
-- [ ] Every caption measures at least 4.5:1 on its scrim, both widths.
-- [ ] Parallax: tiles in three groups move at three rates on approach, and
-      every tile is at its rest position at the exact scroll position where
-      the pin engages — measured, zero offset.
-- [ ] Hover on a tile: it is full, the others recede; the phone tile has no
-      hover state.
-- [ ] The fall is one rigid plane; the phone separates and comes forward; the
-      wall is gone before the phone finishes growing. As approved.
-- [ ] Scrubbing back reverses the whole move to the bento at rest.
-- [ ] Desktop end pose: phone and panel share the width with no dead column;
-      the panel does not move when copy length changes.
-- [ ] Sixteen hotspots sit centred on their icons at the final size; selected
-      icon full, fifteen receded.
-- [ ] Mobile: the device stops at ~92% width with a visible bezel; the sheet
-      never covers the selected row; the tapped icon is visible above the
-      sheet for all sixteen.
-- [ ] The section holds after the services are live for about half a screen
-      before the footer rises.
-- [ ] Reduced motion: bento still, then the phone and panel usable.
-- [ ] No horizontal overflow at 390.
+- [ ] Stills A, B, C and D each read as composed at 1920 and 390 with motion
+      off. **Nahian's eye.**
+- [ ] The wall spans the full viewport width at every width; no side margins.
+- [ ] Three column rates, measured; the outer columns share one.
+- [ ] The phone tile is below the fold at `p = 0` and its centre is within
+      2% of the viewport centre at `p_arrive`, both widths — computed, then
+      measured.
+- [ ] The wall is motionless from arrival to the end of the emergence.
+- [ ] The emergence is one transform per frame on the device; bezel and
+      notch fade in; the wall recedes as one plane.
+- [ ] At the zoom's end every real tile's centre is within 3px of its
+      screenshot icon's centre before the crossfade.
+- [ ] Rest C shows sixteen tiles, real icons, in the app's order; then the
+      first service auto-selects within a second.
+- [ ] Selecting flips the card exactly once; the far face carries the new
+      icon; the copy crosses over; the grid's chosen tile is full, fifteen
+      receded.
+- [ ] At 390 the strip snaps to items and a swipe flips the card.
+- [ ] No horizontal overflow at 390 (the strip scrolls inside itself).
+- [ ] Reduced motion: wall static, grid and card in flow, all usable.
 
 ## Explicitly NOT this
 
-- **NOT cards falling individually or staggered.** One rigid plane. (Built
-  wrong once.)
-- **NOT the phone falling with the grid or merely scaling in place.** It
-  separates and comes forward.
-- **NOT per-tile animation during the fall.** Parallax ends at the pin.
-- **NOT a grid sized from height alone.** Both axes.
-- **NOT seven tiles with three hidden on a phone.** Six chosen.
-- **NOT the phone edge-to-edge on a phone.** The bezel is the point.
-- **NOT a panel that covers what it describes.**
-- **NOT hover-to-select.** Click to lock, as approved.
-- **NOT a crop-filled screen.** The sixteen read whole.
-- **NOT rendered imagery** anywhere in this section (Rule 1).
+- **NOT a bento** — no module grid, no container width, no captions on tiles.
+- **NOT cards falling individually.** The wall tips back as one plane.
+- **NOT the phone changing aspect as it emerges.** The tile is phone-aspect.
+- **NOT icons flying out of the phone to a grid beside it.** The camera goes
+  _through_ the screen; the grid is what is left.
+- **NOT hotspots on a screenshot, and NOT a side panel.**
+- **NOT a decorative rotation.** The flip is the swap; the idle breath is a
+  few degrees.
+- **NOT a detail section below.** Selection is a state inside the pin.
+- **NOT rendered imagery** anywhere here (Rule 1).
 
 ## Open questions
 
-1. **The dark ground** — same question as the people section; one answer for
-   both.
-2. **The five families** and their photographs. Grow and Give are stretched.
-   Ask the client for two photographs, or accept the pairings?
-3. **Screen scrub on desktop** (open since 09-17): does the app screen scroll
-   inside the device as the phone grows, or hold on the top? Written as hold;
-   on mobile it shifts only to keep the tapped row clear of the sheet.
-4. **Where the desktop zoom stops** (open since 09-17): ~520px wide and slid
-   left, as built and as `phone-services.md` approved. Confirm, or bigger.
-5. **`NGO` vs `Microfinance`** — the app says one, the icon set says the other.
+1. **Twenty more photographs** — the wall's density is gated on the client.
+2. **The sixteen lines** — placeholder until the client's.
