@@ -839,3 +839,12 @@ and "In their own words". The first is the deck's own punctuation
 (p.9) — the rule overrides it. Scanned every `<h1>`–`<h6>` in `src/`
 and in both built pages: none left. Headlines only; body copy, leads and
 card lines keep their sentences.
+**Investors, 3 across on mobile (Nahian, 2026-09-20).** Was a 2-column
+grid, so six logos ran to three rows. Now `repeat(3, 1fr)` with
+`grid-auto-rows: 1fr` and `align-items: center`, so both rows are the
+same height and every mark in a row shares one vertical centre — which
+is what makes six logos of different proportions read as one block.
+`about.ts` still solves ONE divisor from the widest wordmark against the
+cell, so the area normalisation survives the narrower cell. Measured at
+390: three 101px columns, two rows at 16.7px, centres 2942.8 and 2983.5,
+logos 50–91px wide, no overflow.
