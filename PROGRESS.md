@@ -590,3 +590,12 @@ tool (`?place`, or `__bkash.hero.place()`) — drag to move, shift-drag to
 resize, arrows to nudge, prints the `hero-beats.ts` lines. Verified by
 synthetic pointer events: a 100px drag at the wide shot moves a box by
 100 / (box.W × s) of the plate; the HUD and the console print the lines.
+
+**Then:** the cutouts "moved around with the zoom" — that was the parallax
+lead (cutouts translated relative to the street mid-segment); off. The
+placement HUD became a panel: x / y / w / soft per cutout, typed or
+dragged, with a copy button. `soft` = screen px at the wide shot, kept
+constant on screen by dividing the layer blur by the scale, zero on the
+subject; only the three cutout layers, never the plate. Measured: soft 2
+→ `blur(2px)` at the wide shot, `blur(0.5px)` at 4× on a receded cutout,
+none on the subject; no cutout transform mid-segment.

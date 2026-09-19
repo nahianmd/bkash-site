@@ -10,7 +10,7 @@
    ============================================================ */
 
 import { gsap, ScrollTrigger, reducedMotion } from './scroll';
-import { createSceneRig, poseFor, type Cam } from './scene-rig';
+import { createSceneRig, poseFor, type Cam, type Cut } from './scene-rig';
 import { BEATS } from './hero-beats';
 import { BIRD, createBirdOverlay } from './bird';
 
@@ -51,10 +51,10 @@ export const HERO = {
   },
   scrub: 0.6,
   snap: true,
-  /* Rule 2: the cutout plane leads the plate mid-segment, zero at
-     every beat. 1 = the token rate, 0 = off. Safe now that the plate
-     has no drawn figure under a cutout to double against. */
-  parallaxLead: 1,
+  /* Rule 2's lead on the cutout plane: they moved relative to the street
+     mid-segment, which read as people sliding on the ground (Nahian,
+     2026-09-19). OFF. The depth cue belongs to the caption plane. */
+  parallaxLead: 0,
   /* The prototype's exponent on the eased scale — keeps the perceived
      zoom rate constant across a 1x→4x push. */
   scaleEase: 0.86,
@@ -245,20 +245,89 @@ export function initHero() {
     placeOff?.();
     placeOff = null;
     if (!on) return;
-    const hud = document.createElement('pre');
+    const hud = document.createElement('div');
     hud.style.cssText =
-      'position:fixed;left:12px;bottom:12px;z-index:9999;margin:0;padding:10px 12px;background:rgba(0,0,0,.8);color:#0f0;font:12px/1.4 ui-monospace,monospace;border-radius:8px;white-space:pre;pointer-events:none;';
+      'position:fixed;left:12px;bottom:12px;z-index:9999;padding:10px 12px;background:rgba(0,0,0,.82);color:#0f0;font:12px/1.5 ui-monospace,monospace;border-radius:8px;';
     document.body.appendChild(hud);
     let active = 1;
-    const show = () => {
-      const lines = HERO.beats
-        .map((b) => (b.cut ? `  { id: '${b.id}', cam: ${JSON.stringify(b.cam).replace(/"/g, '')}, cut: ${JSON.stringify(b.cut).replace(/"/g, '')} },` : ''))
-        .filter(Boolean);
-      hud.textContent =
-        `PLACE — drag: move · shift-drag: resize · arrows: nudge ${HERO.beats[active]?.id ?? ''} (shift ×10)\n` +
-        lines.join('\n');
-      console.log('[hero place]\n' + lines.join('\n'));
+    const fields: (keyof Cut)[] = ['x', 'y', 'w', 'soft'];
+    const lines = () =>
+      HERO.beats
+        .filter((b) => b.cut)
+        .map(
+          (b) =>
+            `  { id: '${b.id}', cam: ${JSON.stringify(b.cam).replace(/"/g, '')}, cut: ${JSON.stringify(b.cut).replace(/"/g, '')} },`,
+        )
+        .join('\n');
+    const inputs = new Map<string, HTMLInputElement>();
+    const build = () => {
+      hud.innerHTML = '';
+      const head = document.createElement('div');
+      head.textContent =
+        'PLACE — drag: move · shift-drag: resize · arrows: nudge (shift ×10) · soft = px at the wide shot';
+      hud.appendChild(head);
+      HERO.beats.forEach((b, i) => {
+        if (!b.cut) return;
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-top:4px;';
+        const name = document.createElement('span');
+        name.textContent = b.id.padEnd(7);
+        name.style.cssText = 'display:inline-block;width:56px;';
+        row.appendChild(name);
+        for (const k of fields) {
+          const lab = document.createElement('label');
+          lab.style.cssText = 'display:inline-flex;gap:3px;align-items:center;';
+          lab.textContent = k;
+          const inp = document.createElement('input');
+          inp.type = 'number';
+          inp.step = k === 'soft' ? '0.1' : '0.001';
+          inp.min = '0';
+          inp.style.cssText =
+            'width:64px;background:#111;color:#0f0;border:1px solid #2a2;border-radius:4px;padding:1px 4px;font:inherit;';
+          inp.value = String(b.cut![k] ?? 0);
+          inp.addEventListener('input', () => {
+            const v = parseFloat(inp.value);
+            if (!Number.isFinite(v)) return;
+            b.cut = { ...b.cut!, [k]: +v.toFixed(k === 'soft' ? 2 : 4) };
+            active = i;
+            rig.measure();
+            render();
+            print();
+          });
+          inputs.set(`${i}.${k}`, inp);
+          lab.appendChild(inp);
+          row.appendChild(lab);
+        }
+        hud.appendChild(row);
+      });
+      const out = document.createElement('pre');
+      out.style.cssText = 'margin:8px 0 0;white-space:pre;color:#9f9;';
+      out.dataset.out = '';
+      hud.appendChild(out);
+      const copy = document.createElement('button');
+      copy.type = 'button';
+      copy.textContent = 'copy lines for hero-beats.ts';
+      copy.style.cssText =
+        'margin-top:6px;background:#0f0;color:#000;border:0;border-radius:4px;padding:3px 8px;font:inherit;cursor:pointer;';
+      copy.addEventListener('click', () => navigator.clipboard?.writeText(lines()));
+      hud.appendChild(copy);
     };
+    const print = () => {
+      const out = hud.querySelector<HTMLElement>('[data-out]');
+      if (out) out.textContent = lines();
+      console.log('[hero place]\n' + lines());
+    };
+    const show = () => {
+      HERO.beats.forEach((b, i) => {
+        if (!b.cut) return;
+        for (const k of fields) {
+          const inp = inputs.get(`${i}.${k}`);
+          if (inp && document.activeElement !== inp) inp.value = String(b.cut![k] ?? 0);
+        }
+      });
+      print();
+    };
+    build();
     const offs: (() => void)[] = [() => hud.remove()];
     rig.cuts.forEach((el, i) => {
       if (!el) return;
@@ -311,6 +380,7 @@ export function initHero() {
       });
     });
     const keys = (ev: KeyboardEvent) => {
+      if (document.activeElement instanceof HTMLInputElement) return;
       const b = HERO.beats[active];
       if (!b?.cut) return;
       const step = (ev.shiftKey ? 0.01 : 0.001);
@@ -325,6 +395,7 @@ export function initHero() {
       ev.preventDefault();
       b.cut = { ...b.cut, x: +(b.cut.x + m[0]).toFixed(4), y: +(b.cut.y + m[1]).toFixed(4) };
       rig.measure();
+      render();
       show();
     };
     window.addEventListener('keydown', keys);
@@ -345,10 +416,9 @@ export function initHero() {
       showBoxes(on = true) {
         rig.cuts.forEach((el) => el && (el.style.outline = on ? '2px solid #0f0' : ''));
       },
-      /** The placement tool: drag a cutout to move it, shift-drag to resize,
-          arrows to nudge the last one touched (shift = ×10). Prints the
-          lines to paste into hero-beats.ts after every change. Also on
-          with `?place` in the URL. */
+      /** The placement panel: drag a cutout to move it, shift-drag to
+          resize, arrows to nudge, or type x / y / w / soft. Prints the
+          lines to paste into hero-beats.ts. Also on with `?place`. */
       place(on = true) {
         placeTool(on);
       },

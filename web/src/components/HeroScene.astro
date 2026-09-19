@@ -32,7 +32,7 @@ const people = BEATS.filter((b) => b.cut).map((b) => ({ id: b.id, cut: b.cut!, i
 const cutCss = people
   .map(
     (p) =>
-      `.scene__cut[data-hero-cut="${p.id}"]{left:${(p.cut.x * 100).toFixed(2)}%;top:${(p.cut.y * 100).toFixed(2)}%;width:${(p.cut.w * 100).toFixed(2)}%;aspect-ratio:${p.img.width}/${p.img.height}}`,
+      `.scene__cut[data-hero-cut="${p.id}"]{left:${(p.cut.x * 100).toFixed(2)}%;top:${(p.cut.y * 100).toFixed(2)}%;width:${(p.cut.w * 100).toFixed(2)}%;aspect-ratio:${p.img.width}/${p.img.height}${p.cut.soft ? `;filter:blur(${p.cut.soft}px)` : ''}}`,
   )
   .join('');
 

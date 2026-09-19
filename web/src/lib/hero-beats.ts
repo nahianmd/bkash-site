@@ -11,8 +11,9 @@
    ============================================================ */
 
 export type Cam = { x: number; y: number; s: number };
-/** a cutout's box: top-left and width, as fractions of the plate */
-export type Cut = { x: number; y: number; w: number };
+/** a cutout's box: top-left and width, as fractions of the plate; `soft`
+    is how soft it reads at the wide shot, in screen px (0 = crisp) */
+export type Cut = { x: number; y: number; w: number; soft?: number };
 export type Beat = { id: string; cam: Cam; cut?: Cut };
 
 export const PLATE = { w: 2748, h: 1536 };

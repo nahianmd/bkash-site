@@ -254,11 +254,20 @@ there is no drawn twin under a cutout, and no opacity ramp on a subject.
   every edge — a ghost by another route (Nahian saw it at once). One
   image per cutout. If the wide shot's crispness reads wrong, the answer
   is a softer drawing from the illustrator, not a second copy.
+- **The parallax lead is OFF.** With the cutouts always visible it read
+  as people sliding on the ground as the camera moved (Nahian). The depth
+  cue belongs to the caption plane, later.
+- **Softness is a number per cutout** (`cut.soft`, screen px at the wide
+  shot): held constant on screen as the camera zooms (the layer blur is
+  divided by the scale) and gone as that cutout becomes the subject. A
+  recorded exception to performance rule 2, limited to the three small
+  cutout layers — the plate never blurs. Default 0.
 - **Placement is Nahian's eye, with a tool.** `?place` on the dev URL (or
   `__bkash.hero.place()`): drag a cutout to move it, shift-drag to resize,
   arrows to nudge; the HUD and the console print the lines to paste into
-  `hero-beats.ts`. Screen px → plate fractions is one division by the
-  cover box × the camera's scale, so it works at any beat and any width.
+  `hero-beats.ts`; or type x / y / w / soft into the panel. Screen px →
+  plate fractions is one division by the cover box × the camera's scale,
+  so it works at any beat and any width.
 - **The parallax lead is safe** now — no drawn figure to double against
   — and stays on the cutouts.
 - **The no-JS still has people.** The beats live in `hero-beats.ts` (pure

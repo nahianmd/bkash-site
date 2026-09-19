@@ -147,19 +147,29 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
     applyRecede(Math.min(1, total) * weight);
     for (let i = 1; i < opts.beats.length; i++) {
       const cut = cuts[i];
-      if (cut) recedeEl(cut, Math.min(1, total - f[i]) * weight);
+      if (!cut) continue;
+      /* Softness is a distance cue: `soft` screen px at the wide shot,
+         held constant on screen as the camera zooms (divided by the
+         scale), and gone as this cutout becomes the subject. Only the
+         three small cutout layers ever carry it — never the plate. */
+      const soft = opts.beats[i].cut?.soft ?? 0;
+      const blur = soft > 0 ? (soft * (1 - f[i])) / lastScale : 0;
+      recedeEl(cut, Math.min(1, total - f[i]) * weight, blur);
     }
     return f;
   }
 
   /** One element receded by 0..1 of the token set — the same numbers for the plate and the cutouts. */
-  function recedeEl(el: HTMLElement, amount: number) {
+  function recedeEl(el: HTMLElement, amount: number, blur = 0) {
     const r = Math.min(1, Math.max(0, amount)) * opts.recedeStrength;
     el.style.opacity = (1 - r * (1 - RECEDE.opacity)).toFixed(3);
-    el.style.filter =
-      r > 0.001
-        ? `saturate(${(1 - r * (1 - RECEDE.saturate)).toFixed(3)}) brightness(${(1 - r * (1 - RECEDE.brightness)).toFixed(3)})`
-        : '';
+    const parts: string[] = [];
+    if (r > 0.001)
+      parts.push(
+        `saturate(${(1 - r * (1 - RECEDE.saturate)).toFixed(3)}) brightness(${(1 - r * (1 - RECEDE.brightness)).toFixed(3)})`,
+      );
+    if (blur > 0.02) parts.push(`blur(${blur.toFixed(2)}px)`);
+    el.style.filter = parts.join(' ');
   }
 
   /** The plate's recede alone, 0..1 of the token set; the cutouts lift with it. */
