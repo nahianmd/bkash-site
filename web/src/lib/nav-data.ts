@@ -33,6 +33,61 @@ const slug = (s: string) =>
 const list = (base: string, labels: string[]): NavItem[] =>
   labels.map((label) => ({ label, href: `${base}/${slug(label)}` }));
 
+/* ---- the footer ---------------------------------------------------
+   The same sheet's Sheet1: social links first, then Consumers, Business
+   and Company. Hrefs are the header's, so the two cannot send the same
+   label to two different places. Social URLs are the sheet's own
+   (Header, rows 111–114) and are the only real links on this site. */
+export const SOCIAL = [
+  { label: 'Facebook', href: 'https://www.facebook.com/bkashlimited' },
+  { label: 'YouTube', href: 'https://www.youtube.com/bkashlimited' },
+  { label: 'Instagram', href: 'https://www.instagram.com/bkashlimited' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/bkash' },
+] as const;
+
+export const FOOTER_COLUMNS: { label: string; items: NavItem[] }[] = [
+  {
+    label: 'Consumers',
+    items: [
+      { label: 'Services', href: '/services' },
+      { label: 'Learning center', href: '/services/learning-center' },
+      { label: 'Offers', href: '/offers' },
+      { label: 'Lifestyle', href: '/smart-spending' },
+      { label: 'Keep your bKash safe', href: '/security-and-protection' },
+    ],
+  },
+  {
+    label: 'Business',
+    items: [
+      { label: 'Online business', href: '/online-merchants' },
+      ...list('/business', [
+        'Merchant',
+        'Agent',
+        'Education institution',
+        'Payroll',
+        'Corporate and enterprise',
+        'Microfinance',
+        'Supplier',
+      ]),
+    ],
+  },
+  {
+    label: 'Company',
+    items: [
+      { label: 'About us', href: '/about' },
+      ...list('/company', [
+        'bKash career',
+        'bKash life',
+        'Sustainability',
+        'Risk management',
+        'Code of conduct',
+        'Governance',
+        'Newsroom',
+      ]),
+    ],
+  },
+];
+
 export const NAV_MENUS: NavMenu[] = [
   {
     id: 'consumers',

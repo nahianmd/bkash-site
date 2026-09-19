@@ -865,3 +865,30 @@ desktop as well, which was out of scope and was pulled back; and the
 mobile `.ab-section` rule comes after `.road` in the file, so it re-added
 the bottom padding the road-ahead illustration needs at zero to run
 full-bleed — re-asserted inside the same media block.
+
+## Footer — rebuilt from the client's sheet, 2026-09-20 (Opus)
+
+Nahian asked for the footer's sections with social links on the left as
+icons. The attached image was the bKash logo, not a list — built from
+the spreadsheet's **Sheet1**, whose footer list runs social links first,
+then Consumers, Business, Company, which is what the instruction
+describes. (The Header sheet's rows 84–114 carry a different, older
+footer list — About us / Customers / Business / Help. Flagged, not used.)
+
+- `FOOTER_COLUMNS` and `SOCIAL` live in `lib/nav-data.ts` beside the
+  header's menus, and reuse the header's hrefs, so no label can point at
+  two different places.
+- Left column: the SVG `Logo` (letterforms ride currentColor, so it sits
+  on the night ground without a filter) and the four accounts as inlined
+  brand glyphs — 44px tap targets around 20px marks, the first pulled
+  back by its own padding so the row starts flush with the mark.
+- The four social URLs are the sheet's own and are the **only live links
+  on this site**; `target="_blank"` with `rel="noopener noreferrer"`.
+- Desktop 297/258/258/258; at 390 the brand block takes the full width
+  above two columns. No overflow.
+
+**Gotcha: the dev server served stale CSS after a whole-file rewrite.**
+The disk had the new rules, `curl` of the compiled stylesheet had the
+old ones, and the page measured the old layout — HMR does not always
+pick up a full replacement. Restarting the dev server fixed it. Measure
+the served CSS, not the file, when a change appears not to land.
