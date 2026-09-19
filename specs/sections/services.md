@@ -1,6 +1,6 @@
 # Section 4: A thousand more stories → the phone → sixteen services
 
-> Status: BUILT (revised 2026-09-19 evening — the phone in the hand; grid size by formula)
+> Status: BUILT (revised 2026-09-19 evening — the phone in the hand, then the phone as an object; grid size by formula)
 > Model: **Fable 5.1** to specify and to build the wall's parallax arithmetic,
 > the emergence, the zoom-to-grid handover and the card; **Opus 5** for the
 > grid, the copy and the picker.
@@ -131,9 +131,35 @@ transform and scales to fit it, never past 1 — at 1920 that is 1.0 (it
 slides, it does not shrink); at 1280 it is 1.0 as well. The cells are the
 Rest C cells.
 
-_Explicitly NOT this:_ not a three.js phone; not a phone model downloaded
-from the web; not the device changing aspect; not the hand inpainted away
-(the wall's recede carries it off).
+**Revised again the same evening — the phone as an object.** The client
+asked for 3D, not a flat plane turned in 3D. Nahian downloaded a handset
+model (`assets/models/phone.glb` — "iPhone 16 - Free" by Wes, Sketchfab
+Standard licence; 2.46MB, meshopt-compressed to 305KB). It is rendered by
+three.js on one transparent canvas over the pin, lit by an environment so
+the frame catches light as it turns, its display carrying the home-screen
+screenshot unlit so the pixels are the screenshot's. **The same six-number
+pose drives it**: the WebGL camera is built to be the CSS camera (world
+units are pixels, the eye at the perspective origin, an off-centre
+frustum), and the display plane is the object's origin, so the mesh's
+display corners land where the CSS device's do — measured to 0.1px at Rest
+B at both widths. The object carries the emergence and the hold; at the
+zoom the CSS device takes over, and where WebGL is unavailable or the
+model has not arrived it does the whole emergence itself. Loaded on demand
+as the section comes within a screen; never on the hero's path; never
+under reduced motion.
+
+The CSS device is now the handset's proportions too — body, display
+inset, corner radii, island — from the model's vertices (`device.ts`), so
+there is one set of numbers. The display aspect (0.4634) replaced the
+prototype's 360/760; the lattice rows are kept in screenshot pixels and
+derived from it, so the zoom still lands by construction (0.7px).
+
+_Explicitly NOT this:_ not the device changing aspect; not the hand
+inpainted away (the wall's recede carries it off); not a render loop —
+one render per scrub frame, nothing while idle; not the object during the
+zoom (the grid is DOM, the handoff is at Rest B where the two coincide).
+The trade-dress question (the model is a specific handset on a bKash
+site) is the client's call and is recorded in Open questions.
 
 ## Depth (Rule 2)
 
@@ -196,6 +222,10 @@ P7 (bezel at 92%) · P8 (no panel over icons — no panel) · P9 (no dead column
 
 ## Open questions
 
+00. **The handset is an iPhone 16.** A recognisable product on bKash's
+    site; Nahian chose it for the trial, the photograph shows the same
+    phone. If bKash objects, a generic handset built in code drops in — the
+    pose, the camera and the handoff do not change.
 0. **The sixteen as turning cards** — each cell a real 3D card, idle turn
    with phase offset, tilt under the pointer, tap to select; sway (±12°)
    or full spin. Proposed 2026-09-19; **waits on the client's feedback.**

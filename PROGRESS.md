@@ -468,3 +468,46 @@ Nahian's two notes after the first look, plus a photograph he shot for it
   photographed screen (the two home screens differ slightly); whether the
   wall's earlier fade leaves the hand for long enough; the grid at 1.0
   beside the 24rem card — the proportion is now Nahian's eye.
+
+**Revised again 2026-09-19 (late) — the phone as an object (three.js).**
+The client asked for 3D, not a flat plane turned in 3D. Nahian downloaded
+`iphone_16_-_free.glb` (Sketchfab Standard); it ships as
+`web/src/assets/models/phone.glb`, meshopt-compressed 2.46MB → 305KB.
+- `lib/device.ts` — the handset's numbers read from the model's vertices
+  (display 6.5266×14.085 at z 0.3901, body 7.1832×14.7387, corner radii
+  solved from the outermost diagonal vertex, the island) plus the pose
+  solver moved out of services.ts. One set of numbers now builds the CSS
+  device (body, display inset, radii, island — written as custom
+  properties per resize), the WebGL device, and the lattice: the display
+  aspect replaced 360/760 and the rows are kept in screenshot pixels.
+- `lib/phone3d.ts` — one transparent canvas over the pin, the GLB under
+  a RoomEnvironment, the display's material replaced by the screenshot
+  (unlit, planar UVs from the plane's own extent, no tone mapping, so the
+  pixels are the screenshot's). **The WebGL camera is the CSS camera**:
+  world units are px, the eye at the pin's perspective origin at the
+  perspective distance, an off-centre frustum via `makePerspective`, y
+  negated; the display plane is the object's origin so the same pose
+  drives both. Loaded by IntersectionObserver a screen ahead, dynamic
+  import; it is its own 642KB (minified) chunk — the page's own scripts
+  stay at 18KB — and never loads under reduced motion.
+- The object carries the emergence and the hold; the CSS device takes
+  over at `restEnd` for the zoom; without WebGL the CSS device does the
+  whole emergence (unchanged from the morning).
+- **Measured.** WebGL display corners vs the CSS device's screen at Rest
+  B: ≤0.1px at 1920 and 390. Vs the photographed corners at the pose:
+  ≤3.3px at 1920 (rms 1.86), ≤1px at 390 (rms 0.46). Lattice at the
+  zoom's end 0.11px. Model load 717ms on localhost. Dist gates clean.
+- **Gotchas.** Vite re-optimised deps after `npm install three` and the
+  automation tab's module map went stale — every page script failed with
+  "Failed to fetch dynamically imported module" until the files were
+  refetched with `cache: 'reload'`. The IntersectionObserver never fires
+  in the hidden tab (`__bkash.services.load3d()` forces it). The tool's
+  window resizes between calls and only `--vh` followed; a 28px lattice
+  error vanished on a dispatched `resize` — an artefact, not a fault.
+- **For `/verify`:** the object in a real browser at both widths — the
+  frame's light as it turns, the island, the edge; the handoff at Rest B
+  (the frame is teal in the model, `--device-body` in CSS — the body
+  colour may want matching); frame time through the emergence on a
+  phone; the 642KB chunk on Slow 4G arriving before the wall ends (it is
+  requested a screen early; if late, the CSS device runs the emergence —
+  check that this is invisible rather than a jump).

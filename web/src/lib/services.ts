@@ -8,6 +8,8 @@
 
 import { gsap, ScrollTrigger, reducedMotion, isPhone } from './scroll';
 import { cubicInOut } from './scene-rig';
+import { MODEL, POSE_ZERO, solvePose, type Camera, type Pose } from './device';
+import type { Phone3D } from './phone3d';
 
 /* ---- the sixteen, in the app's order ---------------------------
    Names are the app's; NGO is the app's word for the Microfinance
@@ -103,8 +105,18 @@ export const SERVICES = [
    is built to match, so the zoom can land on it by construction. */
 export const SCREEN = {
   cols: [0.125, 0.375, 0.625, 0.875],
-  rows: [0.2631, 0.4026, 0.542, 0.6814],
-  aspect: 360 / 760,
+  /** the icon rows, in the screenshot's own pixels */
+  rowsPx: [400, 612, 824, 1036],
+  /** the display's aspect is the handset's (device.ts), so the CSS
+      device, the WebGL device and the lattice all share it */
+  get aspect() {
+    return MODEL.aspect;
+  },
+  /** the rows as fractions of the visible screen box */
+  get rows() {
+    const visible = MODEL.shot.w / this.aspect;
+    return this.rowsPx.map((px) => px / visible);
+  },
   /** row pitch / column pitch, in screen-box units */
   get pitchRatio() {
     return (this.rows[1] - this.rows[0]) / this.aspect / (this.cols[1] - this.cols[0]);
@@ -135,9 +147,6 @@ export const WALL = {
   /* Rest B: the device's height as a fraction of --vh (desktop), or its
      width as a fraction of the viewport (phone). */
   rest: { desktopHeightFrac: 0.9, phoneWidthFrac: 0.92 },
-  /* The device's corner radius as a fraction of its width — a handset's,
-     so at the photographed pose it matches the photographed corners. */
-  deviceRadiusFrac: 0.065,
   /* Over the first part of the emergence the device fades in over the
      photographed screen it is posed on; the wall (hand included) fades
      as the phone lifts out of it. Fractions of the emergence. */
@@ -162,122 +171,6 @@ export const PHONE_QUAD = {
   bl: [0.3362, 0.7365],
 } as const;
 
-/* ---- the pose: six numbers that put the device on the photograph ----
-   CSS `translate3d(tx,ty,tz) rotateZ(rz) rotateY(ry) rotateX(rx)` about
-   the device's centre, projected by the pin's perspective. Solved by
-   Levenberg–Marquardt on the four corners: eight equations, six
-   unknowns; the residual is how far the photograph's lens is from the
-   CSS camera. */
-export type Pose = { tx: number; ty: number; tz: number; rx: number; ry: number; rz: number };
-export const POSE_ZERO: Pose = { tx: 0, ty: 0, tz: 0, rx: 0, ry: 0, rz: 0 };
-
-type Camera = { cx: number; cy: number; d: number; ox: number; oy: number };
-
-/** Project the device's four corners (W×H, centred at cx,cy) under a pose. */
-export function projectCorners(q: Pose, W: number, H: number, cam: Camera): number[] {
-  const out: number[] = [];
-  const [ca, sa] = [Math.cos(q.rx), Math.sin(q.rx)];
-  const [cb, sb] = [Math.cos(q.ry), Math.sin(q.ry)];
-  const [cc, sc] = [Math.cos(q.rz), Math.sin(q.rz)];
-  for (const [x, y] of [
-    [-W / 2, -H / 2],
-    [W / 2, -H / 2],
-    [W / 2, H / 2],
-    [-W / 2, H / 2],
-  ]) {
-    /* rotateX, then rotateY, then rotateZ, then translate — the CSS
-       matrices, in the order the functions apply to a point. */
-    const y1 = y * ca;
-    const z1 = y * sa;
-    const x2 = x * cb + z1 * sb;
-    const z2 = -x * sb + z1 * cb;
-    const x3 = x2 * cc - y1 * sc;
-    const y3 = x2 * sc + y1 * cc;
-    const X = cam.cx + x3 + q.tx;
-    const Y = cam.cy + y3 + q.ty;
-    const Z = z2 + q.tz;
-    const k = cam.d / (cam.d - Z);
-    out.push(cam.ox + (X - cam.ox) * k, cam.oy + (Y - cam.oy) * k);
-  }
-  return out;
-}
-
-export function solvePose(target: number[], W: number, H: number, cam: Camera): { pose: Pose; rms: number } {
-  const qw = (target[2] - target[0] + target[4] - target[6]) / 2;
-  const k0 = qw / W;
-  const qcx = (target[0] + target[2] + target[4] + target[6]) / 4;
-  const qcy = (target[1] + target[3] + target[5] + target[7]) / 4;
-  let q: Pose = {
-    tx: (qcx - cam.ox) / k0 + cam.ox - cam.cx,
-    ty: (qcy - cam.oy) / k0 + cam.oy - cam.cy,
-    tz: cam.d - cam.d / k0,
-    rx: 0,
-    ry: 0,
-    rz: 0,
-  };
-  const keys: (keyof Pose)[] = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
-  const step: Pose = { tx: 0.5, ty: 0.5, tz: 0.5, rx: 1e-3, ry: 1e-3, rz: 1e-3 };
-  const resid = (p: Pose) => projectCorners(p, W, H, cam).map((v, i) => v - target[i]);
-  const cost = (r: number[]) => r.reduce((a, b) => a + b * b, 0);
-  let r = resid(q);
-  let c = cost(r);
-  let lambda = 1e-3;
-  for (let it = 0; it < 60; it++) {
-    /* numeric Jacobian, central differences */
-    const J: number[][] = r.map(() => new Array(6).fill(0));
-    keys.forEach((key, j) => {
-      const h = step[key];
-      const rp = resid({ ...q, [key]: q[key] + h });
-      const rm = resid({ ...q, [key]: q[key] - h });
-      for (let i = 0; i < 8; i++) J[i][j] = (rp[i] - rm[i]) / (2 * h);
-    });
-    const A: number[][] = keys.map(() => new Array(6).fill(0));
-    const g = new Array(6).fill(0);
-    for (let i = 0; i < 8; i++)
-      for (let a = 0; a < 6; a++) {
-        g[a] += J[i][a] * r[i];
-        for (let b = 0; b < 6; b++) A[a][b] += J[i][a] * J[i][b];
-      }
-    for (let a = 0; a < 6; a++) A[a][a] *= 1 + lambda;
-    const delta = solve6(A, g.map((v) => -v));
-    if (!delta) break;
-    const next = { ...q };
-    keys.forEach((key, j) => (next[key] = q[key] + delta[j]));
-    const rn = resid(next);
-    const cn = cost(rn);
-    if (cn < c) {
-      q = next;
-      r = rn;
-      c = cn;
-      lambda = Math.max(lambda / 4, 1e-9);
-      if (c < 1e-6) break;
-    } else lambda = Math.min(lambda * 8, 1e6);
-  }
-  return { pose: q, rms: Math.sqrt(c / 8) };
-}
-
-/** Gaussian elimination with partial pivoting, 6×6. */
-function solve6(A: number[][], b: number[]): number[] | null {
-  const n = 6;
-  const M = A.map((row, i) => [...row, b[i]]);
-  for (let col = 0; col < n; col++) {
-    let piv = col;
-    for (let i = col + 1; i < n; i++) if (Math.abs(M[i][col]) > Math.abs(M[piv][col])) piv = i;
-    if (Math.abs(M[piv][col]) < 1e-12) return null;
-    [M[col], M[piv]] = [M[piv], M[col]];
-    for (let i = col + 1; i < n; i++) {
-      const f = M[i][col] / M[col][col];
-      for (let j = col; j <= n; j++) M[i][j] -= f * M[col][j];
-    }
-  }
-  const x = new Array(n).fill(0);
-  for (let i = n - 1; i >= 0; i--) {
-    let s = M[i][n];
-    for (let j = i + 1; j < n; j++) s -= M[i][j] * x[j];
-    x[i] = s / M[i][i];
-  }
-  return x;
-}
 
 /* Per-photograph crops: the subject decides where the frame sits. */
 const P = (photo: string, crop: Crop, pos: string): WallTile => ({
@@ -388,8 +281,11 @@ export function initServices() {
   section.style.setProperty('--svc-screens', String(1 + WALL.travelScreens));
 
   const device = section.querySelector<HTMLElement>('[data-device]');
-  const bezel = section.querySelector<HTMLElement>('[data-device-bezel]');
-  const notch = section.querySelector<HTMLElement>('[data-device-notch]');
+  const canvas = section.querySelector<HTMLCanvasElement>('[data-device-3d]');
+  /* The phone as an object: loaded as the section approaches; null until
+     then, and null for good if WebGL or the model fails — the CSS device
+     is the fallback, and always the device from Rest B on. */
+  let phone3d: Phone3D | null = null;
 
   let vw = 1;
   let vh = 1;
@@ -407,8 +303,13 @@ export function initServices() {
   /* The zoom's end, solved once per resize from the real grid: the scale
      and translate that put the screenshot's icon lattice under the cells. */
   let zoom = { s: 1, dy: 0 };
+  /* Rest B: the body, and the display inside it — both from the model's
+     proportions, so the WebGL handset coincides with the CSS device. */
   let restW = 1;
   let restH = 1;
+  let screenW = 1;
+  let screenH = 1;
+  let cam: Camera = { cx: 0, cy: 0, d: 1500, ox: 0, oy: 0 };
   /* The fastest column's total translate at arrival — DERIVED from where
      the phone tile sits, so it lands at centre exactly at wallEnd. */
   let D = 0;
@@ -455,31 +356,39 @@ export function initServices() {
       tileTop + fy * tileH - D,
     ]);
 
-    /* Rest B by formula, then the device sized and centred once. */
+    /* Rest B by formula — the body's height on desktop, its width on a
+       phone — then the CSS device sized and centred once, its display,
+       corners and island set from the handset's proportions. */
     if (device) {
-      restH = isPhone()
-        ? (WALL.rest.phoneWidthFrac * vw) / SCREEN.aspect
-        : WALL.rest.desktopHeightFrac * vh;
-      restW = restH * SCREEN.aspect;
+      const B = MODEL.body;
+      const Dp = MODEL.display;
+      restH = isPhone() ? (WALL.rest.phoneWidthFrac * vw * B.h) / B.w : WALL.rest.desktopHeightFrac * vh;
+      restW = (restH * B.w) / B.h;
+      screenW = (restW * Dp.w) / B.w;
+      screenH = (restH * Dp.h) / B.h;
       device.style.width = `${restW.toFixed(1)}px`;
       device.style.height = `${restH.toFixed(1)}px`;
       device.style.left = `${((vw - restW) / 2).toFixed(1)}px`;
       device.style.top = `${((vh - restH) / 2).toFixed(1)}px`;
-      device.style.borderRadius = `${(restW * WALL.deviceRadiusFrac).toFixed(1)}px`;
-      device.style.setProperty('--bezel', `${(restW * 0.028).toFixed(1)}px`);
-      /* The pin's camera, read, not assumed. */
+      device.style.borderRadius = `${((restW * B.r) / B.w).toFixed(1)}px`;
+      const set = (k: string, px: number) => device.style.setProperty(k, `${px.toFixed(1)}px`);
+      set('--screen-inset-x', (restW - screenW) / 2);
+      set('--screen-inset-y', (restH - screenH) / 2);
+      set('--screen-r', (screenW * Dp.r) / Dp.w);
+      set('--island-w', (screenW * MODEL.island.w) / Dp.w);
+      set('--island-h', (screenH * MODEL.island.h) / Dp.h);
+      set('--island-top', (restH - screenH) / 2 + (screenH * MODEL.island.top) / Dp.h);
+      /* The pin's camera, read, not assumed. The pose is solved for the
+         DISPLAY — the photographed corners are the screen's — about the
+         device's centre, which is the display's. */
       const cs = getComputedStyle(pin);
       const d = parseFloat(cs.perspective) || 1500;
       const [ox, oy] = cs.perspectiveOrigin.split(' ').map(parseFloat);
-      const solved = solvePose(quad, restW, restH, {
-        cx: vw / 2,
-        cy: vh / 2,
-        d,
-        ox: ox || vw / 2,
-        oy: oy || vh / 2,
-      });
+      cam = { cx: vw / 2, cy: vh / 2, d, ox: ox || vw / 2, oy: oy || vh / 2 };
+      const solved = solvePose(quad, screenW, screenH, cam);
       pose = solved.pose;
       poseRms = solved.rms;
+      phone3d?.setCamera(vw, vh, cam, screenW);
     }
 
     /* The real grid, by formula: as wide as the cap allows and no taller
@@ -500,7 +409,7 @@ export function initServices() {
       /* Zoom end relative to Rest B: the screenshot's column pitch is
          0.25 × the screen width; the lattice centre sits (mean row) above
          the screen's centre. The grid is centred in the frame, so dx = 0. */
-      const sEnd = P / (0.25 * restW);
+      const sEnd = P / (0.25 * screenW);
       const meanRow = SCREEN.rows.reduce((a, b) => a + b, 0) / SCREEN.rows.length;
       /* Where the grid's lattice centre actually sits — measured, so the
          zoom follows the grid's own centring (below the nav) rather than
@@ -508,7 +417,7 @@ export function initServices() {
       const gi = gridIn.getBoundingClientRect();
       const pi = pin.getBoundingClientRect();
       const gridCy = gi.top + gi.height / 2 - pi.top;
-      zoom = { s: sEnd, dy: gridCy - vh / 2 - (meanRow - 0.5) * restH * sEnd };
+      zoom = { s: sEnd, dy: gridCy - vh / 2 - (meanRow - 0.5) * screenH * sEnd };
       /* The detail layout, by formula: the frame splits at the middle —
          stage left, grid right — and the grid scales to FIT its column,
          never past 1. One transform on the grid; the cells keep layout. */
@@ -538,12 +447,20 @@ export function initServices() {
     const raw = (p - WALL.arriveHoldEnd) / (WALL.emergeEnd - WALL.arriveHoldEnd);
     const e = cubicInOut(Math.min(Math.max(raw, 0), 1));
     const live = p > WALL.arriveHoldEnd;
+    /* The object carries the emergence and the hold; the CSS device takes
+       over at restEnd for the zoom, where the two coincide. Without WebGL
+       the CSS device does all of it. */
+    const use3d = phone3d !== null && p < WALL.restEnd;
+    const fade = live ? ramp(e, 0, WALL.deviceFadeIn).toFixed(3) : '0';
+    if (canvas) canvas.style.opacity = use3d ? fade : '0';
+    if (use3d && phone3d) {
+      phone3d.setPose(pose, 1 - e);
+      if (live) phone3d.render();
+    }
     if (device && p <= WALL.restEnd) {
-      device.style.opacity = live ? ramp(e, 0, WALL.deviceFadeIn).toFixed(3) : '0';
+      device.style.opacity = use3d ? '0' : fade;
       device.style.transform = poseAt(1 - e);
     }
-    if (bezel) bezel.style.opacity = e.toFixed(3);
-    if (notch) notch.style.opacity = ramp(e, 0.5, 1).toFixed(3);
     /* The wall — the hand with it — tips back as ONE plane, hinged at its
        bottom edge, and recedes as the phone lifts out. */
     if (wallEl) {
@@ -703,6 +620,37 @@ export function initServices() {
     return;
   }
 
+  /* The phone as an object, loaded as the section comes within a screen:
+     three.js and the 305KB model, once, off the hero's path. */
+  let loading3d: Promise<void> | null = null;
+  function load3d(): Promise<void> {
+    if (loading3d) return loading3d;
+    const c = canvas;
+    if (!c || !c.dataset.model || !c.dataset.screen) return (loading3d = Promise.resolve());
+    loading3d = import('./phone3d')
+      .then((m) => m.createPhone3D(c, c.dataset.model!, c.dataset.screen!))
+      .then((ph) => {
+        phone3d = ph;
+        ph.setCamera(vw, vh, cam, screenW);
+        render();
+      })
+      .catch((err) => {
+        if (import.meta.env.DEV) console.warn('[services] phone3d unavailable', err);
+      });
+    return loading3d;
+  }
+  if (canvas) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((en) => en.isIntersecting)) return;
+        io.disconnect();
+        load3d();
+      },
+      { rootMargin: '100% 0px' },
+    );
+    io.observe(section);
+  }
+
   const tl = gsap
     .timeline({ paused: true })
     .to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
@@ -732,8 +680,11 @@ export function initServices() {
         fastRate,
         pose,
         poseRms,
+        cam,
         zoom,
-        rest: { restW, restH },
+        rest: { restW, restH, screenW, screenH },
+        phone3d: phone3d !== null,
+        bounds3d: phone3d?.bounds(),
         cols: cols.map((c) => ({ rate: c.rate, h: c.el.scrollHeight })),
       }),
       settle() {
@@ -764,6 +715,9 @@ export function initServices() {
         }
         return pts;
       },
+      /* the WebGL camera's projection of the display's corners */
+      corners3d: () => phone3d?.projectDisplayCorners() ?? [],
+      load3d,
       goTo(p: number) {
         window.scrollTo(0, st.start + (st.end - st.start) * p);
         ScrollTrigger.update();

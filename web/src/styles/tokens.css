@@ -53,6 +53,9 @@
   --paper-2: #faf7f8;
   --night: #0b0b0b;
   --night-2: #171214;
+  /* the handset (services): the body around the display, and the island */
+  --device-body: #16171b;
+  --device-island: #0c0d10;
 
   /* ---- text on a dark ground ----
      Audit X5. Dark sections hand-wrote bare white-with-alpha in a

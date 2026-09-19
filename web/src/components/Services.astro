@@ -6,7 +6,7 @@
    and CSS shows one per breakpoint, so each is composed for its width
    rather than reflowed from the other. The device, the grid and the
    card arrive in later tasks. */
-import { Picture } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import { COLUMNS, SERVICES, type WallTile } from '../lib/services';
 
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/services/*.jpg', {
@@ -15,6 +15,10 @@ const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/servi
 const photo = (name: string) => photos[`../assets/img/services/${name}.jpg`].default;
 import screen from '../assets/img/services/screen.jpg';
 import phonePhoto from '../assets/img/services/phone.jpg';
+import phoneModel from '../assets/models/phone.glb?url';
+/* The screenshot as the WebGL display's texture: the same file the CSS
+   device shows, at its own size. */
+const screenTex = await getImage({ src: screen, width: 720, format: 'jpeg' });
 const icons = import.meta.glob<{ default: ImageMetadata }>('../assets/icons/*.svg', {
   eager: true,
 });
@@ -89,11 +93,21 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       </div>
     ))}
 
-    <!-- The device. A sibling of the wall: at the end of the hold it is posed
-         in 3D over the photographed screen in the phone tile (services.ts
-         solves the pose from the screen's four corners), fades in over it,
-         then stands up and comes forward to Rest B while the wall tips back.
-         Bezel and notch are opacities. -->
+    <!-- The phone as an object: a WebGL canvas over the pin, one handset
+         mesh, posed by services.ts over the photographed screen; it fades
+         in over the photograph, stands up and comes forward to Rest B while
+         the wall tips back. Loaded as the section approaches. -->
+    <canvas
+      class="device3d"
+      data-device-3d
+      data-model={phoneModel}
+      data-screen={screenTex.src}
+      aria-hidden="true"></canvas>
+    <!-- The CSS device: the same handset's proportions (body, display,
+         corners, island — services.ts writes them from device.ts), sized
+         to Rest B. It takes over from the object for the zoom into the
+         grid, and does the whole emergence itself where WebGL is not
+         available. -->
     <div class="device" data-device aria-hidden="true">
       <div class="device__screen" data-device-screen>
         <Picture
@@ -106,8 +120,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
           loading="lazy"
         />
       </div>
-      <div class="device__bezel" data-device-bezel></div>
-      <div class="device__notch" data-device-notch></div>
+      <div class="device__island"></div>
     </div>
     <!-- The ground turns white as the screenshot gives way to the grid. -->
     <div class="ground" data-ground></div>
@@ -259,17 +272,27 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   }
 
   /* ---- the device ------------------------------------------------ */
+  .device3d {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
   .device {
     position: absolute;
-    /* Size, position and radius are written by services.ts once per
-                 resize; only the transform changes per frame. */
+    /* Size, position, radius and the display's inset are written by
+       services.ts once per resize from the handset's proportions; only
+       the transform changes per frame. */
     left: 0;
     top: 0;
     width: 100px;
     height: 211px;
     border-radius: var(--r-lg);
     overflow: hidden;
-    background: var(--paper);
+    background: var(--device-body);
     transform-origin: 50% 50%;
     will-change: transform, opacity;
     opacity: 0;
@@ -277,7 +300,10 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   }
   .device__screen {
     position: absolute;
-    inset: 0;
+    inset: var(--screen-inset-y, 4px) var(--screen-inset-x, 4px);
+    border-radius: var(--screen-r, var(--r-md));
+    overflow: hidden;
+    background: var(--paper);
   }
   .device__screen :global(picture),
   .device__screen :global(img) {
@@ -288,27 +314,15 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     object-fit: cover;
     object-position: 50% 0;
   }
-  /* The bezel is an inset ring, faded in — the tile had none. Width is
-     written per resize as a fraction of the device. */
-  .device__bezel {
+  .device__island {
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    box-shadow: inset 0 0 0 var(--bezel, 10px) #16171b;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .device__notch {
-    position: absolute;
-    top: 1.6%;
+    top: var(--island-top, 4%);
     left: 50%;
-    width: 30%;
-    height: 1.8%;
-    min-height: 5px;
+    width: var(--island-w, 28%);
+    height: var(--island-h, 2.5%);
     transform: translateX(-50%);
     border-radius: var(--r-full);
-    background: #0c0d10;
-    opacity: 0;
+    background: var(--device-island);
   }
 
   /* ---- the ground and the grid ------------------------------------ */
@@ -546,8 +560,10 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     overflow: hidden;
   }
   :global(.no-js) .device,
+  :global(.no-js) .device3d,
   :global(.no-js) .ground,
   .svc--static .device,
+  .svc--static .device3d,
   .svc--static .ground {
     display: none;
   }
