@@ -146,8 +146,23 @@ export function initHero() {
      focus, chrome and depth; the bird's mask stays fully open (q = 0).
      In the tail, the bird owns the scene — it pulls the camera back and
      lifts the recede — and the hero only fades its last caption with it. */
+  /* The nav's ground, driven by the scrub itself — deterministic, no
+     observer: transparent (with its own dark underlay) through the beats
+     and the bird's motion, solid once the mark has come to rest and the
+     white has won. A data attribute on <html>, read by Nav.astro's CSS,
+     so it needs no listener ordering. */
+  const solidFrom = HERO.share + (1 - HERO.share) * BIRD.motionEnd;
+  let ground = '';
+  const setGround = (P: number) => {
+    const g = P < solidFrom - 1e-6 ? 'dark' : 'light';
+    if (g === ground) return;
+    ground = g;
+    document.documentElement.dataset.navGround = g;
+  };
+
   const render = () => {
     const P = proxy.p;
+    setGround(P);
     const share = HERO.share;
     if (P <= share || !bird) {
       const p = share > 0 ? Math.min(P / share, 1) : 0;
@@ -184,8 +199,14 @@ export function initHero() {
   if (reducedMotion()) {
     section.classList.add('hero--static');
     remeasure();
+    /* The still is one screen: the observer's marker decides the nav. */
+    delete document.documentElement.dataset.navGround;
     return;
   }
+
+  /* With the scrub driving the nav, the observer's marker must not
+     also have a say — remove it. Reduced motion (above) keeps it. */
+  section.querySelector('[data-nav-dark-end]')?.remove();
 
   const tl = gsap
     .timeline({ paused: true })

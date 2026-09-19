@@ -165,7 +165,8 @@ const LINKS: NavLink[] = [
      has no class at all, so a `:not()` rule would match it and make
      the default transparent — which is the white-on-white failure
      this file is meant to prevent. */
-  .nav.is-over-dark {
+  .nav.is-over-dark,
+  :global(html[data-nav-ground='dark']) .nav {
     background: transparent;
     color: var(--paper);
     box-shadow: none;
@@ -191,7 +192,8 @@ const LINKS: NavLink[] = [
     pointer-events: none;
   }
 
-  .nav.is-over-dark::before {
+  .nav.is-over-dark::before,
+  :global(html[data-nav-ground='dark']) .nav::before {
     opacity: 1;
   }
 
@@ -245,7 +247,9 @@ const LINKS: NavLink[] = [
   /* On the transparent nav, pink-on-photograph is the H4 mistake.
      The current item stays white and carries its weight instead. */
   .nav.is-over-dark .nav__top.is-current,
-  .nav.is-over-dark .nav__top:hover {
+  .nav.is-over-dark .nav__top:hover,
+  :global(html[data-nav-ground='dark']) .nav .nav__top.is-current,
+  :global(html[data-nav-ground='dark']) .nav .nav__top:hover {
     color: var(--paper);
   }
 

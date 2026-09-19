@@ -635,3 +635,14 @@ transparent through the whole hero pin, the bird's white included — the
 bird no longer toggles the marker; `navSolidAt` is gone. What Nahian saw
 as "white behind the header in the hero" was the bird's solid switch,
 exposed when the wall's marker was removed the night before.
+
+**Nav over the hero, third pass (2026-09-20):** Nahian still saw white in
+the pin. The observer path was the weak link (a zero-height marker at a
+pinned section's end, toggled from a scrub), so the hero now drives the
+nav itself: `render()` writes `<html data-nav-ground="dark|light">` from
+the scrub — dark until the bird's motion ends (P < share + (1 − share) ×
+motionEnd = 0.909), light after — and Nav.astro's CSS reads it beside the
+observer's class. The hero removes its marker when the scrub runs;
+reduced motion keeps it. Measured with the nav's transition disabled (it
+freezes in the hidden tab): transparent + white links at beats 0–3 and
+bird 0.5 / 0.79; solid from 0.81; solid over the wall.
