@@ -833,3 +833,9 @@ found by curling the compiled CSS. Write both padding longhands instead.
 
 **Open:** what the button does when clicked. Nothing is wired yet; the
 client's sheet lists a search button (Sheet1, B2) but no behaviour.
+**No full stop after a headline (Nahian, 2026-09-20).** Three carried
+one, all on About: the Revolution headline, "The best in the business"
+and "In their own words". The first is the deck's own punctuation
+(p.9) — the rule overrides it. Scanned every `<h1>`–`<h6>` in `src/`
+and in both built pages: none left. Headlines only; body copy, leads and
+card lines keep their sentences.
