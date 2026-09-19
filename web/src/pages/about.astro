@@ -767,6 +767,15 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   }
 
   @media (max-width: 767px) {
+    /* One rhythm for every section on a phone. The road keeps its zero
+       bottom — its illustration runs full-bleed off the foot of the
+       section, and this rule comes after `.road` in the file. */
+    .ab-section {
+      padding-block: var(--section-pad-phone);
+    }
+    .road {
+      padding-bottom: 0;
+    }
     /* The mark under the copy, and not so large it becomes the section. */
     .revolution {
       grid-template-columns: 1fr;

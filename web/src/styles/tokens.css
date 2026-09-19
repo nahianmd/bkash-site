@@ -274,6 +274,17 @@
   --nav-h: 4.5rem;
   --vh: 100vh;
 
+  /* The air a section keeps above and below itself ON A PHONE. One
+     value, so the page reads at a constant pace and no section invents
+     its own — the homepage was running 96, 128 and 55 against About's
+     86 (Nahian, 2026-09-20). Desktop is untouched; each section still
+     sets its own there.
+
+     A FIXED length, not a vh clamp: `vh` grows as the URL bar collapses,
+     and section padding that shifts mid-scroll reads as the page moving
+     under you. Same reasoning as `--vh`, one layer up. */
+  --section-pad-phone: 5rem;
+
   /* ---- z-index ---- */
   --z-scene: 1;
   --z-chrome: 20;

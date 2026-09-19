@@ -186,8 +186,11 @@ const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
   }
 
   @media (max-width: 767px) {
+    /* On a phone the extra above goes — 128px of blank white is a
+       screenful to scroll past — and the section takes the phone
+       rhythm like every other. */
     .svcd {
-      padding-block: var(--s-10) var(--s-9);
+      padding-block: var(--section-pad-phone);
     }
     .svcd__in {
       grid-template-columns: 1fr;

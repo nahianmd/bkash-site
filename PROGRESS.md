@@ -848,3 +848,20 @@ is what makes six logos of different proportions read as one block.
 cell, so the area normalisation survives the narrower cell. Measured at
 390: three 101px columns, two rows at 16.7px, centres 2942.8 and 2983.5,
 logos 50–91px wide, no overflow.
+
+**Section rhythm on a phone (Nahian, 2026-09-20).** The homepage ran 96
+(people), 128/96 (the sixteen) and 55 (footer top) against About's 86 —
+four different ideas of how much air a section keeps. One token now:
+`--section-pad-phone: 5rem`, used by every section inside its ≤767 block,
+so both pages read at 80/80 throughout. It is a **fixed** length, not a
+vh clamp: `vh` grows as the URL bar collapses, and section padding that
+shifts mid-scroll reads as the page moving under you — the `--vh` rule,
+one layer up. **Desktop is untouched** (the ask was mobile): People
+128/128, the sixteen 192/128, About 99/99 at 1280, all measured the same
+before and after.
+
+Two things caught while doing it: unifying via a root token first changed
+desktop as well, which was out of scope and was pulled back; and the
+mobile `.ab-section` rule comes after `.road` in the file, so it re-added
+the bottom padding the road-ahead illustration needs at zero to run
+full-bleed — re-asserted inside the same media block.
