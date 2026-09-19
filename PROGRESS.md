@@ -776,8 +776,10 @@ background from the border only — whites *inside* the photographs (a
 laptop, shirts) survive — and mattes the anti-aliased ring by
 un-premultiplying it, which is what stops a grey halo on the section's
 tint. 75.1% cleared, 4002px matted. Layout: copy left / mark right on a
-1.1fr–1fr grid, the triad full width beneath; at 390 the mark stacks
-under the copy, capped at 22rem and centred. Measured at 1920: copy
-345–944, mark 1016–1561 at 545², triad below, no overflow at 390.
+**1.6fr–1fr** grid — measured: the headline runs to six lines at 1.1,
+five at 1.35, four at 1.6, and no fewer however small the mark goes, so
+1.6 is the least the mark has to give up — the triad full width beneath; at 390 the mark stacks
+under the copy, capped at 22rem and centred. Measured at 1920: copy 704, mark 440², headline 4 lines, triad below,
+no overflow at 390.
 **Resolution:** the source is 797² and displays at 545 CSS px, so a 2×
 screen wants ~1090 — a larger export would help.

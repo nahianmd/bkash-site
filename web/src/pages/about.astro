@@ -429,7 +429,10 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   /* ---- the revolution: copy beside the mark ---- */
   .revolution {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    /* 1.6 : 1 is where the headline settles at four lines — measured at
+       1920, it runs to six at 1.1 and five at 1.35, and taking the mark
+       below this buys no further line. */
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: clamp(2rem, 5vw, 4.5rem);
     align-items: center;
     margin-bottom: clamp(2.5rem, 6vh, 4rem);
