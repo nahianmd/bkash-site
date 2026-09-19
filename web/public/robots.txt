@@ -1,0 +1,6 @@
+# Not for indexing. The site carries live bKash branding, real board
+# names and a real executive quote, and is not signed off for public use
+# (CLAUDE.md). Every page also carries <meta name="robots" content="noindex">
+# and the host sends X-Robots-Tag; this file is the third lock.
+User-agent: *
+Disallow: /

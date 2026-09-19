@@ -40,7 +40,13 @@ const cutCss = people
    the plate at 4x zoom on 1920 would want 7680 and has 2748 — the
    tightest beat is a 2.8x stretch, down from 4.8x. A cutout's largest
    size is its box fraction x the plate's display width x its beat's
-   zoom. */
+   zoom.
+
+   `fallbackFormat` is webp on the cutouts: their PNG fallback ladder was
+   13.8MB of the build, and no browser that supports <picture> and reaches
+   the <img> at all lacks WebP except Safari 13 and older. Nothing is
+   saved on a visitor's connection — the fallback is never fetched when a
+   <source> matches — this is deploy weight and build time. */
 ---
 
 <style is:global set:html={cutCss}></style>
@@ -68,6 +74,7 @@ const cutCss = people
         widths={[300, 600, 1000, p.img.width]}
         sizes="50vw"
         formats={['avif', 'webp']}
+        fallbackFormat="webp"
         layout="none"
       />
     </div>
