@@ -192,3 +192,10 @@ artifacts) · H10 mobile dead air and clipped copy.
    `specs/refs/bkash-logo.svg`. The collage layout is retired with the collage.
 3. ~~The deck line~~ — **resolved 2026-09-18: keep the split**, and flag the
    reordering to the client in one line at copy review.
+
+## Revised 2026-09-20 — the nav through the bird
+
+The nav stays transparent through the whole pin, the white included: its
+own dark underlay carries the links over anything. `navSolidAt` is gone;
+the hero section's end marker alone makes the switch, so the wall (on
+white) starts solid.

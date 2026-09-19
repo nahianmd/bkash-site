@@ -627,3 +627,11 @@ hero copies' ground softer.
 - **Open — Nahian's call:** where the hero copies sit (headline top-right
   in the sky, captions bottom-left). Two alternatives offered in
   conversation.
+
+**Then (2026-09-20):** the claim moves to the foot of the frame on desktop
+(the captions' column; it leaves as Amena's caption arrives in the same
+place); the phone keeps it in the top third (Rule 3). The nav stays
+transparent through the whole hero pin, the bird's white included — the
+bird no longer toggles the marker; `navSolidAt` is gone. What Nahian saw
+as "white behind the header in the hero" was the bird's solid switch,
+exposed when the wall's marker was removed the night before.

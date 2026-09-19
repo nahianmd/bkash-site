@@ -33,8 +33,6 @@ export const BIRD = {
      'hold' — the street stays at beat 3, receded (option a, strictly). */
   content: 'wide' as 'wide' | 'hold',
   startMargin: 1.02,
-  /* When the white has won and the nav should go solid. */
-  navSolidAt: 0.5,
 };
 
 type Pose = { k: number; ox: number; oy: number };
@@ -53,7 +51,6 @@ export function createBirdOverlay(
   root: HTMLElement,
   pin: HTMLElement,
   rig: Rig,
-  marker: HTMLElement | null,
   scaleEase: number,
 ) {
   const hole = root.querySelector<SVGGElement>('[data-bird-hole]');
@@ -158,7 +155,10 @@ export function createBirdOverlay(
     }
     /* Transparent nav while the street dominates, solid once the white
        has won — nav.ts's own escape hatch, driven both ways. */
-    if (marker) marker.hidden = q > BIRD.navSolidAt;
+    /* The nav stays transparent through the whole pin, the bird's white
+       included — its own dark underlay carries the links over anything
+       (Nahian, 2026-09-20). The marker at the section's end does the
+       switch; nothing toggles it here. */
     return e;
   }
 

@@ -84,11 +84,14 @@ import BirdOverlay from './BirdOverlay.astro';
     pointer-events: none;
   }
 
+  /* The claim sits at the foot of the frame, in the captions' column,
+     and leaves as Amena's caption arrives in the same place (Nahian,
+     2026-09-20). Rahim's stall is behind it at the wide shot; the
+     ground is the scrim. */
   .hero__open {
     position: absolute;
-    right: var(--gutter);
-    /* Below the nav's own scrim band; the block's scrim fades up into it. */
-    top: calc(var(--nav-h) + var(--s-9));
+    left: var(--gutter);
+    bottom: calc(var(--gutter) + var(--s-6));
     width: max-content;
     max-width: min(52vw, 44rem);
   }
@@ -130,8 +133,7 @@ import BirdOverlay from './BirdOverlay.astro';
     /* Top third: the sky. The people occupy the middle and bottom thirds
                of the phone's slice (Rule 3). */
     .hero__open {
-      right: auto;
-      left: var(--gutter);
+      bottom: auto;
       top: calc(var(--nav-h) + var(--s-6));
       max-width: none;
       width: calc(100% - var(--gutter) * 2);

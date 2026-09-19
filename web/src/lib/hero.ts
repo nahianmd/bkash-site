@@ -71,9 +71,8 @@ export function initHero() {
 
   const rig = createSceneRig(scene, pin, HERO);
 
-  const marker = section.querySelector<HTMLElement>('[data-nav-dark-end]');
   const birdRoot = section.querySelector<HTMLElement>('[data-bird-live]');
-  const bird = birdRoot ? createBirdOverlay(birdRoot, pin, rig, marker, HERO.scaleEase) : null;
+  const bird = birdRoot ? createBirdOverlay(birdRoot, pin, rig, HERO.scaleEase) : null;
 
   /* One pin for both: the section's travel is the hero's beats plus the
      bird's, and the CSS fallback height is overwritten from the configs
