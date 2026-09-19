@@ -653,3 +653,13 @@ one token, `--svc-gather` (`--s-8`, 4rem): the copy's `left` adds it,
 the phone's centre subtracts it. Nahian: "move them both, slightly." The
 mobile layout is untouched. The sixteen get `--s-11` above them (12rem;
 10 on a phone).
+
+**The wall's photographs (2026-09-19, late):** the client's twenty-two
+arrived (WhatsApp exports, 1600×1066 / 1066×1600), renamed to slugs and
+laid into the wall with the ten from before — 32 photographs, each once
+on desktop plus two repeats at other crops so the outer column covers
+the travel (every column's height ≥ its rate × D + vh, checked: 2763–
+3388 needed, 3702–4120 present); the phone's two columns carry eighteen.
+Crops by subject: tall for a standing figure, square for a face or a
+pair, wide for a scene; `object-position` where the subject is off
+centre. Arrival re-measured after the reorder: 496.5 vs 496.
