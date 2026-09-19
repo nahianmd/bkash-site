@@ -713,3 +713,12 @@ Journey Wall on a ScrollTrigger pin with `--vh`). Assets copied to
   it under real scrolling (the observer path, unpinned — the hidden tab
   never fires it); the counters; the wall's pan on a phone; the scrim on
   the hero copy against the banner; the board treatment by eye.
+
+
+## People — BUILT 2026-09-20 (Fable)
+
+`specs/sections/people.md` as written, after the bird. Three named people
+(the reference project's) as equal 4:5 cards on `--night-2`, one caption
+block on `.on-photo`, hover/tap/keyboard = the rest recede (tokens), no
+size change; three planes drifting at the token rates on a scrub, no pin.
+Copy placeholder; the CTA goes nowhere; names need the client's clearance.

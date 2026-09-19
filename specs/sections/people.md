@@ -1,7 +1,7 @@
 # Section 3: People — three of the 85 million
 
-> Status: DRAFT
-> Model: **Fable 5.1** to specify; **Opus 5** to build. The still is the
+> Status: BUILT (2026-09-20, Fable — Nahian: "bring that section after bird; it will adapt our DLS")
+> Model: **Fable 5.1** to specify; built by Fable in the same pass. The still is the
 > design; the motion is two planes and a recede.
 > Source: Nahian's structure (hero's three types → three named people), the
 > prototype's three photographs and names, `specs/design-language.md`.
@@ -129,9 +129,22 @@ this pass and rendered; these are real and named. Both stay.
 - **NOT rendered imagery.** Nothing from the hero or the bird's facets appears
   here (Rule 1).
 
+## As built (2026-09-20)
+
+`People.astro` + `lib/people.ts`. Ground `--night-2`; eyebrow "Meet
+three of them", headline "Real streets. Real stories." (PLACEHOLDER);
+three cards 4:5 inside the gutter, one caption block on `.on-photo`
+(tag, name `.t-h3`, role, outlined CTA); hover is CSS (`:has`), tap /
+keyboard set `.is-on` / `.is-picked`; the other two recede by the token
+set; no card changes size. Depth: the cards plane leads the ground by
+(mid − back) × vh and the captions by (front − mid) × vh as the section
+crosses the viewport, on a scrubbed ScrollTrigger with no pin; reduced
+motion: no drift. Crops per photograph as `object-position` from data.
+390: stacked full-width.
+
 ## Open questions
 
-1. **The dark ground** — the warm near-black the prototype used for the
+1. **The dark ground** — built as `--night-2`. — the warm near-black the prototype used for the
    people row, or something with more colour? It is the ground for both proof
    sections, so it is a language decision as much as a section one.
 2. **Are the three names cleared with the client?** They are real people from
