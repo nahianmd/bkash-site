@@ -683,3 +683,33 @@ shifted against its rows. The About page is next: "as it is."
 scoping — the panel opened in the DOM and stayed invisible; my own
 measurement had read the 0 as a frozen transition. `.nav .nav__panel.is-in`
 now. Measured: hover-open then click → opacity 1, top 72, block.
+
+## About — BUILT 2026-09-20 (Fable)
+
+The prototype's page, content and layout as they were, in the site's
+design language. `pages/about.astro` · `lib/about-data.ts` (stats,
+triad, board, investors, voices — the prototype's lists verbatim) ·
+`lib/about.ts` (reveals, counters, the investors' shared logo size, the
+Journey Wall on a ScrollTrigger pin with `--vh`). Assets copied to
+`assets/img/about/` (27 files, 2.7MB), all through astro:assets.
+- The hero copy sits on `.on-photo` (Rule 3); the banner is dark, so the
+  page places `[data-nav-dark-end]` at its end — the observer path,
+  which is what it is for on an unpinned page.
+- Dark sections use `--night` / `--on-night*`; a `--pink-lift` token was
+  added for eyebrows on dark grounds (the prototype's value).
+- The board keeps the prototype's monochrome treatment — a recorded
+  exception to "documentary left real": the portraits run 175px to
+  2400px and the treatment hides it. Reversible, one line. Better
+  portraits remain a client ask.
+- The wall: height `--vh × 3.2` (2.6 on a phone), pin `--vh`, travel =
+  the artwork's overhang (1895px at 1920), one transform per frame, a
+  progress bar on the same number; reduced motion / no JS: no pin, the
+  artwork scrolls sideways.
+- Reveal stagger via `data-reveal-group` (a custom property set once),
+  not the prototype's inline styles; the road headline's `<br>` is gone.
+- Gates: 0 inline styles, 0 `<br>`, `noindex`, one `100vh` (the fallback;
+  a second one in the nav panel was removed).
+- **For `/verify`:** the nav transparent over the banner and solid below
+  it under real scrolling (the observer path, unpinned — the hidden tab
+  never fires it); the counters; the wall's pan on a phone; the scrim on
+  the hero copy against the banner; the board treatment by eye.

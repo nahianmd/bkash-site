@@ -64,6 +64,8 @@
      they sit on, so "text on dark" is one decision, not twelve. */
   --on-night: rgb(255 255 255 / 92%);
   --on-night-2: rgb(255 255 255 / 72%);
+  /* the pink that reads on a dark ground — eyebrows over night and photographs */
+  --pink-lift: #ff2d87;
   --on-night-3: rgb(255 255 255 / 52%);
   --on-night-line: rgb(255 255 255 / 12%);
 
