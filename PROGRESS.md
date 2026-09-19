@@ -745,8 +745,8 @@ PyPDF2 and applied:
 |---|---|
 | Hero beat 0 | Powering Financial Access / Across Millions of Lives |
 | Beat 1: Amena | 7 in 10 Adults in Bangladesh / Control Their Money with bKash (unchanged) |
-| Beat 3: Rahim | From Floating Stalls to Digital Storefronts / Empowering Millions of Cashless Commerce — Merchant |
-| Beat 2: Faysal | At Least One Human ATM Every 2 KM / The Largest Agent Network in Bangladesh — Agent |
+| Beat 3: Faysal | From Floating Stalls to Digital Storefronts / Empowering Millions of Cashless Commerce — Merchant |
+| Beat 2: Rahim | At Least One Human ATM Every 2 KM / The Largest Agent Network in Bangladesh — Agent |
 | Bird | A Financial Ecosystem / Reaching Every Corner (eyebrow dropped) |
 | People | Stories Behind the Numbers |
 | The wall's title tile | Writing Millions of Stories in Motion (eyebrow and subline dropped — the deck gives one line) |
@@ -756,10 +756,12 @@ PyPDF2 and applied:
 | About: careers | Build What Matters / the 15-years paragraph / "Five values shape how we work:" / Customer-Centric… / "We challenge convention…" / CTA "Come Build What's Next" |
 | About: road ahead | The Road Ahead + the deck's two paragraphs (the eyebrow dropped — it duplicated the title) |
 
-**Resolved (Nahian, 2026-09-20):** follow the deck's order. The camera
-now visits **Amena → Faysal → Rahim** — customer, agent, merchant — so
-`hero-beats.ts` swaps beats 2 and 3 and the captions move with them.
-Measured: each beat lights its own cutout with its own caption.
+**Resolved (Nahian, 2026-09-20):** the deck's p.2 has the two names
+against each other's line — **Rahim is the agent, Faysal the merchant**.
+So copy is assigned by ROLE, and the order is customer → agent →
+merchant: **Amena → Rahim → Faysal**, which is the camera order that was
+already built. Measured: each beat lights its own cutout with its own
+caption and role.
 
 Still ours, not the deck's: the hero cue "Scroll to meet them"; the
 eyebrows (Meet three of them, Sixteen services, Our journey, About bKash,

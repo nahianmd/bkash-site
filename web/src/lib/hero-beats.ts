@@ -9,9 +9,9 @@
    figures were painted. Placed by Nahian with the placement panel
    (`?place`), 2026-09-19.
 
-   The order is the client's deck (`assets/Website_N_1.pdf`, p.2):
-   Amena, then Faysal, then Rahim — customer, agent, merchant.
-   Nahian, 2026-09-20.
+   The order is customer, agent, merchant — Amena, then Rahim, then
+   Faysal. Rahim IS the agent and Faysal the merchant; the deck's p.2
+   has those two names against the other's line. Nahian, 2026-09-20.
    ============================================================ */
 
 export type Cam = { x: number; y: number; s: number };
@@ -25,6 +25,6 @@ export const PLATE = { w: 2748, h: 1536 };
 export const BEATS: Beat[] = [
   { id: 'open', cam: { x: 0.5, y: 0.5, s: 1 } },
   { id: 'amena', cam: { x: 0.41, y: 0.5, s: 4 }, cut: { x: 0.3951, y: 0.4737, w: 0.027, soft: 0 } },
-  { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.4912, y: 0.6677, w: 0.102, soft: 0 } },
   { id: 'rahim', cam: { x: 0.37, y: 0.74, s: 3 }, cut: { x: 0.312, y: 0.745, w: 0.1, soft: 0 } },
+  { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.4912, y: 0.6677, w: 0.102, soft: 0 } },
 ];
