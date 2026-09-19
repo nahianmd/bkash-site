@@ -382,3 +382,59 @@ bird); the snap is directional within the share and off past beat 3;
 the beats land at their scaled positions with exact scene scales; the mask
 is fully open through the beats; a forward tick from beat 0 snaps to beat 1,
 back from beat 1 to 0, and past beat 3 there is no snap.
+
+
+## Built — services (`web/`, 2026-09-19, Fable)
+
+`specs/sections/services.md` · `specs/services/plan.md` ·
+`web/src/components/Services.astro`, `web/src/lib/services.ts`,
+`web/src/assets/img/services/`, `web/src/assets/icons/`.
+
+**What ships.** One pin, 5.5 screens of travel, one scrub. A full-viewport
+masonry wall — four columns at 1920, two at 390, each column one transform
+per frame at 0.85 / 1.0 / 1.15 of the scroll (outer two share a rate) — with
+the title tile _A thousand more stories_ and, last in the fastest column, a
+phone-aspect tile that rises from beneath the fold. Its arrival is computed
+(`D = col.offsetTop + tile.offsetTop + tileH/2 − vh/2`, and the column travel
+is set so it lands at centre exactly at `wallEnd`), then the wall holds. The
+emergence is one transform on the device — `translate(dx(1−e)) scale(k0 +
+(1−k0)e)` from the tile's rect to Rest B (90% of `--vh` tall on desktop, 92%
+of the width on a phone) — while the bezel and notch fade in and the wall tips
+back as one plane. The zoom's end is solved from the real grid: the grid's
+pitch is `P = min(capW/4, capH/(4·pitchRatio))`, the zoom scale is
+`P / (0.25·restW)`, the translate comes from the measured grid centre; the
+real tiles fade up over the screenshot's icons in the last quarter and the
+ground turns white. Rest C, then auto-select after 500ms: the grid compacts
+via one transform (desktop, `translate(25vw) scale(0.38)`) or becomes a 56px
+snap strip (phone), and a two-faced 3D card flips — the hidden face takes the
+new icon, `rotateY` toggles, the copy crosses at 260ms. Selection is a state;
+the recede is the token set. Reduced motion / no-JS: the wall static with the
+phone tile in place, the grid and the first card in flow.
+
+**Measured.** 1920×992: arrival 496.3 vs 496 target; tile→device handoff
+0.3px; lattice error at zoom end 0.18px (spec allows 3). 390×780: arrival
+`cx 280.7 cy 389.7`, device rest 345×728 (92%), `zoomS 0.971`, grid 335px,
+card and copy and strip do not overlap, `scrollWidth 375` — no horizontal
+overflow. Dist gates: 0 inline styles, 0 `<br>`, `noindex` on both pages.
+
+**What measurement caught that reading would not have.**
+- The phone column ran out beneath the phone tile — the wall showed its floor
+  before arrival. Tiles now follow the phone tile in its column.
+- `offsetLeft` on the tiles was column-relative: `will-change: transform` makes
+  each column an offsetParent. Column offsets are added explicitly.
+- `parseFloat('var(--nav-h)')` is `NaN`; custom properties resolve to px only
+  through a probe element (`resolvePx`).
+- Centring the grid below the nav moved its centre 36px from the viewport's,
+  and the zoom landed 36px off. `dy` now comes from the measured grid centre.
+
+**For `/verify` (Sonnet).** Expect to pass: full width at every width, three
+rates measured, arrival within 2% both widths, wall motionless from arrival
+through the emergence, one transform per frame on the device, lattice within
+3px, sixteen in the app's order, one flip per selection, strip snap, no
+overflow, reduced motion. **Look first:** frame time through the zoom (the
+screenshot is 720×4730 and the wall is still in the layer tree); the compact
+grid at 0.38 on desktop — is the right half mostly whitespace; the empty
+lower area on the phone between the copy and the strip; whether the strip is
+discoverable as a picker; adjacent repeats in the wall at 1920 (the
+photographs are ten, the tiles more). **Nahian's eye:** Stills A–D at both
+widths, the title tile's paper-on-dark, and the card's idle breath.

@@ -1,6 +1,6 @@
 # Section 4: A thousand more stories → the phone → sixteen services
 
-> Status: DRAFT
+> Status: BUILT
 > Model: **Fable 5.1** to specify and to build the wall's parallax arithmetic,
 > the emergence, the zoom-to-grid handover and the card; **Opus 5** for the
 > grid, the copy and the picker.

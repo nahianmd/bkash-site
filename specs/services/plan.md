@@ -79,18 +79,18 @@ measured against the computed values.
 
 ## Tasks
 
-- [ ] **1. Assets + the wall still.** Photos, icons, screen; `Services.astro`
+- [x] **1. Assets + the wall still.** Photos, icons, screen; `Services.astro`
       with the columns, varied crops, the title tile, the phone tile
       (phone-aspect); full-bleed; `index.astro`. Build. _One look, both widths._
-- [ ] **2. Parallax + arrival.** `services.ts`: rates, travel, `p_arrive`
+- [x] **2. Parallax + arrival.** `services.ts`: rates, travel, `p_arrive`
       computed, plateau. Measured: tile centre at viewport centre at `p_arrive`.
-- [ ] **3. Emergence.** Device element, one transform from the tile rect to
+- [x] **3. Emergence.** Device element, one transform from the tile rect to
       Rest B, bezel/notch, wall recedes as one plane. Measured.
-- [ ] **4. Zoom to grid.** Real grid built; zoom end computed from it; the
+- [x] **4. Zoom to grid.** Real grid built; zoom end computed from it; the
       overlay tiles fade up; the screenshot out; white ground. Measured: 3px.
-- [ ] **5. Card and states.** Stage, flip, copy, compact grid / strip,
+- [x] **5. Card and states.** Stage, flip, copy, compact grid / strip,
       auto-select, recede. Reduced-motion flow layout.
-- [ ] **6. Close out.** PROGRESS, spec BUILT, hand to `/verify`.
+- [x] **6. Close out.** PROGRESS, spec BUILT, hand to `/verify`.
 
 ## Risks
 
