@@ -249,12 +249,16 @@ there is no drawn twin under a cutout, and no opacity ramp on a subject.
 - **Focus is Rule 4 alone.** While a subject is focused, the street AND
   the other two recede by the token set; the subject stays full. One
   function (`recedeEl`) for the plate and the cutouts.
-- **Depth of field by the zoom.** Each cutout is one drawing twice: sharp,
-  and a pre-softened twin (`tools/soft-twins.mjs` — sigma chosen so it
-  reads ~1.2px soft at the wide shot on 1920) shown while the camera is
-  wide, crossfading to sharp as the camera reaches that beat's zoom.
-  Same drawing, same place — the crossfade cannot double. The
-  performance rule is kept: nothing is blurred per frame.
+- **No soft twins.** Tried the same evening and withdrawn: a blurred
+  silhouette is larger than the sharp one, so crossfading the two haloes
+  every edge — a ghost by another route (Nahian saw it at once). One
+  image per cutout. If the wide shot's crispness reads wrong, the answer
+  is a softer drawing from the illustrator, not a second copy.
+- **Placement is Nahian's eye, with a tool.** `?place` on the dev URL (or
+  `__bkash.hero.place()`): drag a cutout to move it, shift-drag to resize,
+  arrows to nudge; the HUD and the console print the lines to paste into
+  `hero-beats.ts`. Screen px → plate fractions is one division by the
+  cover box × the camera's scale, so it works at any beat and any width.
 - **The parallax lead is safe** now — no drawn figure to double against
   — and stays on the cutouts.
 - **The no-JS still has people.** The beats live in `hero-beats.ts` (pure
@@ -266,7 +270,8 @@ there is no drawn twin under a cutout, and no opacity ramp on a subject.
   4.8×. The cutouts are unchanged (upscale later, as agreed).
 
 _Explicitly NOT this:_ not the cutouts fading in per beat (that was the
-ghost); not a per-frame blur; not a grade on the cutouts to "match".
+ghost); not a soft twin crossfade (the other ghost); not a per-frame blur;
+not a grade on the cutouts to "match".
 
 ## Explicitly NOT this
 

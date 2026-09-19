@@ -13,7 +13,7 @@ const img = await getImage({ src: plate, width: 1600, format: 'webp' });
 
 /* The people, placed as the camera places them: the plate cover-fits the
    mark's box ("slice"), and each cutout is a fraction of the plate. */
-const cuts = import.meta.glob<{ default: ImageMetadata }>('../assets/img/hero/*-soft.png', {
+const cuts = import.meta.glob<{ default: ImageMetadata }>('../assets/img/hero/*.png', {
   eager: true,
 });
 const k = Math.max(BIRD_W / PLATE.w, BIRD_H / PLATE.h);
@@ -23,7 +23,7 @@ const px0 = (BIRD_W - pw) / 2;
 const py0 = (BIRD_H - ph) / 2;
 const people = await Promise.all(
   BEATS.filter((b) => b.cut).map(async (b) => {
-    const src = cuts[`../assets/img/hero/${b.id}-soft.png`].default;
+    const src = cuts[`../assets/img/hero/${b.id}.png`].default;
     const im = await getImage({ src, width: 400, format: 'webp' });
     const w = b.cut!.w * pw;
     return {

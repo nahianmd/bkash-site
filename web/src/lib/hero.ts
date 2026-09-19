@@ -234,7 +234,107 @@ export function initHero() {
   });
 
   /* Dev handle: placement is judged by eye, not measured (spec). */
-  if (import.meta.env.DEV) {
+  if (!import.meta.env.DEV) return;
+
+  /* ---- dev only: the placement tool -------------------------------
+     Screen px → plate fractions is one division: the scene is the plate's
+     cover box scaled by the camera, so a drag of dx px is dx / (box.W × s)
+     of the plate. Inside the DEV guard, so none of it ships. */
+  let placeOff: (() => void) | null = null;
+  function placeTool(on: boolean) {
+    placeOff?.();
+    placeOff = null;
+    if (!on) return;
+    const hud = document.createElement('pre');
+    hud.style.cssText =
+      'position:fixed;left:12px;bottom:12px;z-index:9999;margin:0;padding:10px 12px;background:rgba(0,0,0,.8);color:#0f0;font:12px/1.4 ui-monospace,monospace;border-radius:8px;white-space:pre;pointer-events:none;';
+    document.body.appendChild(hud);
+    let active = 1;
+    const show = () => {
+      const lines = HERO.beats
+        .map((b) => (b.cut ? `  { id: '${b.id}', cam: ${JSON.stringify(b.cam).replace(/"/g, '')}, cut: ${JSON.stringify(b.cut).replace(/"/g, '')} },` : ''))
+        .filter(Boolean);
+      hud.textContent =
+        `PLACE — drag: move · shift-drag: resize · arrows: nudge ${HERO.beats[active]?.id ?? ''} (shift ×10)\n` +
+        lines.join('\n');
+      console.log('[hero place]\n' + lines.join('\n'));
+    };
+    const offs: (() => void)[] = [() => hud.remove()];
+    rig.cuts.forEach((el, i) => {
+      if (!el) return;
+      el.style.pointerEvents = 'auto';
+      el.style.cursor = 'move';
+      el.style.outline = '2px solid #0f0';
+      let x0 = 0;
+      let y0 = 0;
+      let dragging = false;
+      let start = HERO.beats[i].cut!;
+      const down = (ev: PointerEvent) => {
+        active = i;
+        x0 = ev.clientX;
+        y0 = ev.clientY;
+        start = { ...HERO.beats[i].cut! };
+        dragging = true;
+        try {
+          el.setPointerCapture(ev.pointerId);
+        } catch {}
+        ev.preventDefault();
+      };
+      const move = (ev: PointerEvent) => {
+        if (!dragging) return;
+        const k = rig.box.W * rig.scale;
+        const dx = (ev.clientX - x0) / k;
+        const dy = (ev.clientY - y0) / (rig.box.H * rig.scale);
+        HERO.beats[i].cut = ev.shiftKey
+          ? { ...start, w: +Math.max(0.005, start.w + dx).toFixed(4) }
+          : { ...start, x: +(start.x + dx).toFixed(4), y: +(start.y + dy).toFixed(4) };
+        rig.measure();
+      };
+      const up = (ev: PointerEvent) => {
+        if (!dragging) return;
+        dragging = false;
+        try {
+          el.releasePointerCapture(ev.pointerId);
+        } catch {}
+        show();
+      };
+      el.addEventListener('pointerdown', down);
+      el.addEventListener('pointermove', move);
+      el.addEventListener('pointerup', up);
+      offs.push(() => {
+        el.removeEventListener('pointerdown', down);
+        el.removeEventListener('pointermove', move);
+        el.removeEventListener('pointerup', up);
+        el.style.pointerEvents = '';
+        el.style.cursor = '';
+        el.style.outline = '';
+      });
+    });
+    const keys = (ev: KeyboardEvent) => {
+      const b = HERO.beats[active];
+      if (!b?.cut) return;
+      const step = (ev.shiftKey ? 0.01 : 0.001);
+      const d: Record<string, [number, number]> = {
+        ArrowLeft: [-step, 0],
+        ArrowRight: [step, 0],
+        ArrowUp: [0, -step],
+        ArrowDown: [0, step],
+      };
+      const m = d[ev.key];
+      if (!m) return;
+      ev.preventDefault();
+      b.cut = { ...b.cut, x: +(b.cut.x + m[0]).toFixed(4), y: +(b.cut.y + m[1]).toFixed(4) };
+      rig.measure();
+      show();
+    };
+    window.addEventListener('keydown', keys);
+    offs.push(() => window.removeEventListener('keydown', keys));
+    placeOff = () => offs.forEach((f) => f());
+    show();
+  }
+  if (location.search.includes('place')) placeTool(true);
+
+  {
     const w = window as any;
     w.__bkash = w.__bkash ?? {};
     w.__bkash.hero = {
@@ -244,6 +344,13 @@ export function initHero() {
       /** Outline the cutout boxes to check their placement on the street. */
       showBoxes(on = true) {
         rig.cuts.forEach((el) => el && (el.style.outline = on ? '2px solid #0f0' : ''));
+      },
+      /** The placement tool: drag a cutout to move it, shift-drag to resize,
+          arrows to nudge the last one touched (shift = ×10). Prints the
+          lines to paste into hero-beats.ts after every change. Also on
+          with `?place` in the URL. */
+      place(on = true) {
+        placeTool(on);
       },
       /** Move a cutout box by fractions of the plate; returns the values to paste back. */
       nudge(i: number, dx = 0, dy = 0, dw = 0) {

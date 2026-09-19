@@ -73,10 +73,6 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
   const cuts = opts.beats.map((b) =>
     b.cut ? scene.querySelector<HTMLElement>(`[data-hero-cut="${b.id}"]`) : null,
   );
-  /* Each cutout is two copies of one drawing — sharp, and a pre-softened
-     twin for when it is small on screen (never blurred per frame). */
-  const sharps = cuts.map((c) => c?.querySelector<HTMLElement>('[data-cut-sharp]') ?? null);
-  const softs = cuts.map((c) => c?.querySelector<HTMLElement>('[data-cut-soft]') ?? null);
 
   /* Recede from the token set, read ONCE. Written per frame as values
      rather than toggling .is-receded, because it scrubs with the camera
@@ -132,26 +128,9 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
   function applyCam(cam: Cam) {
     const p = poseFor(cam, box, vw, vh);
     scene.style.transform = `translate3d(${p.tx.toFixed(2)}px, ${p.ty.toFixed(2)}px, 0) scale(${p.s.toFixed(4)})`;
-    applySharpness(cam.s);
+    lastScale = cam.s;
   }
-
-  /* Depth of field, by the camera's own zoom: at the wide shot a cutout
-     is a big drawing squeezed small and would sparkle against the painted
-     street, so its soft twin shows; as the camera pushes in toward that
-     beat's scale the sharp copy takes over. The two are ONE drawing in
-     ONE place, so the crossfade cannot ghost. */
-  function applySharpness(s: number) {
-    const cams = beatCams();
-    for (let i = 1; i < opts.beats.length; i++) {
-      const sharp = sharps[i];
-      const soft = softs[i];
-      if (!sharp || !soft) continue;
-      const sBeat = cams[i].s;
-      const t = sBeat > 1 ? Math.min(1, Math.max(0, (s - 1) / (sBeat - 1))) : 1;
-      sharp.style.opacity = t.toFixed(3);
-      soft.style.opacity = (1 - t).toFixed(3);
-    }
-  }
+  let lastScale = 1;
 
   /* Focus (Rule 4): a tent per beat, focus_i = 1 − |n·p − i|, clamped. */
   const n = opts.beats.length - 1;
@@ -214,6 +193,10 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
       return vh;
     },
     cuts,
+    /** the camera's current scale, for tools that convert screen px to plate fractions */
+    get scale() {
+      return lastScale;
+    },
     beatCams,
     measure,
     applyCam,

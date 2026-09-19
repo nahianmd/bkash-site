@@ -8,11 +8,9 @@
 
    The plate has NO people of its own (2026-09-19: the three figures
    removed, 2748×1536). The cutouts are the only people, always
-   visible, placed as fractions of the plate — nothing to ghost. Each
-   is one drawing twice: sharp, and a pre-softened twin shown while it
-   is small on screen (tools/soft-twins.mjs), crossfaded by the
-   camera's zoom. Focus is the recede rule on the street and the other
-   two, never an opacity ramp on the subject.
+   visible, placed as fractions of the plate — nothing to ghost, and
+   never an opacity ramp on anyone. Focus is the recede rule on the
+   street and the other two.
 
    Sizing is the camera's job, not Astro's — `layout="none"` on every
    image, and the scene box is set by lib/hero.ts from the plate's
@@ -26,7 +24,6 @@ const sharp = import.meta.glob<{ default: ImageMetadata }>('../assets/img/hero/*
   eager: true,
 });
 const cut = (id: string) => sharp[`../assets/img/hero/${id}.png`].default;
-const soft = (id: string) => sharp[`../assets/img/hero/${id}-soft.png`].default;
 const people = BEATS.filter((b) => b.cut).map((b) => ({ id: b.id, cut: b.cut!, img: cut(b.id) }));
 
 /* The cutout boxes as CSS, from the same numbers the camera uses, so the
@@ -43,7 +40,7 @@ const cutCss = people
    the plate at 4x zoom on 1920 would want 7680 and has 2748 — the
    tightest beat is a 2.8x stretch, down from 4.8x. A cutout's largest
    size is its box fraction x the plate's display width x its beat's
-   zoom; the soft twin only ever shows small. */
+   zoom. */
 ---
 
 <style is:global set:html={cutCss}></style>
@@ -66,22 +63,12 @@ const cutCss = people
   {people.map((p) => (
     <div class="scene__cut" data-hero-cut={p.id}>
       <Picture
-        src={soft(p.id)}
-        alt=""
-        widths={[200, 400]}
-        sizes="12vw"
-        formats={['avif', 'webp']}
-        layout="none"
-        pictureAttributes={{ 'data-cut-soft': '' }}
-      />
-      <Picture
         src={p.img}
         alt=""
-        widths={[500, 1000, p.img.width]}
+        widths={[300, 600, 1000, p.img.width]}
         sizes="50vw"
         formats={['avif', 'webp']}
         layout="none"
-        pictureAttributes={{ 'data-cut-sharp': '' }}
       />
     </div>
   ))}
@@ -122,8 +109,7 @@ const cutCss = people
   }
 
   /* Cutouts: fractions of the scene box (the generated rules above; JS
-     writes the same on resize), always visible. Two copies stacked:
-     the soft twin under the sharp one, crossfaded by the zoom. */
+     writes the same on resize), always visible. */
   .scene__cut {
     position: absolute;
     pointer-events: none;
@@ -138,8 +124,5 @@ const cutCss = people
     width: 100%;
     height: 100%;
   }
-  /* Without JS the camera never zooms: the soft twin is the still. */
-  :global(.no-js) .scene__cut [data-cut-sharp] {
-    opacity: 0;
-  }
+
 </style>

@@ -581,3 +581,12 @@ Nahian supplied `plate.jpeg` (2748×1536) with the three figures removed.
   inpainted stall behind the tea-stall cutout at beat 2; the cash-out
   banner's absence; feet on the ground at 768/1280; the 2.8× stretch at
   beat 1.
+
+**Same night, after Nahian's look: still ghosting, wrongly placed, wrongly
+blurred.** The soft twins were the ghost — a blurred silhouette is larger
+than the sharp one, so the crossfade haloes every edge. Removed; one image
+per cutout again. Placement goes to Nahian's eye: the dev-only placement
+tool (`?place`, or `__bkash.hero.place()`) — drag to move, shift-drag to
+resize, arrows to nudge, prints the `hero-beats.ts` lines. Verified by
+synthetic pointer events: a 100px drag at the wide shot moves a box by
+100 / (box.W × s) of the plate; the HUD and the console print the lines.
