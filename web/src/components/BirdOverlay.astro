@@ -87,6 +87,10 @@ const paths = FACETS.map((_, i) => facetPath(i));
   }
 
   @media (max-width: 767px) {
+    /* More air between the mark and the copy on a phone (Nahian). */
+    .bird__copy {
+      top: calc(var(--bird-bottom, 71%) + var(--s-8));
+    }
     .bird__title {
       font-size: var(--fs-h2);
       line-height: 1.12;
