@@ -1,6 +1,6 @@
 # Section 4: A thousand more stories → the phone → sixteen services
 
-> Status: BUILT
+> Status: BUILT (revised 2026-09-19 evening — the phone in the hand; grid size by formula)
 > Model: **Fable 5.1** to specify and to build the wall's parallax arithmetic,
 > the emergence, the zoom-to-grid handover and the card; **Opus 5** for the
 > grid, the copy and the picker.
@@ -103,6 +103,38 @@ tile.
 The wall static with the phone tile in place; beneath it, in flow, the grid
 with the first card selected. No pin. Everything readable.
 
+## Revised 2026-09-19 (evening) — the phone in the hand, and the grid's size
+
+_Nahian, after the first look at the BUILT section. Trial, ahead of the
+client's feedback on the cards (see Open questions)._
+
+**The phone tile is a photograph of a hand holding the phone**
+(`phone.jpg`, home screen up, held at a slight turn). The device no longer
+grows from a flat phone-shaped tile: it is **posed in 3D over the
+photographed screen** — the screen's four corners are fitted from the
+photograph's pixels as fractions, and a six-number pose (translate xyz,
+rotate xyz) is solved per viewport so the device's corners land on them
+under the pin's own perspective. Over the emergence the pose interpolates
+to identity: the phone stands up out of the hand, turns to face the viewer
+and comes forward to Rest B, while the wall — hand included — tips back
+and fades. Still one transform per frame on the device. No three.js; the
+CSS camera is the camera, and the residual between it and the photograph's
+lens is measured (2.1px rms at 1920).
+
+The arrival aims the photographed **screen's centre**, not the tile's, at
+the viewport centre. The tile is the photograph at its own aspect (3:4),
+uncropped, so the fitted fractions are the tile's.
+
+**Still D's grid is sized by formula, not `0.38`.** The frame splits at
+the middle: stage left, grid right. The grid moves to its column as one
+transform and scales to fit it, never past 1 — at 1920 that is 1.0 (it
+slides, it does not shrink); at 1280 it is 1.0 as well. The cells are the
+Rest C cells.
+
+_Explicitly NOT this:_ not a three.js phone; not a phone model downloaded
+from the web; not the device changing aspect; not the hand inpainted away
+(the wall's recede carries it off).
+
 ## Depth (Rule 2)
 
 The wall's three column rates _are_ the planes — the recorded exception.
@@ -163,6 +195,10 @@ P7 (bezel at 92%) · P8 (no panel over icons — no panel) · P9 (no dead column
 - **NOT rendered imagery** anywhere here (Rule 1).
 
 ## Open questions
+
+0. **The sixteen as turning cards** — each cell a real 3D card, idle turn
+   with phase offset, tilt under the pointer, tap to select; sway (±12°)
+   or full spin. Proposed 2026-09-19; **waits on the client's feedback.**
 
 1. **Twenty more photographs** — the wall's density is gated on the client.
 2. **The sixteen lines** — placeholder until the client's.

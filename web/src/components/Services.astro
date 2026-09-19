@@ -14,6 +14,7 @@ const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/servi
 });
 const photo = (name: string) => photos[`../assets/img/services/${name}.jpg`].default;
 import screen from '../assets/img/services/screen.jpg';
+import phonePhoto from '../assets/img/services/phone.jpg';
 const icons = import.meta.glob<{ default: ImageMetadata }>('../assets/icons/*.svg', {
   eager: true,
 });
@@ -72,10 +73,10 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
               ) : (
                 <div class="tile tile--phone" data-tile="phone">
                   <Picture
-                    src={screen}
-                    alt="The bKash app home screen"
-                    widths={[360, 720]}
-                    sizes="20vw"
+                    src={phonePhoto}
+                    alt="A hand holding a phone with the bKash home screen open"
+                    widths={[480, 960, 1440]}
+                    sizes={key === 'desktop' ? '25vw' : '50vw'}
                     formats={['avif', 'webp']}
                     layout="none"
                     loading="lazy"
@@ -88,10 +89,11 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       </div>
     ))}
 
-    <!-- The device. A sibling of the wall: at the end of the hold it is laid
-         exactly over the phone tile (one transform: scale + translate about
-         its centre), then grows into Rest B while the wall tips back. Bezel
-         and notch are opacities. The grid and the card land in tasks 4–5. -->
+    <!-- The device. A sibling of the wall: at the end of the hold it is posed
+         in 3D over the photographed screen in the phone tile (services.ts
+         solves the pose from the screen's four corners), fades in over it,
+         then stands up and comes forward to Rest B while the wall tips back.
+         Bezel and notch are opacities. -->
     <div class="device" data-device aria-hidden="true">
       <div class="device__screen" data-device-screen>
         <Picture
@@ -370,21 +372,11 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     line-height: 1.2;
   }
 
-  /* The phone tile: a true phone's proportions, narrower than its
-     column so it grows into Rest B. Indistinguishable from a tile at
-     rest — same corners, no bezel. */
+  /* The phone tile: the photograph of a hand holding the phone, at the
+     photograph's own aspect and uncropped, so PHONE_QUAD's fractions are
+     the tile's. Indistinguishable from the other tiles at rest. */
   .tile--phone {
-    width: 60%;
-    aspect-ratio: 360 / 760;
-    background: var(--paper);
-  }
-  .tile--phone :global(img) {
-    object-position: 50% 0;
-  }
-  @media (max-width: 767px) {
-    .tile--phone {
-      width: 75%;
-    }
+    aspect-ratio: 3 / 4;
   }
 
   /* ---- the stage and the two layouts (state: .is-detail) ----------- */
@@ -465,14 +457,16 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     color: var(--ink-2);
   }
 
-  /* Desktop detail: the grid compacts to the right as ONE transform; the
-     cells keep their layout. The chosen cell is full, the rest recede. */
+  /* Desktop detail: the grid moves to the right column as ONE transform
+     and scales to fit it (services.ts writes --detail-dx / --detail-s by
+     formula); the cells keep their layout. The chosen cell is full, the
+     rest recede. */
   .grid__in {
     transform-origin: 50% 50%;
     transition: transform var(--t-slow) var(--ease);
   }
   .is-detail .grid__in {
-    transform: translate(25vw, 0) scale(0.38);
+    transform: translate(var(--detail-dx, 0), 0) scale(var(--detail-s, 1));
   }
   .is-detail .cell {
     cursor: pointer;

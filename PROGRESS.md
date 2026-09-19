@@ -438,3 +438,33 @@ lower area on the phone between the copy and the strip; whether the strip is
 discoverable as a picker; adjacent repeats in the wall at 1920 (the
 photographs are ten, the tiles more). **Nahian's eye:** Stills A–D at both
 widths, the title tile's paper-on-dark, and the card's idle breath.
+
+**Revised 2026-09-19 (evening) — the phone in the hand; the grid's size.**
+Nahian's two notes after the first look, plus a photograph he shot for it
+(`phone.jpg`: a hand, the home screen up, held at a slight turn).
+- The device is now **posed in 3D over the photographed screen** and
+  stands up out of the hand. The screen's four corners were fitted from
+  the photograph's pixels (edges as lines, intersected — `PHONE_QUAD`),
+  and a six-number pose is solved per viewport by Levenberg–Marquardt
+  against the pin's own `perspective`/`perspective-origin` (read, not
+  assumed). The pose × (1 − e) is the emergence; identity at e = 1, so
+  the zoom is untouched. The device fades in over the photographed screen
+  in the first 20% of the emergence; the wall (hand included) fades from
+  5% to 55%. No three.js. Measured against the browser's own projection
+  (four point-sized children, `__bkash.services.corners()`): 1920 — pose
+  rms 2.1px, corners within 3.8px (the photograph's lens vs the CSS
+  camera), rotation ≈ (−6.7°, 10.3°, 1.5°), tz −2555; 390 — rms 0.5px,
+  corners within 1px, tz −8092. Arrival aims the screen's centre: 495.9
+  vs 496 and 389.7 vs 390. Identity at Rest B exact at both widths.
+- Still D's grid: `scale(0.38)` replaced by a fit to its column — frame
+  split at the middle, grid to the right column as one transform,
+  `s = min(1, colW/gridW, colH/gridH)`. At 1920 and 1280 that is 1.0 (it
+  slides, it does not shrink; cells 168px at 1920).
+- The turning cards (sixteen real 3D cards, idle turn, pointer tilt) are
+  proposed in the spec's open questions and wait on the client.
+- **For `/verify`:** the emergence in a real browser at both widths — the
+  hidden tab does not paint the photograph, so the turn was checked by
+  numbers and silhouette only; the moment the device fades in over the
+  photographed screen (the two home screens differ slightly); whether the
+  wall's earlier fade leaves the hand for long enough; the grid at 1.0
+  beside the 24rem card — the proportion is now Nahian's eye.
