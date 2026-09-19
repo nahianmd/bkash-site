@@ -11,7 +11,7 @@
 
 import { gsap, ScrollTrigger, reducedMotion } from './scroll';
 import { createSceneRig, poseFor, type Cam, type Cut } from './scene-rig';
-import { BEATS } from './hero-beats';
+import { BEATS, PLATE } from './hero-beats';
 import { BIRD, createBirdOverlay } from './bird';
 
 /* ---- the section's tuning, one object -------------------------
@@ -251,6 +251,23 @@ export function initHero() {
     document.body.appendChild(hud);
     let active = 1;
     const fields: (keyof Cut)[] = ['x', 'y', 'w', 'soft'];
+    /* Resizing keeps the FEET where they are: the box grows about its
+       bottom-centre. Height in plate fractions follows the drawing's
+       aspect through the plate's. */
+    const resized = (i: number, cut: Cut, w: number): Cut => {
+      /* The box's aspect is the drawing's, set by the generated CSS, so
+         it is right before the image has even decoded. */
+      const el = rig.cuts[i];
+      const aspect = el && el.offsetWidth ? el.offsetHeight / el.offsetWidth : 1;
+      const hOf = (ww: number) => (ww * aspect * PLATE.w) / PLATE.h;
+      const nw = Math.max(0.005, w);
+      return {
+        ...cut,
+        w: +nw.toFixed(4),
+        x: +(cut.x + (cut.w - nw) / 2).toFixed(4),
+        y: +(cut.y + hOf(cut.w) - hOf(nw)).toFixed(4),
+      };
+    };
     const lines = () =>
       HERO.beats
         .filter((b) => b.cut)
@@ -264,7 +281,7 @@ export function initHero() {
       hud.innerHTML = '';
       const head = document.createElement('div');
       head.textContent =
-        'PLACE — drag: move · shift-drag: resize · arrows: nudge (shift ×10) · soft = px at the wide shot';
+        'PLACE — drag: move · shift-drag or [ ]: size (about the feet) · arrows: nudge (shift ×10) · w = width, fraction of the plate · soft = px at the wide shot';
       hud.appendChild(head);
       HERO.beats.forEach((b, i) => {
         if (!b.cut) return;
@@ -288,7 +305,8 @@ export function initHero() {
           inp.addEventListener('input', () => {
             const v = parseFloat(inp.value);
             if (!Number.isFinite(v)) return;
-            b.cut = { ...b.cut!, [k]: +v.toFixed(k === 'soft' ? 2 : 4) };
+            b.cut =
+              k === 'w' ? resized(i, b.cut!, v) : { ...b.cut!, [k]: +v.toFixed(k === 'soft' ? 2 : 4) };
             active = i;
             rig.measure();
             render();
@@ -355,7 +373,7 @@ export function initHero() {
         const dx = (ev.clientX - x0) / k;
         const dy = (ev.clientY - y0) / (rig.box.H * rig.scale);
         HERO.beats[i].cut = ev.shiftKey
-          ? { ...start, w: +Math.max(0.005, start.w + dx).toFixed(4) }
+          ? resized(i, start, start.w + dx)
           : { ...start, x: +(start.x + dx).toFixed(4), y: +(start.y + dy).toFixed(4) };
         rig.measure();
       };
@@ -384,6 +402,14 @@ export function initHero() {
       const b = HERO.beats[active];
       if (!b?.cut) return;
       const step = (ev.shiftKey ? 0.01 : 0.001);
+      if (ev.key === '[' || ev.key === ']') {
+        ev.preventDefault();
+        b.cut = resized(active, b.cut, b.cut.w + (ev.key === ']' ? step : -step));
+        rig.measure();
+        render();
+        show();
+        return;
+      }
       const d: Record<string, [number, number]> = {
         ArrowLeft: [-step, 0],
         ArrowRight: [step, 0],

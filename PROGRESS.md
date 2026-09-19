@@ -599,3 +599,7 @@ constant on screen by dividing the layer blur by the scale, zero on the
 subject; only the three cutout layers, never the plate. Measured: soft 2
 → `blur(2px)` at the wide shot, `blur(0.5px)` at 4× on a receded cutout,
 none on the subject; no cutout transform mid-segment.
+**Size control (same night):** `w` resizes about the FEET — the box grows
+about its bottom-centre, height from the box's own CSS aspect — from the
+panel's `w`, shift-drag, or `[` / `]` (shift ×10). Measured: feet drift
+0 / −0.1px across a 0.10 → 0.13 → 0.12 resize.
