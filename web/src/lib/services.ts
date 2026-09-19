@@ -149,7 +149,12 @@ export const WALL = {
   scrub: 0.6,
   /* Rest B: the device's height as a fraction of --vh (desktop), or its
      width as a fraction of the viewport (phone). */
-  rest: { desktopHeightFrac: 0.9, phoneWidthFrac: 0.92 },
+  rest: {
+    desktopHeightFrac: 0.9,
+    phoneWidthFrac: 0.92,
+    /* clear air between the resting handset and the copy on a phone */
+    phoneCopyGap: 'var(--s-8)',
+  },
   /* Over the first part of the emergence the device fades in over the
      photographed screen it is posed on; the wall (hand included) fades
      as the phone lifts out of it, and the ground turns white beneath.
@@ -426,10 +431,18 @@ export function initServices() {
          sits at the bottom at its own measured height; the phone takes
          what is left above it, centred there. */
       if (isPhone()) {
+        /* The band the phone rests in: below the nav, above the copy,
+           with WALL.rest.phoneCopyGap reserved as clear air between the
+           handset and the title — the one dial for how big it reads
+           (Nahian, 2026-09-20). The phone is centred in that band and
+           scaled to fit it. */
         const copyH = copy?.offsetHeight ?? 0;
-        const avail = vh - navH - copyH - 3 * gutter;
+        const gap = resolvePx(WALL.rest.phoneCopyGap, 64);
+        const top = navH + gutter;
+        const bottom = vh - gutter - copyH - gap;
+        const avail = Math.max(0, bottom - top);
         const s = Math.min(1, avail / restH, (vw - 2 * gutter) / restW);
-        slide = { dx: 0, dy: navH + gutter + avail / 2 - vh / 2, s };
+        slide = { dx: 0, dy: (top + bottom) / 2 - vh / 2, s };
       } else {
         /* The phone belongs to the right: the centre of the right column,
            centred in the space below the nav, no taller than it. Copy and

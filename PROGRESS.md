@@ -731,3 +731,7 @@ recede kept on the neighbours; the phone stays stacked. Measured at 1920:
 the title and a text link, centred; eyebrow, line and button hidden.
 Measured at 390: copy 83px at the foot, the phone rests at 0.82 (up from
 0.62 — the shorter copy gives it the room), 23px clear above the copy.
+**Phone size on a phone (2026-09-20):** the resting band is now solved
+with clear air reserved between the handset and the copy —
+`WALL.rest.phoneCopyGap` (`--s-8`), one dial. At 390×780 the phone rests
+at 0.759 (was 0.821) with 57px from the display's bottom to the title.
