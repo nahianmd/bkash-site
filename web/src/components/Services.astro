@@ -1,0 +1,216 @@
+---
+/* Section 4: A thousand more stories → the phone → sixteen services.
+   specs/sections/services.md · specs/services/plan.md
+
+   Task 1: the wall. Two walls are rendered — four columns and two —
+   and CSS shows one per breakpoint, so each is composed for its width
+   rather than reflowed from the other. The device, the grid and the
+   card arrive in later tasks. */
+import { Picture } from 'astro:assets';
+import { COLUMNS, SERVICES, type WallTile } from '../lib/services';
+
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/services/*.jpg', {
+  eager: true,
+});
+const photo = (name: string) => photos[`../assets/img/services/${name}.jpg`].default;
+import screen from '../assets/img/services/screen.jpg';
+
+/* Crops are data, and the gate forbids inline styles — so the
+   object-position rules are generated here, one class per photograph
+   and crop, and emitted as a stylesheet. */
+const posRules = new Map<string, string>();
+for (const cols of [COLUMNS.desktop, COLUMNS.phone])
+  for (const col of cols)
+    for (const t of col)
+      if (t.kind === 'photo') posRules.set(`pos-${t.photo}-${t.crop}`, t.pos);
+const posCss = [...posRules]
+  .map(([cls, pos]) => `.${cls} img{object-position:${pos}}`)
+  .join('');
+
+const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
+  { key: 'desktop', cols: COLUMNS.desktop },
+  { key: 'phone', cols: COLUMNS.phone },
+];
+---
+
+<section
+  class="svc"
+  data-services
+  aria-label="A thousand more stories, and what a bKash account can do"
+>
+  <div class="svc__pin" data-services-pin>
+    {walls.map(({ key, cols }) => (
+      <div class={`wall wall--${key}`} data-wall={key}>
+        {cols.map((tiles, ci) => (
+          <div class="wall__col" data-wall-col={ci}>
+            {tiles.map((t) =>
+              t.kind === 'photo' ? (
+                <figure
+                  class={`tile tile--${t.crop} pos-${t.photo}-${t.crop}`}
+                  data-tile="photo"
+                >
+                  <Picture
+                    src={photo(t.photo)}
+                    alt=""
+                    widths={[400, 640, 960]}
+                    sizes={key === 'desktop' ? '25vw' : '50vw'}
+                    formats={['avif', 'webp']}
+                    layout="none"
+                    loading="lazy"
+                  />
+                </figure>
+              ) : t.kind === 'title' ? (
+                <div class="tile tile--title" data-tile="title">
+                  <p class="t-eyebrow tile__eyebrow">And</p>
+                  <h2 class="t-h2 tile__title">A thousand more stories</h2>
+                  <p class="t-sm tile__line">85 million of them, actually.</p>
+                </div>
+              ) : (
+                <div class="tile tile--phone" data-tile="phone">
+                  <Picture
+                    src={screen}
+                    alt="The bKash app home screen"
+                    widths={[360, 720]}
+                    sizes="20vw"
+                    formats={['avif', 'webp']}
+                    layout="none"
+                    loading="lazy"
+                  />
+                </div>
+              ),
+            )}
+          </div>
+        ))}
+      </div>
+    ))}
+
+    <!-- The device, the grid and the card land here in tasks 3–5. -->
+    <div class="svc__names sr-only">
+      {SERVICES.map((s) => (
+        <span>{s.name}</span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style is:global set:html={posCss}></style>
+
+<style>
+  .svc {
+    position: relative;
+    /* One screen of pin plus the travel (config: travelScreens). */
+    height: calc(var(--vh) * var(--svc-screens, 6.5));
+    background: var(--night);
+  }
+
+  .svc__pin {
+    position: relative;
+    height: var(--vh);
+    overflow: hidden;
+    background: var(--night);
+    perspective: 1500px;
+    perspective-origin: 50% 42%;
+  }
+
+  /* ---- the wall: full viewport width, not the container ---- */
+  .wall {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    gap: var(--s-4);
+    padding-inline: var(--s-4);
+    align-items: start;
+    transform-origin: 50% 100%;
+    will-change: transform, opacity;
+  }
+  .wall--desktop {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .wall--phone {
+    grid-template-columns: repeat(2, 1fr);
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .wall--desktop {
+      display: none;
+    }
+    .wall--phone {
+      display: grid;
+    }
+  }
+
+  .wall__col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-4);
+    will-change: transform;
+  }
+
+  .tile {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: var(--night-2);
+  }
+  .tile--tall {
+    aspect-ratio: 4 / 5;
+  }
+  .tile--square {
+    aspect-ratio: 1;
+  }
+  .tile--wide {
+    aspect-ratio: 3 / 2;
+  }
+  .tile :global(picture),
+  .tile :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* The one typographic tile. Paper on the dark. */
+  .tile--title {
+    aspect-ratio: 1;
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--s-5);
+  }
+  .tile__eyebrow {
+    color: var(--pink);
+    margin-bottom: var(--s-3);
+  }
+  .tile__line {
+    color: var(--ink-3);
+    margin-top: var(--s-3);
+  }
+
+  /* The phone tile: a true phone's proportions, narrower than its
+     column so it grows into Rest B. Indistinguishable from a tile at
+     rest — same corners, no bezel. */
+  .tile--phone {
+    width: 60%;
+    aspect-ratio: 360 / 760;
+    background: var(--paper);
+  }
+  .tile--phone :global(img) {
+    object-position: 50% 0;
+  }
+  @media (max-width: 767px) {
+    .tile--phone {
+      width: 75%;
+    }
+  }
+</style>
+
+<script>
+  import { initServices } from '../lib/services';
+  initServices();
+</script>
