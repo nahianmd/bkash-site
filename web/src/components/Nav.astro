@@ -384,7 +384,8 @@ const MENUS = NAV_MENUS;
     max-height: calc(var(--vh) - var(--nav-h));
     overflow: auto;
   }
-  .nav__panel.is-in {
+  /* Same strength as the rule above, or the collapsed opacity wins. */
+  .nav .nav__panel.is-in {
     opacity: 1;
     transform: none;
   }

@@ -677,3 +677,9 @@ rule made the panel a flex item (now `.nav .nav__panel`), and the open
 class waited on a rAF the hidden tab never gives (now one forced layout
 per open). Hrefs are placeholder slugs — the sheet's "goes to" column is
 shifted against its rows. The About page is next: "as it is."
+**Desktop panels invisible (2026-09-20):** raising the panel rule to
+`.nav .nav__panel` (to beat the bar's `.nav > *`) also made its collapsed
+`opacity: 0` outrank `.nav__panel.is-in`'s `opacity: 1` under Astro's
+scoping — the panel opened in the DOM and stayed invisible; my own
+measurement had read the 0 as a frozen transition. `.nav .nav__panel.is-in`
+now. Measured: hover-open then click → opacity 1, top 72, block.
