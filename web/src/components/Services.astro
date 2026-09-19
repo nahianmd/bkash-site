@@ -14,6 +14,10 @@ const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/servi
 });
 const photo = (name: string) => photos[`../assets/img/services/${name}.jpg`].default;
 import screen from '../assets/img/services/screen.jpg';
+const icons = import.meta.glob<{ default: ImageMetadata }>('../assets/icons/*.svg', {
+  eager: true,
+});
+const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
 
 /* Crops are data, and the gate forbids inline styles — so the
    object-position rules are generated here, one class per photograph
@@ -103,12 +107,35 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       <div class="device__bezel" data-device-bezel></div>
       <div class="device__notch" data-device-notch></div>
     </div>
-    <div class="svc__names sr-only">
-      {SERVICES.map((s) => (
-        <span>{s.name}</span>
-      ))}
+    <!-- The ground turns white as the screenshot gives way to the grid. -->
+    <div class="ground" data-ground></div>
+
+    <!-- The real grid. Sixteen cells in the app's order; each cell is
+         centred on its icon so the lattice of icon centres matches the
+         screenshot's, scaled — the zoom lands on it by construction. -->
+    <div class="grid" data-grid>
+      <div class="grid__in" data-grid-in role="list">
+        {SERVICES.map((svc, i) => (
+          <button
+            class="cell"
+            type="button"
+            data-cell={i}
+            role="listitem"
+            aria-label={svc.name}
+          >
+            <span class="cell__icon">
+              <img src={icon(svc.id).src} width="64" height="64" alt="" loading="lazy" />
+            </span>
+            <span class="cell__label t-sm">{svc.name}</span>
+          </button>
+        ))}
+      </div>
     </div>
   </div>
+
+  <!-- Transparent nav over the dark wall; services.ts hides the marker
+       once the ground has turned white. -->
+  <div data-nav-dark-end data-svc-marker></div>
 </section>
 
 <style is:global set:html={posCss}></style>
@@ -214,7 +241,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   .device {
     position: absolute;
     /* Size, position and radius are written by services.ts once per
-         resize; only the transform changes per frame. */
+               resize; only the transform changes per frame. */
     left: 0;
     top: 0;
     width: 100px;
@@ -261,6 +288,67 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     border-radius: var(--r-full);
     background: #0c0d10;
     opacity: 0;
+  }
+
+  /* ---- the ground and the grid ------------------------------------ */
+  .ground {
+    position: absolute;
+    inset: 0;
+    background: var(--paper);
+    opacity: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .grid {
+    position: absolute;
+    inset: 0;
+    /* Centred in the space below the fixed header, not the whole frame. */
+    padding-top: var(--nav-h);
+    z-index: 6;
+    opacity: 0;
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+  }
+  .grid__in {
+    /* Width and row pitch are written by services.ts once per resize, by
+           formula: fits the width cap and the height. */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: var(--row, 6rem);
+    width: var(--grid-w, 40rem);
+  }
+  .cell {
+    position: relative;
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    border-radius: var(--r-md);
+    transition:
+      opacity var(--recede-t) var(--ease-io),
+      filter var(--recede-t) var(--ease-io);
+  }
+  .cell__icon {
+    /* The disc: 55% of the column pitch, like the screenshot's. */
+    width: calc(var(--col, 6rem) * 0.55);
+    aspect-ratio: 1;
+    border-radius: var(--r-full);
+    background: var(--paper-2);
+    display: grid;
+    place-items: center;
+  }
+  .cell__icon img {
+    width: 56%;
+    height: 56%;
+  }
+  .cell__label {
+    position: absolute;
+    top: calc(50% + var(--col, 6rem) * 0.275 + var(--s-2));
+    left: 0;
+    right: 0;
+    text-align: center;
+    line-height: 1.2;
   }
 
   /* The phone tile: a true phone's proportions, narrower than its

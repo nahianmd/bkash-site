@@ -229,6 +229,16 @@ export const COLUMNS: { desktop: WallTile[][]; phone: WallTile[][] } = {
 
 type Col = { el: HTMLElement; rate: number };
 
+/** Resolve a CSS length expression (tokens, calc, clamp) to px. */
+function resolvePx(expr: string, fallback: number): number {
+  const probe = document.createElement('div');
+  probe.style.cssText = `position:absolute;visibility:hidden;width:${expr};`;
+  document.body.appendChild(probe);
+  const px = parseFloat(getComputedStyle(probe).width);
+  probe.remove();
+  return Number.isFinite(px) ? px : fallback;
+}
+
 export function initServices() {
   const section = document.querySelector<HTMLElement>('[data-services]');
   const pinEl = section?.querySelector<HTMLElement>('[data-services-pin]');
@@ -252,6 +262,15 @@ export function initServices() {
      scale/offset that lay it exactly over the tile at arrival. dy is zero
      by construction — D put the tile's centre at the viewport centre. */
   let emerge = { k0: 1, dx: 0, dy: 0 };
+  const ground = section.querySelector<HTMLElement>('[data-ground]');
+  const grid = section.querySelector<HTMLElement>('[data-grid]');
+  const gridIn = section.querySelector<HTMLElement>('[data-grid-in]');
+  const marker = section.querySelector<HTMLElement>('[data-svc-marker]');
+  /* The zoom's end, solved once per resize from the real grid: the scale
+     and translate that put the screenshot's icon lattice under the cells. */
+  let zoom = { s: 1, dy: 0 };
+  let restW = 1;
+  let restH = 1;
   /* The fastest column's total translate at arrival — DERIVED from where
      the phone tile sits, so it lands at centre exactly at wallEnd. */
   let D = 0;
@@ -291,10 +310,10 @@ export function initServices() {
 
     /* Rest B by formula, then the device sized and centred once. */
     if (device) {
-      const restH = isPhone()
+      restH = isPhone()
         ? (WALL.rest.phoneWidthFrac * vw) / SCREEN.aspect
         : WALL.rest.desktopHeightFrac * vh;
-      const restW = restH * SCREEN.aspect;
+      restW = restH * SCREEN.aspect;
       device.style.width = `${restW.toFixed(1)}px`;
       device.style.height = `${restH.toFixed(1)}px`;
       device.style.left = `${((vw - restW) / 2).toFixed(1)}px`;
@@ -307,6 +326,35 @@ export function initServices() {
       device.style.setProperty('--bezel', `${(restW * 0.028).toFixed(1)}px`);
       emerge = { k0, dx: tileLeft + tileW / 2 - vw / 2, dy: 0 };
     }
+
+    /* The real grid, by formula: as wide as the cap allows and no taller
+       than the frame — whichever binds. Column pitch P; row pitch
+       P × SCREEN.pitchRatio so the lattice matches the screenshot's. */
+    if (gridIn) {
+      /* Tokens resolved to px through a probe: a custom property's computed
+         value is its raw text ("4.5rem", "clamp(...)"), and parseFloat of
+         that read --nav-h as 4.5px and --gutter as nothing. */
+      const gutter = resolvePx('var(--gutter)', 32);
+      const navH = resolvePx('var(--nav-h)', 72);
+      const capW = Math.min(vw - 2 * gutter, 56 * 16);
+      const capH = vh - navH - 2 * gutter;
+      const P = Math.min(capW / 4, capH / (4 * SCREEN.pitchRatio));
+      gridIn.style.setProperty('--grid-w', `${(P * 4).toFixed(1)}px`);
+      gridIn.style.setProperty('--col', `${P.toFixed(1)}px`);
+      gridIn.style.setProperty('--row', `${(P * SCREEN.pitchRatio).toFixed(1)}px`);
+      /* Zoom end relative to Rest B: the screenshot's column pitch is
+         0.25 × the screen width; the lattice centre sits (mean row) above
+         the screen's centre. The grid is centred in the frame, so dx = 0. */
+      const sEnd = P / (0.25 * restW);
+      const meanRow = SCREEN.rows.reduce((a, b) => a + b, 0) / SCREEN.rows.length;
+      /* Where the grid's lattice centre actually sits — measured, so the
+         zoom follows the grid's own centring (below the nav) rather than
+         assuming the frame's centre. */
+      const gi = gridIn.getBoundingClientRect();
+      const pi = pin.getBoundingClientRect();
+      const gridCy = gi.top + gi.height / 2 - pi.top;
+      zoom = { s: sEnd, dy: gridCy - vh / 2 - (meanRow - 0.5) * restH * sEnd };
+    }
   }
 
   /* ---- the emergence: one transform on the device, one on the wall ---- */
@@ -315,7 +363,7 @@ export function initServices() {
     const e = cubicInOut(Math.min(Math.max(raw, 0), 1));
     const live = p > WALL.arriveHoldEnd;
     if (tileEl) tileEl.style.opacity = live ? '0' : '';
-    if (device) {
+    if (device && p <= WALL.restEnd) {
       device.style.opacity = live ? '1' : '0';
       const k = emerge.k0 + (1 - emerge.k0) * e;
       const dx = emerge.dx * (1 - e);
@@ -345,9 +393,34 @@ export function initServices() {
   }
 
   const proxy = { p: 0 };
+  /* ---- the zoom to the grid --------------------------------------
+     0.70 → 0.90 the device scales (log space) to the solved end and
+     drifts by dy so the icon lattice lands under the cells; over the last
+     quarter the cells fade up and the screenshot — with the device — fades
+     out over white. */
+  function renderZoom(p: number) {
+    if (!device) return;
+    const raw = (p - WALL.restEnd) / (WALL.zoomEnd - WALL.restEnd);
+    const z = cubicInOut(Math.min(Math.max(raw, 0), 1));
+    if (p > WALL.restEnd) {
+      const k = Math.exp(Math.log(zoom.s) * z);
+      const dy = zoom.dy * z;
+      device.style.transform = `translate3d(0, ${dy.toFixed(2)}px, 0) scale(${k.toFixed(4)})`;
+    }
+    const x = Math.min(1, Math.max(0, (raw - 0.75) / 0.25));
+    if (p > WALL.restEnd) device.style.opacity = (1 - x).toFixed(3);
+    if (ground) ground.style.opacity = x.toFixed(3);
+    if (grid) {
+      grid.style.opacity = x.toFixed(3);
+      grid.style.pointerEvents = x > 0.99 ? 'auto' : 'none';
+    }
+    if (marker) marker.hidden = x > 0.5;
+  }
+
   const render = () => {
     renderWall(proxy.p);
     renderEmergence(proxy.p);
+    renderZoom(proxy.p);
   };
   const remeasure = () => {
     measure();
@@ -394,6 +467,8 @@ export function initServices() {
         D,
         fastRate,
         emerge,
+        zoom,
+        rest: { restW, restH },
         cols: cols.map((c) => ({ rate: c.rate, h: c.el.scrollHeight })),
       }),
       settle() {
