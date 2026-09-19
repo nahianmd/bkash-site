@@ -727,3 +727,7 @@ Copy placeholder; the CTA goes nowhere; names need the client's clearance.
 card, image scale 1.04) and the title on one line. Done with the tokens;
 recede kept on the neighbours; the phone stays stacked. Measured at 1920:
 389/389/389 at rest → 157/855/157 open; title one line.
+**Phone copy in the phone section (2026-09-20):** on a phone the copy is
+the title and a text link, centred; eyebrow, line and button hidden.
+Measured at 390: copy 83px at the foot, the phone rests at 0.82 (up from
+0.62 — the shorter copy gives it the room), 23px clear above the copy.

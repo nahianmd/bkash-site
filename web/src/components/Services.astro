@@ -132,6 +132,8 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
         already in your hand.
       </p>
       <a class="btn btn--primary svc__cta" href="#services-detail">See details of our services</a>
+      {/* On a phone the copy is the title and this link alone. */}
+      <a class="svc__textlink t-sm" href="#services-detail">See details of our services →</a>
     </div>
 
   </div>
@@ -341,6 +343,20 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     justify-self: start;
     margin-top: var(--s-3);
   }
+  .svc__textlink {
+    display: none;
+    color: var(--pink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-color: var(--pink-line);
+  }
+  .svc__textlink:hover {
+    color: var(--pink-deep);
+    text-decoration-color: currentColor;
+  }
+  /* Phone: the title and a text link, centred; the eyebrow, the line and
+     the button are gone (Nahian, 2026-09-20). */
   @media (max-width: 767px) {
     .svc__copy {
       left: var(--gutter);
@@ -348,7 +364,17 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       top: auto;
       bottom: var(--gutter);
       align-content: end;
-      gap: var(--s-3);
+      justify-items: center;
+      text-align: center;
+      gap: var(--s-4);
+    }
+    .svc__eyebrow,
+    .svc__line,
+    .svc__cta {
+      display: none;
+    }
+    .svc__textlink {
+      display: inline-block;
     }
     .svc__title {
       font-size: var(--fs-h3);
