@@ -158,10 +158,111 @@ function initDrawer(): void {
   });
 }
 
+/* ---- the menus --------------------------------------------
+   Three buttons, three panels. Click toggles; on a device that can
+   hover, resting on a button opens after a beat and leaving the
+   header closes after a longer one, so crossing from the bar into
+   the panel never drops it. Escape, a click outside, and focus
+   leaving the header all close. The bar goes solid while a panel is
+   open (Nav.astro, .is-open). Nothing here reads layout. */
+function initMenus(nav: HTMLElement): void {
+  const buttons = [...nav.querySelectorAll<HTMLButtonElement>('[data-menu-button]')];
+  const panels = new Map(
+    [...nav.querySelectorAll<HTMLElement>('[data-menu-panel]')].map((p) => [p.dataset.menuPanel!, p]),
+  );
+  if (buttons.length === 0) return;
+  const canHover = window.matchMedia('(hover: hover)').matches;
+  const OPEN_DELAY = 80;
+  const CLOSE_DELAY = 220;
+  let openId: string | null = null;
+  let timer: number | null = null;
+
+  const clearTimer = () => {
+    if (timer) clearTimeout(timer);
+    timer = null;
+  };
+
+  function show(id: string) {
+    clearTimer();
+    if (openId === id) return;
+    if (openId) hideNow(openId);
+    const panel = panels.get(id);
+    const btn = buttons.find((b) => b.dataset.menuButton === id);
+    if (!panel || !btn) return;
+    panel.hidden = false;
+    /* one forced layout, so the transition runs from the hidden state
+       — once per open, never per frame */
+    void panel.offsetHeight;
+    panel.classList.add('is-in');
+    btn.setAttribute('aria-expanded', 'true');
+    nav.classList.add('is-open');
+    openId = id;
+  }
+
+  function hideNow(id: string) {
+    const panel = panels.get(id);
+    const btn = buttons.find((b) => b.dataset.menuButton === id);
+    if (panel) {
+      panel.classList.remove('is-in');
+      panel.hidden = true;
+    }
+    btn?.setAttribute('aria-expanded', 'false');
+    if (openId === id) openId = null;
+    if (!openId) nav.classList.remove('is-open');
+  }
+
+  const closeAll = () => {
+    clearTimer();
+    if (openId) hideNow(openId);
+  };
+  const closeSoon = () => {
+    clearTimer();
+    timer = window.setTimeout(closeAll, CLOSE_DELAY);
+  };
+
+  for (const btn of buttons) {
+    const id = btn.dataset.menuButton!;
+    btn.addEventListener('click', () => (openId === id ? closeAll() : show(id)));
+    if (canHover) {
+      btn.addEventListener('pointerenter', () => {
+        clearTimer();
+        timer = window.setTimeout(() => show(id), OPEN_DELAY);
+      });
+    }
+  }
+  if (canHover) {
+    nav.addEventListener('pointerleave', closeSoon);
+    nav.addEventListener('pointerenter', clearTimer);
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && openId) {
+      const id = openId;
+      closeAll();
+      buttons.find((b) => b.dataset.menuButton === id)?.focus();
+    }
+  });
+  document.addEventListener('pointerdown', (e) => {
+    if (openId && !nav.contains(e.target as Node)) closeAll();
+  });
+  nav.addEventListener('focusout', (e) => {
+    const to = e.relatedTarget as Node | null;
+    if (openId && to && !nav.contains(to)) closeAll();
+  });
+  /* A choice made: the panel closes behind the navigation. */
+  for (const a of nav.querySelectorAll('[data-menu-panel] a')) a.addEventListener('click', closeAll);
+
+  if (import.meta.env.DEV) {
+    const w = window as any;
+    w.__bkash = w.__bkash ?? {};
+    w.__bkash.nav = { open: show, close: closeAll, get openId() { return openId; } };
+  }
+}
+
 /** Boot the nav. Called once, from Nav.astro's own module script. */
 export function initNav(): void {
   const nav = document.querySelector<HTMLElement>('[data-nav]');
   if (!nav) return;
   initNavGround(nav);
+  initMenus(nav);
   initDrawer();
 }

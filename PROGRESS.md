@@ -663,3 +663,17 @@ the travel (every column's height ≥ its rate × D + vh, checked: 2763–
 Crops by subject: tall for a standing figure, square for a face or a
 pair, wide for a scene; `object-position` where the subject is off
 centre. Arrival re-measured after the reorder: 496.5 vs 496.
+
+## Header menus — BUILT 2026-09-20 (Fable)
+
+`specs/sections/nav.md` · `lib/nav-data.ts` (the sheet as data) ·
+`Nav.astro` (panels + accordion) · `lib/nav.ts` (`initMenus`). Three
+menus that open panels under the bar and collapse; the drawer becomes
+a nested `<details>` accordion. Measured: click opens (aria-expanded,
+`.is-open`, bar solid), switching closes the other, Escape closes and
+refocuses, outside click closes; panel absolute under the bar, full
+width, five columns for Consumers. Two things caught: the bar's `.nav > *`
+rule made the panel a flex item (now `.nav .nav__panel`), and the open
+class waited on a rAF the hidden tab never gives (now one forced layout
+per open). Hrefs are placeholder slugs — the sheet's "goes to" column is
+shifted against its rows. The About page is next: "as it is."

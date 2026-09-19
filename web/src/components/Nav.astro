@@ -1,13 +1,14 @@
 ---
 /* The site header.
 
-   Ported from `reference/prototype/index.html:20-56` and
-   `css/nav.css`, with the mega-panels and the demo page-switcher
-   pill dropped, and the two inline `style=""` attributes removed.
-
-   All link labels are PLACEHOLDER until bKash approves them.
+   The structure is the client's sheet (lib/nav-data.ts): three menus
+   that open panels — Consumers (the services in groups, plus four
+   links), Business, Company — rendered once for the bar's panels and
+   once for the drawer's accordion. Support and the language switch
+   stay as they were. Link targets are PLACEHOLDER routes.
 */
 import Logo from './Logo.astro';
+import { NAV_MENUS } from '../lib/nav-data';
 
 interface Props {
   /* Which top-level entry is current. Drives aria-current on both
@@ -17,23 +18,10 @@ interface Props {
 
 const { current } = Astro.props;
 
-/* One list, rendered twice — the bar and the drawer cannot drift
-   apart the way the prototype's two hand-written copies did. Audit
-   A7 was exactly that: the About nav lost its Support button
-   because the markup was duplicated by hand. */
-interface NavLink {
-  id: NonNullable<Props['current']>;
-  label: string;
-  href: string;
-  /* The drawer has room for a fuller label than the bar. */
-  drawerLabel?: string;
-}
-
-const LINKS: NavLink[] = [
-  { id: 'consumers', label: 'Consumers', href: '#' },
-  { id: 'business', label: 'Business', href: '#' },
-  { id: 'company', label: 'Company', href: '/about', drawerLabel: 'About bKash' },
-];
+/* One structure, rendered twice — the bar's panels and the drawer's
+   accordion cannot drift apart the way the prototype's two
+   hand-written copies did (audit A7). */
+const MENUS = NAV_MENUS;
 ---
 
 <header class="nav" data-nav>
@@ -42,14 +30,18 @@ const LINKS: NavLink[] = [
   </a>
 
   <nav class="nav__links" aria-label="Primary">
-    {LINKS.map((l) => (
-      <a
-        class:list={['nav__top', { 'is-current': current === l.id }]}
-        href={l.href}
-        aria-current={current === l.id ? 'page' : undefined}
+    {MENUS.map((m) => (
+      <button
+        class:list={['nav__top', { 'is-current': current === m.id }]}
+        type="button"
+        data-menu-button={m.id}
+        aria-expanded="false"
+        aria-controls={`nav-panel-${m.id}`}
+        aria-current={current === m.id ? 'page' : undefined}
       >
-        {l.label}
-      </a>
+        {m.label}
+        <span class="nav__chev" aria-hidden="true"></span>
+      </button>
     ))}
   </nav>
 
@@ -85,6 +77,52 @@ const LINKS: NavLink[] = [
     <span class="nav__burger-bar" aria-hidden="true"></span>
     <span class="nav__burger-bar" aria-hidden="true"></span>
   </button>
+
+  {/* The panels: one per menu, below the bar, collapsed until opened.
+      Consumers is the wide one — the services in their groups, the
+      four links set apart. */}
+  {MENUS.map((m) => (
+    <div
+      class:list={['nav__panel', `nav__panel--${m.id}`]}
+      id={`nav-panel-${m.id}`}
+      data-menu-panel={m.id}
+      hidden
+    >
+      <div class="wrap nav__panel-in">
+        <div class="nav__groups">
+          {m.groups.map((g) => (
+            <div class="nav__group">
+              {g.items ? (
+                <>
+                  <p class="nav__group-label">{g.label}</p>
+                  <ul class="nav__list">
+                    {g.items.map((it) => (
+                      <li>
+                        <a href={it.href}>{it.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <a class="nav__group-label nav__group-link" href={g.href}>
+                  {g.label}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+        {m.aside && (
+          <div class="nav__aside">
+            {m.aside.map((it) => (
+              <a class="nav__aside-link" href={it.href}>
+                {it.label}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  ))}
 </header>
 
 {/* A native <dialog>: focus trap, Escape and focus restore come for
@@ -97,20 +135,48 @@ const LINKS: NavLink[] = [
 
     <nav class="nav__drawer-nav" aria-label="Menu">
       <a
-        class:list={['t-h3', { 'is-current': current === 'home' }]}
+        class:list={['t-h3 nav__drawer-home', { 'is-current': current === 'home' }]}
         href="/"
         aria-current={current === 'home' ? 'page' : undefined}
       >
         Home
       </a>
-      {LINKS.map((l) => (
-        <a
-          class:list={['t-h3', { 'is-current': current === l.id }]}
-          href={l.href}
-          aria-current={current === l.id ? 'page' : undefined}
-        >
-          {l.drawerLabel ?? l.label}
-        </a>
+      {/* The accordion: native <details>, nested where the sheet nests. */}
+      {MENUS.map((m) => (
+        <details class="nav__acc" data-acc>
+          <summary class:list={['t-h3 nav__acc-sum', { 'is-current': current === m.id }]}>
+            {m.label}
+            <span class="nav__chev" aria-hidden="true"></span>
+          </summary>
+          <div class="nav__acc-body">
+            {m.groups.map((g) =>
+              g.items ? (
+                <details class="nav__acc nav__acc--sub">
+                  <summary class="nav__acc-sum nav__acc-sum--sub">
+                    {g.label}
+                    <span class="nav__chev" aria-hidden="true"></span>
+                  </summary>
+                  <ul class="nav__list nav__list--drawer">
+                    {g.items.map((it) => (
+                      <li>
+                        <a href={it.href}>{it.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <a class="nav__acc-link" href={g.href}>
+                  {g.label}
+                </a>
+              ),
+            )}
+            {m.aside?.map((it) => (
+              <a class="nav__acc-link nav__acc-link--aside" href={it.href}>
+                {it.label}
+              </a>
+            ))}
+          </div>
+        </details>
       ))}
     </nav>
 
@@ -253,6 +319,139 @@ const LINKS: NavLink[] = [
     color: var(--paper);
   }
 
+  .nav__top {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  .nav__top[aria-expanded='true'] {
+    opacity: 1;
+    color: var(--pink);
+  }
+  /* The chevron: a rotated corner, turns when open. */
+  .nav__chev {
+    display: inline-block;
+    width: 0.45em;
+    height: 0.45em;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-0.15em) rotate(45deg);
+    transition: transform var(--t-fast) var(--ease-io);
+  }
+  [aria-expanded='true'] > .nav__chev,
+  details[open] > summary > .nav__chev {
+    transform: translateY(0.1em) rotate(225deg);
+  }
+
+  /* While a panel is open the bar is solid whatever the ground, so
+     the panel and the bar read as one sheet. */
+  .nav.is-open,
+  :global(html[data-nav-ground='dark']) .nav.is-open {
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 1px 0 var(--pink-line);
+  }
+  .nav.is-open::before {
+    opacity: 0;
+  }
+  :global(html[data-nav-ground='dark']) .nav.is-open .nav__top:hover,
+  :global(html[data-nav-ground='dark']) .nav.is-open .nav__top[aria-expanded='true'] {
+    color: var(--pink);
+  }
+
+  /* ---- the panels ----
+     A paper sheet under the bar. Collapsed: hidden. Opening: a short
+     fade and a few px of rise, from the tokens. */
+  /* `.nav .nav__panel`, not `.nav__panel`: the bar's own `.nav > *`
+     rule sets its children relative, and would otherwise win. */
+  .nav .nav__panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow:
+      0 1px 0 var(--pink-line) inset,
+      var(--e-3);
+    padding-block: var(--s-7);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity var(--t-base) var(--ease-io),
+      transform var(--t-base) var(--ease);
+    max-height: calc(100vh - var(--nav-h));
+    max-height: calc(var(--vh) - var(--nav-h));
+    overflow: auto;
+  }
+  .nav__panel.is-in {
+    opacity: 1;
+    transform: none;
+  }
+  .nav__panel-in {
+    display: grid;
+    gap: var(--s-8);
+  }
+  .nav__panel--consumers .nav__panel-in {
+    grid-template-columns: 1fr auto;
+  }
+  .nav__groups {
+    display: grid;
+    gap: var(--s-6) var(--s-7);
+  }
+  .nav__panel--consumers .nav__groups {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .nav__panel--business .nav__groups,
+  .nav__panel--company .nav__groups {
+    grid-template-columns: repeat(2, minmax(0, 20rem));
+  }
+  .nav__panel--business .nav__list,
+  .nav__panel--company .nav__list {
+    columns: 2;
+    column-gap: var(--s-7);
+  }
+  .nav__group-label {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: var(--s-3);
+  }
+  .nav__group-link {
+    color: var(--ink);
+  }
+  .nav__group-link:hover {
+    color: var(--pink);
+  }
+  .nav__list {
+    display: grid;
+    gap: var(--s-2);
+    font-size: var(--fs-sm);
+  }
+  .nav__list a {
+    color: var(--ink);
+  }
+  .nav__list a:hover {
+    color: var(--pink);
+  }
+  .nav__aside {
+    display: grid;
+    align-content: start;
+    gap: var(--s-3);
+    padding-inline-start: var(--s-7);
+    border-inline-start: 1px solid var(--pink-line);
+    min-width: 14rem;
+  }
+  .nav__aside-link {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .nav__aside-link:hover {
+    color: var(--pink);
+  }
+
   /* ---- meta ---- */
   .nav__meta {
     margin-inline-start: auto;
@@ -357,8 +556,54 @@ const LINKS: NavLink[] = [
     color: var(--ink);
   }
 
-  .nav__drawer-nav a.is-current {
+  .nav__drawer-nav a.is-current,
+  .nav__acc-sum.is-current {
     color: var(--pink);
+  }
+
+  /* The accordion. Native <details>; the summary is the row. */
+  .nav__acc {
+    width: 100%;
+  }
+  .nav__acc-sum {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    cursor: pointer;
+    list-style: none;
+    padding-block: var(--s-2);
+    color: var(--ink);
+  }
+  .nav__acc-sum::-webkit-details-marker {
+    display: none;
+  }
+  .nav__acc-sum--sub {
+    font-size: var(--fs-body);
+    font-weight: 600;
+  }
+  .nav__acc-body {
+    display: grid;
+    gap: var(--s-2);
+    padding: var(--s-2) 0 var(--s-4) var(--s-4);
+    border-inline-start: 1px solid var(--pink-line);
+  }
+  .nav__acc--sub {
+    padding-inline-start: 0;
+  }
+  .nav__list--drawer {
+    padding: var(--s-2) 0 var(--s-3) var(--s-4);
+    gap: var(--s-3);
+    font-size: var(--fs-body);
+  }
+  .nav__acc-link {
+    display: block;
+    padding-block: var(--s-2);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .nav__acc-link--aside {
+    font-weight: 500;
   }
 
   .nav__drawer-support {
@@ -379,7 +624,8 @@ const LINKS: NavLink[] = [
      target instead of a cramped pill. */
   @media (max-width: 900px) {
     .nav__links,
-    .nav__support {
+    .nav__support,
+    .nav__panel {
       display: none;
     }
 
