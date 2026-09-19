@@ -491,10 +491,16 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   }
 
   /* ---- board: one crop, one caption block ----
-     The portraits run 175px to 2400px across in mixed aspects; one
-     monochrome treatment makes twelve sources read as one set and keeps
-     the low-resolution ones from announcing themselves. A recorded
-     exception to "documentary left real" — reversible, one line. */
+     The portraits run 175px to 2400px across in mixed aspects. They were
+     monochrome by default, which made twelve sources read as one set;
+     Nahian, 2026-09-20: natural colour instead, so the crop and the
+     caption block are what hold the set together (Rule 1 — documentary
+     left real).
+
+     Hover changes the tile's SHAPE, not its size: two opposite corners
+     open from --r-md to --r-xl and back, so the square becomes a leaf.
+     Nothing reflows and no neighbour moves — the people row's rejected
+     grow-on-hover is not repeated here. */
   .board {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
@@ -512,11 +518,10 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     border-radius: var(--r-md);
     margin-bottom: var(--s-3);
     background: var(--paper-2);
-    filter: grayscale(1) contrast(1.06) brightness(1.02);
-    transition: filter var(--t-base) var(--ease-io);
+    transition: border-radius var(--t-base) var(--ease);
   }
   .board__card:hover :global(.board__img) {
-    filter: none;
+    border-radius: var(--r-xl) var(--r-md);
   }
   .board__name {
     font-weight: 600;

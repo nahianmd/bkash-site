@@ -697,10 +697,14 @@ Journey Wall on a ScrollTrigger pin with `--vh`). Assets copied to
   which is what it is for on an unpinned page.
 - Dark sections use `--night` / `--on-night*`; a `--pink-lift` token was
   added for eyebrows on dark grounds (the prototype's value).
-- The board keeps the prototype's monochrome treatment — a recorded
-  exception to "documentary left real": the portraits run 175px to
-  2400px and the treatment hides it. Reversible, one line. Better
-  portraits remain a client ask.
+- The board kept the prototype's monochrome treatment at first — a
+  recorded exception to "documentary left real". **Reverted 2026-09-20
+  (Nahian): natural colour by default**, so the crop and the caption
+  block are the only things holding the twelve together, and the
+  variety in their backgrounds and lighting now shows. Hover changes
+  the tile's SHAPE instead: two opposite corners open `--r-md` →
+  `--r-xl` (14 → 36px) and back, a square becoming a leaf. No size
+  change, nothing reflows. Better portraits remain a client ask.
 - The wall: height `--vh × 3.2` (2.6 on a phone), pin `--vh`, travel =
   the artwork's overhang (1895px at 1920), one transform per frame, a
   progress bar on the same number; reduced motion / no JS: no pin, the
