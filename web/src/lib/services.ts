@@ -429,8 +429,9 @@ export function initServices() {
       } else {
         const colL = vw / 2 + gap / 2;
         const colR = vw - gutter;
-        const s = Math.min(1, (colR - colL) / restW);
-        slide = { dx: (colL + colR) / 2 - vw / 2, dy: 0, s };
+        /* centred in the space below the nav, and no taller than it */
+        const s = Math.min(1, (colR - colL) / restW, (vh - navH - gutter) / restH);
+        slide = { dx: (colL + colR) / 2 - vw / 2, dy: navH / 2, s };
       }
     }
   }
