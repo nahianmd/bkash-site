@@ -238,10 +238,20 @@ export function initServices() {
   /* One pin, the travel from config, one source. */
   section.style.setProperty('--svc-screens', String(1 + WALL.travelScreens));
 
+  const device = section.querySelector<HTMLElement>('[data-device]');
+  const bezel = section.querySelector<HTMLElement>('[data-device-bezel]');
+  const notch = section.querySelector<HTMLElement>('[data-device-notch]');
+
   let vw = 1;
   let vh = 1;
   let cols: Col[] = [];
   let fastRate = 1;
+  let wallEl: HTMLElement | null = null;
+  let tileEl: HTMLElement | null = null;
+  /* The emergence, solved once per resize: the device at Rest B, and the
+     scale/offset that lay it exactly over the tile at arrival. dy is zero
+     by construction — D put the tile's centre at the viewport centre. */
+  let emerge = { k0: 1, dx: 0, dy: 0 };
   /* The fastest column's total translate at arrival — DERIVED from where
      the phone tile sits, so it lands at centre exactly at wallEnd. */
   let D = 0;
@@ -266,9 +276,63 @@ export function initServices() {
     fastRate = Math.max(...cols.map((c) => c.rate));
     const tile = wall.querySelector<HTMLElement>('[data-tile="phone"]');
     if (!tile) return;
-    /* offsetTop is relative to the wall (the columns are not positioned);
-       the wall's top is the pin's top. One layout read per resize. */
-    D = tile.offsetTop + tile.offsetHeight / 2 - vh / 2;
+    wallEl = wall;
+    tileEl = tile;
+    /* The columns carry will-change: transform, which makes each one an
+       offsetParent — so the tile's offsets are column-relative and the
+       column's are wall-relative. Both are added. The wall's top-left is
+       the pin's. One layout read per resize. */
+    const col = tile.parentElement as HTMLElement;
+    const tileW = tile.offsetWidth;
+    const tileH = tile.offsetHeight;
+    const tileTop = col.offsetTop + tile.offsetTop;
+    const tileLeft = col.offsetLeft + tile.offsetLeft;
+    D = tileTop + tileH / 2 - vh / 2;
+
+    /* Rest B by formula, then the device sized and centred once. */
+    if (device) {
+      const restH = isPhone()
+        ? (WALL.rest.phoneWidthFrac * vw) / SCREEN.aspect
+        : WALL.rest.desktopHeightFrac * vh;
+      const restW = restH * SCREEN.aspect;
+      device.style.width = `${restW.toFixed(1)}px`;
+      device.style.height = `${restH.toFixed(1)}px`;
+      device.style.left = `${((vw - restW) / 2).toFixed(1)}px`;
+      device.style.top = `${((vh - restH) / 2).toFixed(1)}px`;
+      const k0 = tileW / restW;
+      /* The tile's corners are --r-lg; scaled by k0 the device must show the
+         same, so its resting radius is the tile's divided by k0. */
+      const r = parseFloat(getComputedStyle(tile).borderRadius) || 22;
+      device.style.borderRadius = `${(r / k0).toFixed(1)}px`;
+      device.style.setProperty('--bezel', `${(restW * 0.028).toFixed(1)}px`);
+      emerge = { k0, dx: tileLeft + tileW / 2 - vw / 2, dy: 0 };
+    }
+  }
+
+  /* ---- the emergence: one transform on the device, one on the wall ---- */
+  function renderEmergence(p: number) {
+    const raw = (p - WALL.arriveHoldEnd) / (WALL.emergeEnd - WALL.arriveHoldEnd);
+    const e = cubicInOut(Math.min(Math.max(raw, 0), 1));
+    const live = p > WALL.arriveHoldEnd;
+    if (tileEl) tileEl.style.opacity = live ? '0' : '';
+    if (device) {
+      device.style.opacity = live ? '1' : '0';
+      const k = emerge.k0 + (1 - emerge.k0) * e;
+      const dx = emerge.dx * (1 - e);
+      const dy = emerge.dy * (1 - e);
+      device.style.transform = `translate3d(${dx.toFixed(2)}px, ${dy.toFixed(2)}px, 0) scale(${k.toFixed(4)})`;
+    }
+    if (bezel) bezel.style.opacity = e.toFixed(3);
+    if (notch) notch.style.opacity = Math.min(1, Math.max(0, (e - 0.5) / 0.5)).toFixed(3);
+    /* The wall tips back as ONE plane, hinged at its bottom edge, and
+       recedes — the approved move. Reaches zero opacity as the tilt completes. */
+    if (wallEl) {
+      wallEl.style.transform =
+        e > 0
+          ? `translate3d(0, ${(6 * e).toFixed(2)}%, ${(-950 * e).toFixed(0)}px) rotateX(${(64 * e).toFixed(2)}deg)`
+          : '';
+      wallEl.style.opacity = (1 - Math.min(1, Math.max(0, (e - 0.34) / 0.66))).toFixed(3);
+    }
   }
 
   /* ---- the wall: three rates, one transform each ------------------ */
@@ -283,6 +347,7 @@ export function initServices() {
   const proxy = { p: 0 };
   const render = () => {
     renderWall(proxy.p);
+    renderEmergence(proxy.p);
   };
   const remeasure = () => {
     measure();
@@ -318,8 +383,6 @@ export function initServices() {
     onRefresh: render,
   });
 
-  void cubicInOut;
-
   if (import.meta.env.DEV) {
     const w = window as any;
     w.__bkash = w.__bkash ?? {};
@@ -330,6 +393,7 @@ export function initServices() {
         vh,
         D,
         fastRate,
+        emerge,
         cols: cols.map((c) => ({ rate: c.rate, h: c.el.scrollHeight })),
       }),
       settle() {

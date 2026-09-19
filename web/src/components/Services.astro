@@ -84,7 +84,25 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       </div>
     ))}
 
-    <!-- The device, the grid and the card land here in tasks 3–5. -->
+    <!-- The device. A sibling of the wall: at the end of the hold it is laid
+         exactly over the phone tile (one transform: scale + translate about
+         its centre), then grows into Rest B while the wall tips back. Bezel
+         and notch are opacities. The grid and the card land in tasks 4–5. -->
+    <div class="device" data-device aria-hidden="true">
+      <div class="device__screen" data-device-screen>
+        <Picture
+          src={screen}
+          alt=""
+          widths={[360, 720]}
+          sizes="30vw"
+          formats={['avif', 'webp']}
+          layout="none"
+          loading="lazy"
+        />
+      </div>
+      <div class="device__bezel" data-device-bezel></div>
+      <div class="device__notch" data-device-notch></div>
+    </div>
     <div class="svc__names sr-only">
       {SERVICES.map((s) => (
         <span>{s.name}</span>
@@ -190,6 +208,59 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   .tile__line {
     color: var(--ink-3);
     margin-top: var(--s-3);
+  }
+
+  /* ---- the device ------------------------------------------------ */
+  .device {
+    position: absolute;
+    /* Size, position and radius are written by services.ts once per
+         resize; only the transform changes per frame. */
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 211px;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: var(--paper);
+    transform-origin: 50% 50%;
+    will-change: transform, opacity;
+    opacity: 0;
+    z-index: 5;
+  }
+  .device__screen {
+    position: absolute;
+    inset: 0;
+  }
+  .device__screen :global(picture),
+  .device__screen :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0;
+  }
+  /* The bezel is an inset ring, faded in — the tile had none. Width is
+     written per resize as a fraction of the device. */
+  .device__bezel {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 var(--bezel, 10px) #16171b;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .device__notch {
+    position: absolute;
+    top: 1.6%;
+    left: 50%;
+    width: 30%;
+    height: 1.8%;
+    min-height: 5px;
+    transform: translateX(-50%);
+    border-radius: var(--r-full);
+    background: #0c0d10;
+    opacity: 0;
   }
 
   /* The phone tile: a true phone's proportions, narrower than its
