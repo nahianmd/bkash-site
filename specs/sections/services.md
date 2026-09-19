@@ -195,13 +195,36 @@ service selected on load; click flips the card; the fifteen recede. The
 zoom-to-lattice is gone with the morph, and with it the lattice
 acceptance row; the grid still keeps the home screen's row/column pitch.
 
-Phases now: wall 0–0.40 · arrival 0.40–0.50 · emergence 0.50–0.65 · Rest B
-0.65–0.70 · slide 0.70–0.85 · alive 0.85–1.
+Phases now: wall 0–0.489 · arrival 0.489–0.611 · emergence 0.611–0.794 ·
+Rest B 0.794–0.856 · slide 0.856–0.956 · alive 0.956–1, over **4.5 screens
+of travel** (was 5.5 — see the tail, below).
 
 _Explicitly NOT this:_ not a morph, not a zoom through the screen; not a
 render loop while the section is off screen; not the phone following the
 pointer during the emergence (life is zero until the slide); not a strip
 on mobile — the sixteen are a grid in flow.
+
+## Revised 2026-09-19 (late) — the tail cut
+
+_Nahian: the distance spent on the phone-and-copy rest is too much._
+
+Nothing progress-driven happened between `slideEnd` and the end of the pin —
+the life is pointer- and idle-driven, not scrubbed — so the last 0.15 of the
+pin was **0.83 of a screen of scrolling with the composition already final**.
+The slide before it took as long again.
+
+The **tail is cut from 1.65 screens to 0.65**: the slide is 0.45, the hold
+after it 0.20 — enough to read the copy before the section releases into the
+sixteen. Travel goes 5.5 → 4.5 screens.
+
+Everything up to Rest B keeps its **absolute** travel, so the wall, the
+arrival and the emergence feel exactly as before: the phase fractions were
+re-derived against the shorter travel rather than re-tuned. The wall's pixel
+distance is measured and divided by `wallEnd`, so its scroll-to-pixel rate is
+unchanged by construction.
+
+_Explicitly NOT this:_ not a faster wall; not a quicker emergence; not the
+hold removed altogether — the copy needs a beat before the release.
 
 ## Depth (Rule 2)
 

@@ -140,12 +140,12 @@ export const WALL = {
      arrives at centre exactly when the wall phase ends. */
   rates: { desktop: [0.85, 1.0, 1.15, 0.85], phone: [0.85, 1.15] },
   /* Phases of the section's progress. */
-  wallEnd: 0.4,
-  arriveHoldEnd: 0.5,
-  emergeEnd: 0.65,
-  restEnd: 0.7,
-  slideEnd: 0.85,
-  travelScreens: 5.5,
+  wallEnd: 0.489,
+  arriveHoldEnd: 0.611,
+  emergeEnd: 0.794,
+  restEnd: 0.856,
+  slideEnd: 0.956,
+  travelScreens: 4.5,
   scrub: 0.6,
   /* Rest B: the device's height as a fraction of --vh (desktop), or its
      width as a fraction of the viewport (phone). */
