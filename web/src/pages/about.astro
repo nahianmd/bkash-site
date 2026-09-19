@@ -180,7 +180,7 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
         <div class="quote">
           <Image
             src={ceo}
-            alt="Kamal Quadir, Chief Executive Officer of bKash"
+            alt="Kamal Quadir, Founder and Chief Executive Officer of bKash"
             width={720}
             layout="none"
             class="quote__portrait"
@@ -197,7 +197,7 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
               keep going until we ensure financial inclusion for all.”
             </blockquote>
             <p class="quote__attr t-sm">
-              <strong>Kamal Quadir</strong>Chief Executive Officer, bKash
+              <strong>Kamal Quadir</strong>Founder &amp; Chief Executive Officer, bKash
             </p>
           </div>
         </div>
@@ -532,11 +532,26 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   }
 
   /* ---- the CEO ---- */
+  /* The portrait column is narrower than the page's usual split so the
+     quote's left edge moves left and it runs to fewer lines: measured at
+     1920 it is eleven lines at 18rem against the 34ch quote measure,
+     ten once the measure is lifted, and nine at 16rem — and no fewer
+     however narrow the portrait goes, so 16rem is the least it gives up.
+     (Nahian, 2026-09-20.) */
   .quote {
     display: grid;
-    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 4.5rem);
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+    gap: var(--s-7);
     align-items: center;
+  }
+  /* This is a long executive quote in a column, not a pull quote, so it
+     takes the lead measure rather than the quote measure — still a named
+     step, and the column is narrower than it at this size, so the column
+     governs. Justified per Nahian; `balance` would fight it. */
+  .quote blockquote {
+    max-width: var(--measure-tight);
+    text-align: justify;
+    text-wrap: normal;
   }
   .quote :global(.quote__portrait) {
     width: 100%;
@@ -762,10 +777,15 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
       aspect-ratio: 16 / 10;
     }
     /* One column; the portrait takes the full column so the picture and
-       the quote share one set of edges. */
+       the quote share one set of edges. Justification is desktop-only:
+       the column here carries about 26 characters a line, and justifying
+       that opens rivers rather than setting type. */
     .quote {
       grid-template-columns: 1fr;
       gap: var(--s-6);
+    }
+    .quote blockquote {
+      text-align: start;
     }
     /* Two even columns: each mark the same cell, centred in it. */
     .investors {

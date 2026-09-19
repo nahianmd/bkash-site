@@ -787,3 +787,14 @@ under the copy, capped at 22rem and centred. Measured at 1920: copy 704, mark 44
 no overflow at 390.
 **Resolution:** the source is 797² and displays at 545 CSS px, so a 2×
 screen wants ~1090 — a larger export would help.
+
+**About — the CEO quote (2026-09-20).** Nahian: too many lines on
+desktop, justify it, and the designation is **Founder & Chief Executive
+Officer**. The line count was capped by `--measure-quote` (34ch), not by
+the column — the quote was only using 729 of its 856px. It now takes
+`--measure-tight` (the next named step) and the portrait column narrows
+18rem → 16rem with a `--s-7` gap, which moves the quote's left edge 56px
+left. Measured at 1920: eleven lines → **nine**, and nine is the floor —
+narrowing the portrait further changes nothing. Justified on desktop
+only: at 390 the column carries ~26 characters a line, where justifying
+opens rivers, so the phone stays left-aligned (`text-align: start`).
