@@ -1,13 +1,14 @@
 ---
-/* Section 4: A thousand more stories → the phone → sixteen services.
+/* Section 4: A thousand more stories → the phone.
    specs/sections/services.md · specs/services/plan.md
 
-   Task 1: the wall. Two walls are rendered — four columns and two —
-   and CSS shows one per breakpoint, so each is composed for its width
-   rather than reflowed from the other. The device, the grid and the
-   card arrive in later tasks. */
+   Two walls are rendered — four columns and two — and CSS shows one
+   per breakpoint, so each is composed for its width rather than
+   reflowed from the other. The phone stands up out of the photographed
+   hand as an object, slides beside the copy and stays alive. The
+   sixteen services are ServicesDetail.astro, reached by the button. */
 import { Picture, getImage } from 'astro:assets';
-import { COLUMNS, SERVICES, type WallTile } from '../lib/services';
+import { COLUMNS, type WallTile } from '../lib/services';
 
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/services/*.jpg', {
   eager: true,
@@ -19,10 +20,6 @@ import phoneModel from '../assets/models/phone.glb?url';
 /* The screenshot as the WebGL display's texture: the same file the CSS
    device shows, at its own size. */
 const screenTex = await getImage({ src: screen, width: 720, format: 'jpeg' });
-const icons = import.meta.glob<{ default: ImageMetadata }>('../assets/icons/*.svg', {
-  eager: true,
-});
-const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
 
 /* Crops are data, and the gate forbids inline styles — so the
    object-position rules are generated here, one class per photograph
@@ -45,7 +42,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
 <section
   class="svc"
   data-services
-  aria-label="A thousand more stories, and what a bKash account can do"
+  aria-label="A thousand more stories, and the bKash app"
 >
   <div class="svc__pin" data-services-pin>
     {walls.map(({ key, cols }) => (
@@ -122,53 +119,25 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       </div>
       <div class="device__island"></div>
     </div>
-    <!-- The ground turns white as the screenshot gives way to the grid. -->
+    <!-- The ground turns white as the phone lifts out of the wall. -->
     <div class="ground" data-ground></div>
 
-    <!-- The real grid. Sixteen cells in the app's order; each cell is
-         centred on its icon so the lattice of icon centres matches the
-         screenshot's, scaled — the zoom lands on it by construction. -->
-    <div class="grid" data-grid>
-      <div class="grid__in" data-grid-in role="list">
-        {SERVICES.map((svc, i) => (
-          <button
-            class="cell"
-            type="button"
-            data-cell={i}
-            role="listitem"
-            aria-label={svc.name}
-          >
-            <span class="cell__icon">
-              <img src={icon(svc.id).src} width="64" height="64" alt="" loading="lazy" />
-            </span>
-            <span class="cell__label t-sm">{svc.name}</span>
-          </button>
-        ))}
-      </div>
+    <!-- The copy the phone slides beside: left column on desktop, the foot
+         of the frame on a phone. PLACEHOLDER until the client's. -->
+    <div class="svc__copy" data-copy>
+      <p class="t-eyebrow svc__eyebrow">Sixteen services</p>
+      <h2 class="t-h2 svc__title">Everything money does, in one app.</h2>
+      <p class="t-lead svc__line">
+        Send, pay, save, borrow, insure. Sixteen services, one bKash account, in the phone
+        already in your hand.
+      </p>
+      <a class="btn btn--primary svc__cta" href="#services-detail">See details of our services</a>
     </div>
-    <!-- The stage: a 3D card that flips to the chosen service, the copy
-         beneath it. Desktop: left half, the grid compacts to the right.
-         Phone: on top, the grid becomes a picker strip beneath. -->
-    <div class="stage" data-stage aria-live="polite">
-      <div class="card3d" data-card>
-        <div class="card3d__flip" data-card-flip>
-          <div class="card3d__face card3d__face--front" data-face="0">
-            <img data-face-icon alt="" width="64" height="64" />
-          </div>
-          <div class="card3d__face card3d__face--back" data-face="1">
-            <img data-face-icon alt="" width="64" height="64" />
-          </div>
-        </div>
-      </div>
-      <div class="stage__copy" data-stage-copy>
-        <h3 class="t-h1 stage__title" data-stage-title></h3>
-        <p class="t-lead stage__line" data-stage-line></p>
-      </div>
-    </div>
+
   </div>
 
   <!-- Transparent nav over the dark wall; services.ts hides the marker
-       once the ground has turned white. -->
+       once the ground has turned white under the phone. -->
   <div data-nav-dark-end data-svc-marker></div>
 </section>
 
@@ -335,57 +304,6 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     pointer-events: none;
   }
 
-  .grid {
-    position: absolute;
-    inset: 0;
-    /* Centred in the space below the fixed header, not the whole frame. */
-    padding-top: var(--nav-h);
-    z-index: 6;
-    opacity: 0;
-    pointer-events: none;
-    display: grid;
-    place-items: center;
-  }
-  .grid__in {
-    /* Width and row pitch are written by services.ts once per resize, by
-             formula: fits the width cap and the height. */
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: var(--row, 6rem);
-    width: var(--grid-w, 40rem);
-  }
-  .cell {
-    position: relative;
-    display: grid;
-    place-items: center;
-    color: var(--ink);
-    border-radius: var(--r-md);
-    transition:
-      opacity var(--recede-t) var(--ease-io),
-      filter var(--recede-t) var(--ease-io);
-  }
-  .cell__icon {
-    /* The disc: 55% of the column pitch, like the screenshot's. */
-    width: calc(var(--col, 6rem) * 0.55);
-    aspect-ratio: 1;
-    border-radius: var(--r-full);
-    background: var(--paper-2);
-    display: grid;
-    place-items: center;
-  }
-  .cell__icon img {
-    width: 56%;
-    height: 56%;
-  }
-  .cell__label {
-    position: absolute;
-    top: calc(50% + var(--col, 6rem) * 0.275 + var(--s-2));
-    left: 0;
-    right: 0;
-    text-align: center;
-    line-height: 1.2;
-  }
-
   /* The phone tile: the photograph of a hand holding the phone, at the
      photograph's own aspect and uncropped, so PHONE_QUAD's fractions are
      the tile's. Indistinguishable from the other tiles at rest. */
@@ -393,152 +311,51 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     aspect-ratio: 3 / 4;
   }
 
-  /* ---- the stage and the two layouts (state: .is-detail) ----------- */
-  .stage {
+  /* ---- the copy beside the phone ---------------------------------- */
+  .svc__copy {
     position: absolute;
     left: var(--gutter);
-    right: 50%;
+    right: calc(50% + var(--s-6) / 2);
     top: var(--nav-h);
     bottom: 0;
-    z-index: 7;
+    z-index: 6;
     display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: var(--s-6);
-    perspective: 1200px;
+    align-content: center;
+    gap: var(--s-4);
+    color: var(--ink);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--t-slow) var(--ease);
+    will-change: transform, opacity;
   }
-  .is-detail .stage {
-    opacity: 1;
+  .svc__copy.is-on {
     pointer-events: auto;
   }
-
-  /* The idle breath: a few degrees, slow, on a wrapper so it never fights
-     the flip. */
-  .card3d {
-    width: min(24rem, 40vh);
-    aspect-ratio: 1;
-    transform-style: preserve-3d;
-    animation: breathe 7s ease-in-out infinite alternate;
+  .svc__eyebrow {
+    color: var(--pink);
   }
-  @keyframes breathe {
-    from {
-      transform: rotateY(-5deg) rotateX(2deg);
-    }
-    to {
-      transform: rotateY(5deg) rotateX(-2deg);
-    }
-  }
-  .card3d__flip {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transition: transform var(--t-veil) var(--ease);
-  }
-  .card3d__flip.is-flipped {
-    transform: rotateY(180deg);
-  }
-  .card3d__face {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    border-radius: var(--r-lg);
-    background: var(--paper-2);
-    box-shadow: var(--e-3);
-    backface-visibility: hidden;
-  }
-  .card3d__face--back {
-    transform: rotateY(180deg);
-  }
-  .card3d__face img {
-    width: 48%;
-    height: 48%;
-  }
-  .stage__copy {
-    text-align: center;
-    color: var(--ink);
-    transition: opacity var(--t-base) var(--ease-io);
-  }
-  .stage__title {
-    margin-inline: auto;
-  }
-  .stage__line {
-    margin: var(--s-3) auto 0;
+  .svc__line {
     color: var(--ink-2);
   }
-
-  /* Desktop detail: the grid moves to the right column as ONE transform
-     and scales to fit it (services.ts writes --detail-dx / --detail-s by
-     formula); the cells keep their layout. The chosen cell is full, the
-     rest recede. */
-  .grid__in {
-    transform-origin: 50% 50%;
-    transition: transform var(--t-slow) var(--ease);
+  .svc__cta {
+    justify-self: start;
+    margin-top: var(--s-3);
   }
-  .is-detail .grid__in {
-    transform: translate(var(--detail-dx, 0), 0) scale(var(--detail-s, 1));
-  }
-  .is-detail .cell {
-    cursor: pointer;
-    pointer-events: auto;
-  }
-  .is-detail .cell:not(.is-on) {
-    opacity: var(--recede-opacity);
-    filter: saturate(var(--recede-saturate)) brightness(var(--recede-brightness));
-  }
-  .is-detail .cell.is-on .cell__icon {
-    box-shadow: 0 0 0 3px var(--pink);
-  }
-
-  /* Phone detail: the card on top, the sixteen as a picker strip beneath —
-     56px icons, snap to item, the chosen one centred. */
   @media (max-width: 767px) {
-    .stage {
+    .svc__copy {
       left: var(--gutter);
       right: var(--gutter);
-      top: var(--nav-h);
-      bottom: 7rem;
-      gap: var(--s-5);
+      top: auto;
+      bottom: var(--gutter);
+      align-content: end;
+      gap: var(--s-3);
     }
-    .card3d {
-      width: min(60vw, 40vh);
+    .svc__title {
+      font-size: var(--fs-h3);
+      line-height: 1.15;
     }
-    .stage__title {
-      font-size: var(--fs-h2);
-      line-height: 1.12;
-      letter-spacing: -0.022em;
-    }
-    .is-detail .grid {
-      place-items: end center;
-      padding-bottom: var(--s-6);
-    }
-    .is-detail .grid__in {
-      transform: none;
-      display: flex;
-      gap: var(--s-4);
-      width: 100vw;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      padding-inline: calc(50vw - 28px);
-    }
-    .is-detail .grid__in::-webkit-scrollbar {
-      display: none;
-    }
-    .is-detail .cell {
-      flex: 0 0 56px;
-      scroll-snap-align: center;
-      --col: 56px;
-    }
-    .is-detail .cell .cell__icon {
-      width: 56px;
-    }
-    .is-detail .cell__label {
-      display: none;
+    .svc__line {
+      font-size: var(--fs-body);
+      line-height: 1.45;
     }
   }
 
@@ -567,24 +384,15 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   .svc--static .ground {
     display: none;
   }
-  :global(.no-js) .grid,
-  :global(.no-js) .stage,
-  .svc--static .grid,
-  .svc--static .stage {
+  :global(.no-js) .svc__copy,
+  .svc--static .svc__copy {
     position: relative;
     inset: auto;
     opacity: 1;
+    transform: none;
     pointer-events: auto;
     background: var(--paper);
-    padding-block: var(--s-8);
-  }
-  :global(.no-js) .stage,
-  .svc--static .stage {
-    right: auto;
-  }
-  .svc--static .grid__in,
-  :global(.no-js) .grid__in {
-    transform: none;
+    padding: var(--s-8) var(--gutter);
   }
 </style>
 

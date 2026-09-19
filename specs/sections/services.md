@@ -1,6 +1,6 @@
 # Section 4: A thousand more stories → the phone → sixteen services
 
-> Status: BUILT (revised 2026-09-19 evening — the phone in the hand, then the phone as an object; grid size by formula)
+> Status: BUILT (revised 2026-09-19 evening — the phone in the hand, then the phone as an object, then the slide and the life; the sixteen as their own section)
 > Model: **Fable 5.1** to specify and to build the wall's parallax arithmetic,
 > the emergence, the zoom-to-grid handover and the card; **Opus 5** for the
 > grid, the copy and the picker.
@@ -160,6 +160,48 @@ one render per scrub frame, nothing while idle; not the object during the
 zoom (the grid is DOM, the handoff is at Rest B where the two coincide).
 The trade-dress question (the model is a specific handset on a bKash
 site) is the client's call and is recorded in Open questions.
+
+## Revised 2026-09-19 (late) — the phone stays a phone; the sixteen get their own section
+
+_Nahian, relaying the client, after the object shipped. Four notes._
+
+1. **The tilt.** The object emerged leaning the wrong way. A rectangle in
+   perspective has two near-identical poses — a tilt and its mirror — and
+   the residual barely separates them; the solver had found the mirror.
+   The photograph settles it: **the nearer edge is the longer one**. The
+   solver now starts from each quadrant and keeps the fit whose rotation
+   signs agree with the photographed edges (`device.ts`). A rule, not a
+   nudge.
+2. **No morph into the grid.** The phone stays a phone. From Rest B it
+   **slides**: on desktop to the centre of the right column, copy rising
+   in the left column; on a phone it shrinks to the space above the copy,
+   which sits at the foot of the frame at its own measured height. Then
+   it rests and is **alive**: an idle sway (4° / 2°, a 6px bob, three
+   unrelated periods) and a tilt toward the pointer (12° / 8° at the
+   frame's edge, followed at 0.08 per tick), both scaled by the slide so
+   the emergence stays exact. Touch moves it the same way. One render per
+   tick while the section is pinned and the tab visible; nothing off
+   screen. Without WebGL the CSS device does the emergence and the slide,
+   without the life.
+3. **The copy** — eyebrow, headline, one line, and a button _See details
+   of our services_ that goes to `#services-detail`. PLACEHOLDER.
+4. **White, not black.** The ground turns white through the emergence, as
+   the wall recedes; the nav goes solid over it.
+
+**The sixteen are `ServicesDetail.astro`** — the former Stills C and D as
+their own in-flow section on white: card and copy left, the 4×4 grid
+right; on a phone the card on top and the grid beneath, full width. First
+service selected on load; click flips the card; the fifteen recede. The
+zoom-to-lattice is gone with the morph, and with it the lattice
+acceptance row; the grid still keeps the home screen's row/column pitch.
+
+Phases now: wall 0–0.40 · arrival 0.40–0.50 · emergence 0.50–0.65 · Rest B
+0.65–0.70 · slide 0.70–0.85 · alive 0.85–1.
+
+_Explicitly NOT this:_ not a morph, not a zoom through the screen; not a
+render loop while the section is off screen; not the phone following the
+pointer during the emergence (life is zero until the slide); not a strip
+on mobile — the sixteen are a grid in flow.
 
 ## Depth (Rule 2)
 

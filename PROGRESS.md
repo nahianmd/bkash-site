@@ -511,3 +511,48 @@ The client asked for 3D, not a flat plane turned in 3D. Nahian downloaded
   phone; the 642KB chunk on Slow 4G arriving before the wall ends (it is
   requested a screen early; if late, the CSS device runs the emergence —
   check that this is invisible rather than a jump).
+
+**Revised 2026-09-19 (late) — the phone stays a phone; the sixteen get
+their own section; the tilt is the photograph's.** Nahian's four notes
+after the object shipped (spec: "Revised … the phone stays a phone").
+- **The tilt.** The object leaned the wrong way. Diagnosed, not nudged:
+  at tile scale the quad's perspective signal is ~1px, so the solver
+  could not tell a tilt from its mirror — and the CSS camera (1500px
+  eye, object 2500px back) is far more orthographic than the lens that
+  took the photograph, so the two minima are not even mirrors. The tilt
+  is now solved ONCE in the photograph's own pixels (`tools/
+  photo-pose.mjs`, weak perspective, 4.3px rms on a 1600px phone): the
+  quad's shear fixes both angles and the sign of their product; which
+  side of the handset the photograph shows fixes the rest. Top back
+  11.4°, right side 16.4° nearer, roll 0.6° — `PHONE_QUAD.tilt`. Per
+  viewport only the placement (tx, ty, tz) is solved
+  (`device.solvePlacement`); the residual is the lens mismatch: 4.5px rms
+  at 1920 (max 9.6px at one corner), 0.6px at 390.
+- **No morph.** `renderZoom`, the lattice and the in-pin grid are gone.
+  From Rest B the phone slides — desktop to the right column's centre
+  (dx by formula from the split and the gutter; s = 1 there), copy rising
+  in the left column; phone to the space above the copy, measured
+  (`copy.offsetHeight`): at 390×780 the copy is 222px tall at the foot,
+  the phone scales to 0.624 and its display bottom sits 33px above it.
+- **Alive.** `liveAt(p, now)`: an idle sway (4°/2°, 6px bob, periods
+  3.1/4.3/2.7s) plus a pointer tilt (12°/8°, followed at 0.08 per tick),
+  both × the slide's progress so the emergence is exact. One
+  `gsap.ticker` render while the trigger is active and the tab visible
+  (`onToggle`, `visibilitychange`); nothing otherwise.
+- **White ground** through the emergence; the nav marker hides at 50%.
+- **`ServicesDetail.astro` / `services-detail.ts`** — the former Stills
+  C/D in flow on white at `#services-detail`: stage left (card flips,
+  copy crosses), 4×4 grid right; on a phone the card on top and the grid
+  beneath, full width (cells 84×99 at 390, labels shown). First service
+  selected on load; the fifteen recede. The strip is gone.
+- **Measured.** 1920: rest centre 1405.9 vs 1404.8 expected; copy in the
+  left column 64–937. 390: as above; no overflow at either width; dist
+  gates clean; the page's own scripts 7KB, three.js still its own lazy
+  chunk.
+- **For `/verify`:** the tilt's direction against the photograph by eye
+  at both widths (the numbers say top-back, right-near); the fade-in at
+  1920 where the placement is up to 10px off the photographed corners; the
+  pointer tilt on desktop and the touch tilt on a phone (does it fight
+  scrolling?); the idle sway's speed; the copy's measure at 390 under a
+  moving `--vh`; the button's scroll to `#services-detail`; the detail
+  grid's labels at 390.

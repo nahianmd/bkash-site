@@ -33,11 +33,17 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { MODEL, type Camera, type Pose } from './device';
 
+/** What the object does after the emergence: where it slides to, how
+    big it is there, and the small rotations that keep it alive — all in
+    CSS conventions (px, y down, rotate signs as the pose's). */
+export type Live = { dx: number; dy: number; s: number; rx: number; ry: number };
+export const LIVE_ZERO: Live = { dx: 0, dy: 0, s: 1, rx: 0, ry: 0 };
+
 export type Phone3D = {
   /** the pin's size and camera, and the display's width at Rest B in px */
   setCamera(vw: number, vh: number, cam: Camera, screenW: number): void;
-  /** the pose scaled by u (1 = on the photograph, 0 = Rest B) */
-  setPose(pose: Pose, u: number): void;
+  /** the pose scaled by u (1 = on the photograph, 0 = Rest B), plus the live offsets */
+  setPose(pose: Pose, u: number, live?: Live): void;
   render(): void;
   /** the display's corners as the WebGL camera projects them: TL, TR, BR, BL, in pin px */
   projectDisplayCorners(): number[];
@@ -152,11 +158,12 @@ export async function createPhone3D(
     fit.scale.setScalar(s);
   }
 
-  function setPose(p: Pose, u: number) {
-    group.position.set(cam.cx + p.tx * u, -(cam.cy + p.ty * u), p.tz * u);
+  function setPose(p: Pose, u: number, live: Live = LIVE_ZERO) {
+    group.position.set(cam.cx + p.tx * u + live.dx, -(cam.cy + p.ty * u + live.dy), p.tz * u);
     /* CSS rotateZ·rotateY·rotateX in a y-down frame is Rz(−rz)·Ry(ry)·Rx(−rx)
        in three's y-up frame; 'ZYX' applies X first, as CSS does. */
-    group.rotation.set(-p.rx * u, p.ry * u, -p.rz * u, 'ZYX');
+    group.rotation.set(-(p.rx * u + live.rx), p.ry * u + live.ry, -p.rz * u, 'ZYX');
+    group.scale.setScalar(live.s);
     group.updateMatrixWorld(true);
   }
 

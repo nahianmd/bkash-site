@@ -32,10 +32,9 @@ export const MODEL = {
 
 /* ---- the pose: six numbers that put the device on the photograph ----
    CSS `translate3d(tx,ty,tz) rotateZ(rz) rotateY(ry) rotateX(rx)` about
-   the device's centre, projected by the pin's perspective. Solved by
-   Levenberg–Marquardt on the four corners: eight equations, six
-   unknowns; the residual is how far the photograph's lens is from the
-   CSS camera. */
+   the device's centre, projected by the pin's perspective. The tilt is
+   the photograph's (a constant); the placement is solved per viewport
+   by Levenberg–Marquardt on the four corners. */
 export type Pose = { tx: number; ty: number; tz: number; rx: number; ry: number; rz: number };
 export const POSE_ZERO: Pose = { tx: 0, ty: 0, tz: 0, rx: 0, ry: 0, rz: 0 };
 
@@ -71,49 +70,70 @@ export function projectCorners(q: Pose, W: number, H: number, cam: Camera): numb
   return out;
 }
 
-export function solvePose(
+export type Tilt = { rx: number; ry: number; rz: number };
+
+/** Place the device — translation only — under a tilt that is already
+    known. The photograph's tilt is solved ONCE in the photograph's own
+    pixels (tools/photo-pose.mjs: weak perspective, the mirror chosen by
+    which side of the handset is visible); at tile scale the quad cannot
+    separate a tilt from its mirror, and the CSS camera's perspective is
+    not the lens's, so only the placement is solved per viewport. The
+    residual is that perspective mismatch. */
+export function solvePlacement(
+  target: number[],
+  W: number,
+  H: number,
+  cam: Camera,
+  tilt: Tilt,
+): { pose: Pose; rms: number } {
+  const qw = (target[2] - target[0] + target[4] - target[6]) / 2;
+  const k0 = qw / (W * Math.cos(tilt.ry));
+  const qcx = (target[0] + target[2] + target[4] + target[6]) / 4;
+  const qcy = (target[1] + target[3] + target[5] + target[7]) / 4;
+  const start: Pose = {
+    tx: (qcx - cam.ox) / k0 + cam.ox - cam.cx,
+    ty: (qcy - cam.oy) / k0 + cam.oy - cam.cy,
+    tz: cam.d - cam.d / k0,
+    ...tilt,
+  };
+  return refine(start, ['tx', 'ty', 'tz'], target, W, H, cam);
+}
+
+/** Levenberg–Marquardt from one starting pose over the given parameters. */
+function refine(
+  start: Pose,
+  keys: (keyof Pose)[],
   target: number[],
   W: number,
   H: number,
   cam: Camera,
 ): { pose: Pose; rms: number } {
-  const qw = (target[2] - target[0] + target[4] - target[6]) / 2;
-  const k0 = qw / W;
-  const qcx = (target[0] + target[2] + target[4] + target[6]) / 4;
-  const qcy = (target[1] + target[3] + target[5] + target[7]) / 4;
-  let q: Pose = {
-    tx: (qcx - cam.ox) / k0 + cam.ox - cam.cx,
-    ty: (qcy - cam.oy) / k0 + cam.oy - cam.cy,
-    tz: cam.d - cam.d / k0,
-    rx: 0,
-    ry: 0,
-    rz: 0,
-  };
-  const keys: (keyof Pose)[] = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
+  let q = start;
+  const n = keys.length;
   const step: Pose = { tx: 0.5, ty: 0.5, tz: 0.5, rx: 1e-3, ry: 1e-3, rz: 1e-3 };
   const resid = (p: Pose) => projectCorners(p, W, H, cam).map((v, i) => v - target[i]);
   const cost = (r: number[]) => r.reduce((a, b) => a + b * b, 0);
   let r = resid(q);
   let c = cost(r);
   let lambda = 1e-3;
-  for (let it = 0; it < 60; it++) {
+  for (let it = 0; it < 80; it++) {
     /* numeric Jacobian, central differences */
-    const J: number[][] = r.map(() => new Array(6).fill(0));
+    const J: number[][] = r.map(() => new Array(n).fill(0));
     keys.forEach((key, j) => {
       const h = step[key];
       const rp = resid({ ...q, [key]: q[key] + h });
       const rm = resid({ ...q, [key]: q[key] - h });
       for (let i = 0; i < 8; i++) J[i][j] = (rp[i] - rm[i]) / (2 * h);
     });
-    const A: number[][] = keys.map(() => new Array(6).fill(0));
-    const g = new Array(6).fill(0);
+    const A: number[][] = keys.map(() => new Array(n).fill(0));
+    const g = new Array(n).fill(0);
     for (let i = 0; i < 8; i++)
-      for (let a = 0; a < 6; a++) {
+      for (let a = 0; a < n; a++) {
         g[a] += J[i][a] * r[i];
-        for (let b = 0; b < 6; b++) A[a][b] += J[i][a] * J[i][b];
+        for (let b = 0; b < n; b++) A[a][b] += J[i][a] * J[i][b];
       }
-    for (let a = 0; a < 6; a++) A[a][a] *= 1 + lambda;
-    const delta = solve6(
+    for (let a = 0; a < n; a++) A[a][a] *= 1 + lambda;
+    const delta = solveLinear(
       A,
       g.map((v) => -v),
     );
@@ -133,9 +153,9 @@ export function solvePose(
   return { pose: q, rms: Math.sqrt(c / 8) };
 }
 
-/** Gaussian elimination with partial pivoting, 6×6. */
-function solve6(A: number[][], b: number[]): number[] | null {
-  const n = 6;
+/** Gaussian elimination with partial pivoting. */
+function solveLinear(A: number[][], b: number[]): number[] | null {
+  const n = A.length;
   const M = A.map((row, i) => [...row, b[i]]);
   for (let col = 0; col < n; col++) {
     let piv = col;
