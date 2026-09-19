@@ -556,3 +556,28 @@ after the object shipped (spec: "Revised … the phone stays a phone").
   scrolling?); the idle sway's speed; the copy's measure at 390 under a
   moving `--vh`; the button's scroll to `#services-detail`; the detail
   grid's labels at 390.
+
+
+## Hero — revised 2026-09-19 (night): the empty street (Fable)
+
+Nahian supplied `plate.jpeg` (2748×1536) with the three figures removed.
+- Cutouts always on; focus = the street and the other two recede (token
+  set), the subject full. `scene-rig.applyFocus(p, weight)` — the bird
+  lifts the recede on street and cutouts alike as it pulls wide.
+- Depth of field by the zoom: sharp + pre-softened twin per cutout,
+  crossfaded by `(s − 1)/(s_beat − 1)` in `applyCam`. Twins from
+  `tools/soft-twins.mjs` (amena σ 15.8px, rahim 10, faysal 13.4 at source;
+  rendered at 1/4). Measured: beat 0 soft 1/sharp 0 on all three; beat 1
+  Amena full + sharp, the others 0.45 with the recede filter; bird end all
+  full and soft.
+- `lib/hero-beats.ts` holds the beats as pure data; HeroScene emits the
+  boxes as CSS (JS placement vs CSS placement: 0px on all three); the
+  bird's poster places the twins inside the mark.
+- The old cutout fractions land on the removed figures' positions (offline
+  composite checked): Amena on the balcony, the tea stall, the scooter.
+- **For `/verify`:** the plate never paints in the hidden tab, so Nahian
+  and Sonnet judge by eye: the soft twins against the painted street at
+  beat 0 (too soft / not soft enough — `ON_SCREEN_BLUR` in the tool); the
+  inpainted stall behind the tea-stall cutout at beat 2; the cash-out
+  banner's absence; feet on the ground at 768/1280; the 2.8× stretch at
+  beat 1.

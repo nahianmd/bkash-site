@@ -44,6 +44,7 @@ type Start = { facet: number; c: [number, number]; fp: [number, number]; k: numb
 type Rig = {
   applyCam(cam: Cam): void;
   applyRecede(r: number): void;
+  applyFocus(p: number, weight?: number): number[];
   beatCams(): Cam[];
   cuts: (HTMLElement | null)[];
 };
@@ -146,9 +147,9 @@ export function createBirdOverlay(
     if (BIRD.content === 'wide' && q > 0) {
       const cams = rig.beatCams();
       rig.applyCam(camBetween(cams[cams.length - 1], cams[0], e, scaleEase));
-      const last = rig.cuts[rig.cuts.length - 1];
-      if (last) last.style.opacity = (1 - e).toFixed(3);
-      rig.applyRecede(1 - e);
+      /* The street and the other two come back as the window opens; the
+         cutouts stay — the plate has no people of its own. */
+      rig.applyFocus(1, 1 - e);
     }
     if (copy) {
       const c = Math.min(1, Math.max(0, (q - BIRD.copyFrom) / (BIRD.copyTo - BIRD.copyFrom)));

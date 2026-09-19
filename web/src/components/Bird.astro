@@ -4,11 +4,38 @@
    the same poster with no machinery: the plate, clipped to the mark,
    sized by CSS, copy beneath. */
 import { getImage } from 'astro:assets';
-import plate from '../assets/img/hero/plate.jpg';
+import plate from '../assets/img/hero/plate.jpeg';
 import { FACETS, facetPath, BIRD_W, BIRD_H } from '../lib/bird-shape';
+import { BEATS, PLATE } from '../lib/hero-beats';
 
 const paths = FACETS.map((_, i) => facetPath(i));
 const img = await getImage({ src: plate, width: 1600, format: 'webp' });
+
+/* The people, placed as the camera places them: the plate cover-fits the
+   mark's box ("slice"), and each cutout is a fraction of the plate. */
+const cuts = import.meta.glob<{ default: ImageMetadata }>('../assets/img/hero/*-soft.png', {
+  eager: true,
+});
+const k = Math.max(BIRD_W / PLATE.w, BIRD_H / PLATE.h);
+const pw = PLATE.w * k;
+const ph = PLATE.h * k;
+const px0 = (BIRD_W - pw) / 2;
+const py0 = (BIRD_H - ph) / 2;
+const people = await Promise.all(
+  BEATS.filter((b) => b.cut).map(async (b) => {
+    const src = cuts[`../assets/img/hero/${b.id}-soft.png`].default;
+    const im = await getImage({ src, width: 400, format: 'webp' });
+    const w = b.cut!.w * pw;
+    return {
+      id: b.id,
+      href: im.src,
+      x: px0 + b.cut!.x * pw,
+      y: py0 + b.cut!.y * ph,
+      w,
+      h: (w * src.height) / src.width,
+    };
+  }),
+);
 ---
 
 <section class="bird-still" aria-label="The bKash mark, framing the street">
@@ -25,13 +52,12 @@ const img = await getImage({ src: plate, width: 1600, format: 'webp' });
         ))}
       </clipPath>
     </defs>
-    <image
-      href={img.src}
-      width={BIRD_W}
-      height={BIRD_H}
-      preserveAspectRatio="xMidYMid slice"
-      clip-path="url(#bird-still-clip)"
-    />
+    <g clip-path="url(#bird-still-clip)">
+      <image href={img.src} width={BIRD_W} height={BIRD_H} preserveAspectRatio="xMidYMid slice" />
+      {people.map((p) => (
+        <image href={p.href} x={p.x} y={p.y} width={p.w} height={p.h} data-cut={p.id} />
+      ))}
+    </g>
     <g class="bird-still__lines" fill="none">
       {paths.map((d) => (
         <path d={d} vector-effect="non-scaling-stroke"></path>

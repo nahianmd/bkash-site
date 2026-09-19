@@ -10,26 +10,22 @@
    ============================================================ */
 
 import { gsap, ScrollTrigger, reducedMotion } from './scroll';
-import { createSceneRig, poseFor, type Beat, type Cam } from './scene-rig';
+import { createSceneRig, poseFor, type Cam } from './scene-rig';
+import { BEATS } from './hero-beats';
 import { BIRD, createBirdOverlay } from './bird';
 
 /* ---- the section's tuning, one object -------------------------
    styles/README.md: what is genuinely per-section lives here, not
-   as literals in the maths. Camera targets and cutout boxes are
-   STARTING VALUES read off the plate — placed against an offline
-   composite; the dev handle nudges them live. */
+   as literals in the maths. The beats (camera targets and cutout
+   boxes) are data in hero-beats.ts so the components can read them
+   at build time; the dev handle nudges them live. */
 export const HERO = {
   /* Which slice of the wide plate a narrow screen shows at beat 0.
      A window centred at 46% contains Amena, the tea stall and Faysal
      (spec, 390). Desktop centres. */
   focusX: { desktop: 0.5, phone: 0.46 },
 
-  beats: [
-    { id: 'open', cam: { x: 0.5, y: 0.5, s: 1 } },
-    { id: 'amena', cam: { x: 0.41, y: 0.5, s: 4 }, cut: { x: 0.388, y: 0.47, w: 0.04 } },
-    { id: 'rahim', cam: { x: 0.37, y: 0.74, s: 3 }, cut: { x: 0.312, y: 0.745, w: 0.1 } },
-    { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.52, y: 0.71, w: 0.072 } },
-  ] as Beat[],
+  beats: BEATS,
 
   /* On a phone the caption takes the bottom third, so each subject must
      sit in the middle third (Rule 3). The camera puts its target at the
@@ -56,9 +52,8 @@ export const HERO = {
   scrub: 0.6,
   snap: true,
   /* Rule 2: the cutout plane leads the plate mid-segment, zero at
-     every beat. 1 = the token rate, 0 = off. FLAGGED (PROGRESS.md): the
-     lead peaks exactly when a cutout is half-visible over its drawn
-     figure; the next pass moves it to the caption plane. */
+     every beat. 1 = the token rate, 0 = off. Safe now that the plate
+     has no drawn figure under a cutout to double against. */
   parallaxLead: 1,
   /* The prototype's exponent on the eased scale — keeps the perceived
      zoom rate constant across a 1x→4x push. */
@@ -246,9 +241,9 @@ export function initHero() {
       config: HERO,
       rig,
       box: () => rig.box,
-      /** Force the cutouts visible to check they sit on their drawn figures. */
-      showCuts(on = true) {
-        rig.cuts.forEach((el) => el && (el.style.opacity = on ? '1' : ''));
+      /** Outline the cutout boxes to check their placement on the street. */
+      showBoxes(on = true) {
+        rig.cuts.forEach((el) => el && (el.style.outline = on ? '2px solid #0f0' : ''));
       },
       /** Move a cutout box by fractions of the plate; returns the values to paste back. */
       nudge(i: number, dx = 0, dy = 0, dw = 0) {

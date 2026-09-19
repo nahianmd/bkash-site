@@ -6,32 +6,53 @@
    the content under its mask, which is what makes the handover
    exact by construction: same component, same assets, same pixels.
 
-   The plate already contains all three figures, drawn small. The
-   cutouts are hi-res detail layers that fade up only when the camera
-   is on them (specs/hero/plan.md, "beat-local"), so at rest the still
-   is the plate alone and no cutout can ghost its drawn figure.
+   The plate has NO people of its own (2026-09-19: the three figures
+   removed, 2748×1536). The cutouts are the only people, always
+   visible, placed as fractions of the plate — nothing to ghost. Each
+   is one drawing twice: sharp, and a pre-softened twin shown while it
+   is small on screen (tools/soft-twins.mjs), crossfaded by the
+   camera's zoom. Focus is the recede rule on the street and the other
+   two, never an opacity ramp on the subject.
 
    Sizing is the camera's job, not Astro's — `layout="none"` on every
    image, and the scene box is set by lib/hero.ts from the plate's
    cover fit. The no-JS fallback is plain CSS cover, below.        */
 import { Picture } from 'astro:assets';
 
-import plate from '../assets/img/hero/plate.jpg';
-import amena from '../assets/img/hero/amena.png';
-import rahim from '../assets/img/hero/rahim.png';
-import faysal from '../assets/img/hero/faysal.png';
+import plate from '../assets/img/hero/plate.jpeg';
+import { BEATS } from '../lib/hero-beats';
+
+const sharp = import.meta.glob<{ default: ImageMetadata }>('../assets/img/hero/*.png', {
+  eager: true,
+});
+const cut = (id: string) => sharp[`../assets/img/hero/${id}.png`].default;
+const soft = (id: string) => sharp[`../assets/img/hero/${id}-soft.png`].default;
+const people = BEATS.filter((b) => b.cut).map((b) => ({ id: b.id, cut: b.cut!, img: cut(b.id) }));
+
+/* The cutout boxes as CSS, from the same numbers the camera uses, so the
+   no-JS still places them too (the gate forbids inline styles). The
+   box's aspect is the drawing's. */
+const cutCss = people
+  .map(
+    (p) =>
+      `.scene__cut[data-hero-cut="${p.id}"]{left:${(p.cut.x * 100).toFixed(2)}%;top:${(p.cut.y * 100).toFixed(2)}%;width:${(p.cut.w * 100).toFixed(2)}%;aspect-ratio:${p.img.width}/${p.img.height}}`,
+  )
+  .join('');
 
 /* The widths cap each variant at about 2x its largest display size:
-   the plate never displays above its own 1600; a cutout's largest
+   the plate at 4x zoom on 1920 would want 7680 and has 2748 — the
+   tightest beat is a 2.8x stretch, down from 4.8x. A cutout's largest
    size is its box fraction x the plate's display width x its beat's
-   zoom (plan, Assets). Upscaling is a later pass — spec. */
+   zoom; the soft twin only ever shows small. */
 ---
+
+<style is:global set:html={cutCss}></style>
 
 <div class="scene" data-hero-scene>
   <Picture
     src={plate}
     alt="A neighbourhood street at golden hour"
-    widths={[390, 640, 768, 1024, 1280, 1600]}
+    widths={[390, 640, 768, 1024, 1280, 1600, 1920, 2748]}
     sizes="100vw"
     formats={['avif', 'webp']}
     layout="none"
@@ -42,36 +63,28 @@ import faysal from '../assets/img/hero/faysal.png';
     data-hero-plate
   />
 
-  <div class="scene__cut" data-hero-cut="amena">
-    <Picture
-      src={amena}
-      alt=""
-      widths={[400, 700, 1008]}
-      sizes="35vw"
-      formats={['avif', 'webp']}
-      layout="none"
-    />
-  </div>
-  <div class="scene__cut" data-hero-cut="rahim">
-    <Picture
-      src={rahim}
-      alt=""
-      widths={[600, 1000, 1600]}
-      sizes="60vw"
-      formats={['avif', 'webp']}
-      layout="none"
-    />
-  </div>
-  <div class="scene__cut" data-hero-cut="faysal">
-    <Picture
-      src={faysal}
-      alt=""
-      widths={[500, 1000, 1546]}
-      sizes="50vw"
-      formats={['avif', 'webp']}
-      layout="none"
-    />
-  </div>
+  {people.map((p) => (
+    <div class="scene__cut" data-hero-cut={p.id}>
+      <Picture
+        src={soft(p.id)}
+        alt=""
+        widths={[200, 400]}
+        sizes="12vw"
+        formats={['avif', 'webp']}
+        layout="none"
+        pictureAttributes={{ 'data-cut-soft': '' }}
+      />
+      <Picture
+        src={p.img}
+        alt=""
+        widths={[500, 1000, p.img.width]}
+        sizes="50vw"
+        formats={['avif', 'webp']}
+        layout="none"
+        pictureAttributes={{ 'data-cut-sharp': '' }}
+      />
+    </div>
+  ))}
 </div>
 
 <style is:global>
@@ -108,21 +121,25 @@ import faysal from '../assets/img/hero/faysal.png';
     }
   }
 
-  /* Cutouts: positioned by JS as fractions of the scene box, and
-     invisible until the camera is on them. No-JS never shows them. */
+  /* Cutouts: fractions of the scene box (the generated rules above; JS
+     writes the same on resize), always visible. Two copies stacked:
+     the soft twin under the sharp one, crossfaded by the zoom. */
   .scene__cut {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 10%;
-    opacity: 0;
     pointer-events: none;
     user-select: none;
     will-change: opacity, transform;
   }
 
+  .scene__cut picture,
   .scene__cut img {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
+    height: 100%;
+  }
+  /* Without JS the camera never zooms: the soft twin is the still. */
+  :global(.no-js) .scene__cut [data-cut-sharp] {
+    opacity: 0;
   }
 </style>

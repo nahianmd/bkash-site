@@ -16,13 +16,11 @@
    ============================================================ */
 
 import { isPhone } from './scroll';
+import { PLATE, type Beat, type Cam, type Cut } from './hero-beats';
 
-export type Cam = { x: number; y: number; s: number };
-export type Cut = { x: number; y: number; w: number };
-export type Beat = { id: string; cam: Cam; cut?: Cut };
+export type { Beat, Cam, Cut };
 export type Box = { ox: number; oy: number; W: number; H: number };
-
-export const PLATE = { w: 1600, h: 893 };
+export { PLATE };
 
 /** How the plate cover-fits a viewport, centred. Recomputed on resize only. */
 export function coverBox(vw: number, vh: number): Box {
@@ -75,6 +73,10 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
   const cuts = opts.beats.map((b) =>
     b.cut ? scene.querySelector<HTMLElement>(`[data-hero-cut="${b.id}"]`) : null,
   );
+  /* Each cutout is two copies of one drawing — sharp, and a pre-softened
+     twin for when it is small on screen (never blurred per frame). */
+  const sharps = cuts.map((c) => c?.querySelector<HTMLElement>('[data-cut-sharp]') ?? null);
+  const softs = cuts.map((c) => c?.querySelector<HTMLElement>('[data-cut-soft]') ?? null);
 
   /* Recede from the token set, read ONCE. Written per frame as values
      rather than toggling .is-receded, because it scrubs with the camera
@@ -130,38 +132,60 @@ export function createSceneRig(scene: HTMLElement, pin: HTMLElement, opts: RigOp
   function applyCam(cam: Cam) {
     const p = poseFor(cam, box, vw, vh);
     scene.style.transform = `translate3d(${p.tx.toFixed(2)}px, ${p.ty.toFixed(2)}px, 0) scale(${p.s.toFixed(4)})`;
+    applySharpness(cam.s);
+  }
+
+  /* Depth of field, by the camera's own zoom: at the wide shot a cutout
+     is a big drawing squeezed small and would sparkle against the painted
+     street, so its soft twin shows; as the camera pushes in toward that
+     beat's scale the sharp copy takes over. The two are ONE drawing in
+     ONE place, so the crossfade cannot ghost. */
+  function applySharpness(s: number) {
+    const cams = beatCams();
+    for (let i = 1; i < opts.beats.length; i++) {
+      const sharp = sharps[i];
+      const soft = softs[i];
+      if (!sharp || !soft) continue;
+      const sBeat = cams[i].s;
+      const t = sBeat > 1 ? Math.min(1, Math.max(0, (s - 1) / (sBeat - 1))) : 1;
+      sharp.style.opacity = t.toFixed(3);
+      soft.style.opacity = (1 - t).toFixed(3);
+    }
   }
 
   /* Focus (Rule 4): a tent per beat, focus_i = 1 − |n·p − i|, clamped. */
   const n = opts.beats.length - 1;
   const focusOf = (p: number, i: number) => Math.max(0, 1 - Math.abs(n * p - i));
 
-  /* The subject cutout's opacity IS its focus, so subjects cross at the
-     midpoint between beats. The plate's recede is the sum, never above
-     1: dimming the plate is the other two receding — they are drawn in
-     it. Returns the focus per beat for the chrome to reuse. */
-  function applyFocus(p: number): number[] {
+  /* The cutouts are always there — the plate has no people of its own.
+     Focus is Rule 4 alone: while a subject is focused, the street and the
+     OTHER two recede by the token set; the subject stays full. The
+     plate's recede is the sum of focus, never above 1; each cutout's is
+     the sum of the others'. Returns the focus per beat for the chrome. */
+  function applyFocus(p: number, weight = 1): number[] {
     const f = opts.beats.map((_, i) => (i === 0 ? 0 : focusOf(p, i)));
-    let r = 0;
+    const total = f.reduce((a, b) => a + b, 0);
+    applyRecede(Math.min(1, total) * weight);
     for (let i = 1; i < opts.beats.length; i++) {
-      r += f[i];
       const cut = cuts[i];
-      if (cut) cut.style.opacity = f[i].toFixed(3);
+      if (cut) recedeEl(cut, Math.min(1, total - f[i]) * weight);
     }
-    applyRecede(Math.min(1, r));
     return f;
   }
 
-  /** The plate's recede alone, 0..1 of the token set. */
-  function applyRecede(amount: number) {
+  /** One element receded by 0..1 of the token set — the same numbers for the plate and the cutouts. */
+  function recedeEl(el: HTMLElement, amount: number) {
     const r = Math.min(1, Math.max(0, amount)) * opts.recedeStrength;
-    if (plateEl) {
-      plateEl.style.opacity = (1 - r * (1 - RECEDE.opacity)).toFixed(3);
-      plateEl.style.filter =
-        r > 0.001
-          ? `saturate(${(1 - r * (1 - RECEDE.saturate)).toFixed(3)}) brightness(${(1 - r * (1 - RECEDE.brightness)).toFixed(3)})`
-          : '';
-    }
+    el.style.opacity = (1 - r * (1 - RECEDE.opacity)).toFixed(3);
+    el.style.filter =
+      r > 0.001
+        ? `saturate(${(1 - r * (1 - RECEDE.saturate)).toFixed(3)}) brightness(${(1 - r * (1 - RECEDE.brightness)).toFixed(3)})`
+        : '';
+  }
+
+  /** The plate's recede alone, 0..1 of the token set; the cutouts lift with it. */
+  function applyRecede(amount: number) {
+    if (plateEl) recedeEl(plateEl, amount);
   }
 
   /** Camera along the beats for a progress in 0..1. */

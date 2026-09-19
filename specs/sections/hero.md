@@ -237,6 +237,37 @@ H1 · H2 · H3 · H4 (Rule 3) · H7 · H8 · H9 · H11. H5, H6, H10 belong to th
 - [ ] Reduced motion: beat 0 composed; page scrolls normally.
 - [ ] No layout reads in any input handler. No horizontal overflow at 390.
 
+## Revised 2026-09-19 (night) — the empty street
+
+_Nahian, after seeing the ghost._ The plate now has **no people of its
+own**: `plate.jpeg`, 2748×1536, the three figures removed (the tea stall
+re-painted with baskets; the cash-out banner is gone with it — flag for
+the client). The cutouts are the only people, **always visible**, placed
+as fractions of the plate where the figures were. Nothing can ghost:
+there is no drawn twin under a cutout, and no opacity ramp on a subject.
+
+- **Focus is Rule 4 alone.** While a subject is focused, the street AND
+  the other two recede by the token set; the subject stays full. One
+  function (`recedeEl`) for the plate and the cutouts.
+- **Depth of field by the zoom.** Each cutout is one drawing twice: sharp,
+  and a pre-softened twin (`tools/soft-twins.mjs` — sigma chosen so it
+  reads ~1.2px soft at the wide shot on 1920) shown while the camera is
+  wide, crossfading to sharp as the camera reaches that beat's zoom.
+  Same drawing, same place — the crossfade cannot double. The
+  performance rule is kept: nothing is blurred per frame.
+- **The parallax lead is safe** now — no drawn figure to double against
+  — and stays on the cutouts.
+- **The no-JS still has people.** The beats live in `hero-beats.ts` (pure
+  data) so `HeroScene.astro` emits each cutout's box as CSS from the same
+  numbers the camera uses; measured identical to the JS placement. The
+  bird's static poster places the soft twins inside the mark the same
+  way.
+- The tightest beat is now a 2.8× stretch of the plate on 1920, down from
+  4.8×. The cutouts are unchanged (upscale later, as agreed).
+
+_Explicitly NOT this:_ not the cutouts fading in per beat (that was the
+ghost); not a per-frame blur; not a grade on the cutouts to "match".
+
 ## Explicitly NOT this
 
 - **NOT one gesture per beat.** Scroll drives; snap settles.
