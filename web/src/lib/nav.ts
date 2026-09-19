@@ -222,7 +222,16 @@ function initMenus(nav: HTMLElement): void {
 
   for (const btn of buttons) {
     const id = btn.dataset.menuButton!;
-    btn.addEventListener('click', () => (openId === id ? closeAll() : show(id)));
+    /* With a pointer that hovers, the panel is already open by the time
+       the click lands — so a click only ever opens; leaving the header,
+       Escape or a click outside closes. Touch and keyboard toggle. */
+    btn.addEventListener('click', () => {
+      if (openId === id) {
+        if (!canHover) closeAll();
+        return;
+      }
+      show(id);
+    });
     if (canHover) {
       btn.addEventListener('pointerenter', () => {
         clearTimer();
