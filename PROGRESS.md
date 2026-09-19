@@ -735,3 +735,34 @@ Measured at 390: copy 83px at the foot, the phone rests at 0.82 (up from
 with clear air reserved between the handset and the copy —
 `WALL.rest.phoneCopyGap` (`--s-8`), one dial. At 390×780 the phone rests
 at 0.759 (was 0.821) with 57px from the display's bottom to the title.
+
+## Copy — the client's deck, 2026-09-20 (Opus)
+
+`web/src/assets/Website_N_1.pdf` (12pp) is the real copy. Extracted with
+PyPDF2 and applied:
+
+| Where | Now |
+|---|---|
+| Hero beat 0 | Powering Financial Access / Across Millions of Lives |
+| Beat: Amena | 7 in 10 Adults in Bangladesh / Control Their Money with bKash (unchanged) |
+| Beat: Rahim | From Floating Stalls to Digital Storefronts / Empowering Millions of Cashless Commerce — **role now Merchant** |
+| Beat: Faysal | At Least One Human ATM Every 2 KM / The Largest Agent Network in Bangladesh — **role now Agent** |
+| Bird | A Financial Ecosystem / Reaching Every Corner (eyebrow dropped) |
+| People | Stories Behind the Numbers |
+| The wall's title tile | Writing Millions of Stories in Motion (eyebrow and subline dropped — the deck gives one line) |
+| The phone | Everything You Need to Manage Your Money / Send, receive, pay, save, borrow. All in one app, always within your reach. |
+| About: stats | full stops removed (the deck says so); `.stats__note` capped at 28ch for the deck's "two lines" — three of four reach two, "Democratizing digital payments" is too short to |
+| About: journey wall | 15 Years of Moving Bangladesh Forward |
+| About: careers | Build What Matters / the 15-years paragraph / "Five values shape how we work:" / Customer-Centric… / "We challenge convention…" / CTA "Come Build What's Next" |
+| About: road ahead | The Road Ahead + the deck's two paragraphs (the eyebrow dropped — it duplicated the title) |
+
+The deck's beat order is Amena → **Faisal** → **Rahim**; the build's camera
+order is Nahian's (Amena → Rahim → Faysal) and was left alone, so copy is
+mapped by NAME and the roles now read customer → merchant → agent.
+**Open for Nahian.**
+
+Still ours, not the deck's: the hero cue "Scroll to meet them"; the
+eyebrows (Meet three of them, Sixteen services, Our journey, About bKash,
+The Revolution, Backed by, Leadership, Careers at bKash); the three
+people's names, roles and CTAs; the sixteen service names and lines; and
+About's voices, board, investors and CEO quote.

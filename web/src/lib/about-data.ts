@@ -9,20 +9,22 @@ export type Person = { file: string; name: string; role: string };
 export type Investor = { file: string; name: string };
 export type Voice = { file: string; tag: string; quote: string; name: string; city: string };
 
+/* Deck p.8, verbatim — and its two notes: the sublines run to two lines
+   (a measure on `.stats__note`), and they carry NO full stop. */
 export const STATS = [
-  { count: 85, suffix: 'M+', label: 'Customers', note: '1 in 20 global MFS transactions by bKash.' },
+  { count: 85, suffix: 'M+', label: 'Customers', note: '1 in 20 global MFS transactions by bKash' },
   {
     count: 350,
     suffix: 'K+',
     label: 'Agents',
-    note: 'Human ATMs extending financial access to the grassroots.',
+    note: 'Human ATMs extending financial access to the grassroots',
   },
-  { count: 1, suffix: 'M+', label: 'Merchants', note: 'Democratizing digital payments.' },
+  { count: 1, suffix: 'M+', label: 'Merchants', note: 'Democratizing digital payments' },
   {
     count: 200,
     suffix: '+',
     label: 'Products & Services',
-    note: 'One account, an entire financial ecosystem.',
+    note: 'One account, an entire financial ecosystem',
   },
 ];
 

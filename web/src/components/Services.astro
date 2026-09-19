@@ -42,7 +42,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
 <section
   class="svc"
   data-services
-  aria-label="A thousand more stories, and the bKash app"
+  aria-label="Millions of stories, and the bKash app"
 >
   <div class="svc__pin" data-services-pin>
     {walls.map(({ key, cols }) => (
@@ -67,9 +67,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
                 </figure>
               ) : t.kind === 'title' ? (
                 <div class="tile tile--title" data-tile="title">
-                  <p class="t-eyebrow tile__eyebrow">And</p>
-                  <h2 class="t-h2 tile__title">A thousand more stories</h2>
-                  <p class="t-sm tile__line">85 million of them, actually.</p>
+                  <h2 class="t-h2 tile__title">Writing Millions of Stories in Motion</h2>
                 </div>
               ) : (
                 <div class="tile tile--phone" data-tile="phone">
@@ -126,10 +124,9 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
          of the frame on a phone. PLACEHOLDER until the client's. -->
     <div class="svc__copy" data-copy>
       <p class="t-eyebrow svc__eyebrow">Sixteen services</p>
-      <h2 class="t-h2 svc__title">Everything money does, in one app.</h2>
+      <h2 class="t-h2 svc__title">Everything You Need to Manage Your Money</h2>
       <p class="t-lead svc__line">
-        Send, pay, save, borrow, insure. Sixteen services, one bKash account, in the phone
-        already in your hand.
+        Send, receive, pay, save, borrow. All in one app, always within your reach.
       </p>
       <a class="btn btn--primary svc__cta" href="#services-detail">See details of our services</a>
       {/* On a phone the copy is the title and this link alone. */}
@@ -234,13 +231,10 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     justify-content: flex-end;
     padding: var(--s-5);
   }
-  .tile__eyebrow {
-    color: var(--pink);
-    margin-bottom: var(--s-3);
-  }
-  .tile__line {
-    color: var(--on-night-2);
-    margin-top: var(--s-3);
+  /* One headline, no eyebrow: the deck gives the tile a single line
+     (Website_N_1.pdf, p.4). */
+  .tile__title {
+    text-wrap: balance;
   }
 
   /* ---- the device ------------------------------------------------ */

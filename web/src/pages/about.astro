@@ -192,7 +192,7 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
       <div class="wall__pin" data-wall-pin>
         <div class="wall__head">
           <p class="t-eyebrow wall__eyebrow">Our journey</p>
-          <h2 class="t-h2">Fifteen years, one street at a time.</h2>
+          <h2 class="t-h2">15 Years of Moving Bangladesh Forward</h2>
         </div>
         <div class="wall__viewport">
           <div class="wall__track" data-wall-track>
@@ -248,20 +248,19 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
         <div class="split">
           <div class="split__copy">
             <p class="t-eyebrow ab-head__eyebrow" data-reveal>Careers at bKash</p>
-            <h2 class="t-h1 split__title" data-reveal>A team built to make a difference.</h2>
+            <h2 class="t-h1 split__title" data-reveal>Build What Matters</h2>
             <p class="t-lead ab-head__lead split__lead" data-reveal>
-              Recognised as Bangladesh’s Best Brand for seven consecutive years, we are a team
-              united by a shared ambition.
+              For 15 years, bKash has been expanding financial access across Bangladesh. What began
+              as a way to move money has grown into a financial ecosystem reaching every corner.
             </p>
+            <p class="t-body split__values-head" data-reveal>Five values shape how we work:</p>
             <p class="careers__values" data-reveal>
-              Customer-centric. Collaborative. Innovative. Agile. Ethical.
+              Customer-Centric. Collaborative. Innovative. Agile. Ethical.
             </p>
             <p class="t-body split__body" data-reveal>
-              Five values shape how we work, challenge convention, and create impact for millions.
-              We are always looking for talented, driven people who share that ambition. Be part of
-              the team shaping what comes next.
+              We challenge convention, work together, put customers first, and do what is right.
             </p>
-            <a class="btn btn--primary split__cta" href="#" data-reveal>Join our team →</a>
+            <a class="btn btn--primary split__cta" href="#" data-reveal>Come Build What’s Next</a>
           </div>
           <Image
             src={careers}
@@ -280,12 +279,16 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     <section class="ab-section ab-section--dark road" aria-label="The road ahead">
       <div class="wrap">
         <div class="ab-head road__head">
-          <p class="t-eyebrow ab-head__eyebrow" data-reveal>The road ahead</p>
-          <h2 class="t-h1" data-reveal>The journey doesn’t end with access. It begins there.</h2>
+          <h2 class="t-h1" data-reveal>The Road Ahead</h2>
           <p class="t-lead ab-head__lead" data-reveal>
-            From city workers to farmers in remote villages, bKash keeps innovating to make
-            financial services safer, simpler and more accessible — building towards a future where
-            financial inclusion is within everyone’s reach.
+            The next chapter is bigger than access. We are building towards a country where
+            cashless is the norm, every transaction is secure, digital finance is understood and
+            trusted, and advanced financial services are within everyone’s reach.
+          </p>
+          <p class="t-body road__body" data-reveal>
+            After 15 years of transforming how Bangladesh moves money, the ambition is not simply
+            to keep up with a changing Bangladesh, but to keep changing it, at a scale that matters
+            to the entire economy.
           </p>
         </div>
       </div>
@@ -401,6 +404,9 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   }
   .stats__note {
     color: var(--ink-3);
+    /* The deck asks for two lines under every figure; 28ch is the measure
+       at which all four wrap to two and none to three. */
+    max-width: 28ch;
   }
 
   /* ---- platform triad ---- */
@@ -638,6 +644,10 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   .split__lead {
     margin-bottom: var(--s-5);
   }
+  .split__values-head {
+    color: var(--ink-2);
+    margin-bottom: var(--s-2);
+  }
   .split__body {
     color: var(--ink-2);
   }
@@ -667,6 +677,10 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   }
   .road__head {
     margin-bottom: clamp(2.5rem, 6vh, 4rem);
+  }
+  .road__body {
+    margin-top: var(--s-5);
+    color: var(--on-night-2);
   }
   .road :global(.road__img) {
     width: 100%;
