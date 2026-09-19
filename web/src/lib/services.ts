@@ -392,6 +392,94 @@ export function initServices() {
     }
   }
 
+  /* ---- selection: one flip for any pair ----------------------------- */
+  const flip = section.querySelector<HTMLElement>('[data-card-flip]');
+  const faces = [...section.querySelectorAll<HTMLImageElement>('[data-face-icon]')];
+  const titleEl = section.querySelector<HTMLElement>('[data-stage-title]');
+  const lineEl = section.querySelector<HTMLElement>('[data-stage-line]');
+  const copyEl = section.querySelector<HTMLElement>('[data-stage-copy]');
+  const cells = [...section.querySelectorAll<HTMLButtonElement>('[data-cell]')];
+  const iconSrc = (i: number) => cells[i]?.querySelector('img')?.getAttribute('src') ?? '';
+
+  let selected = -1;
+  let flipped = false;
+  let autoTimer: number | null = null;
+  let copyTimer: number | null = null;
+
+  function select(i: number, animate = true) {
+    if (i === selected || !SERVICES[i]) return;
+    const first = selected < 0;
+    selected = i;
+    cells.forEach((c, k) => c.classList.toggle('is-on', k === i));
+    /* Put the new icon on the hidden face, then turn the card over. The
+       first selection just shows the front. */
+    const hidden = flipped ? 0 : 1;
+    if (first) {
+      faces.forEach((f) => (f.src = iconSrc(i)));
+    } else {
+      faces[hidden].src = iconSrc(i);
+      flipped = !flipped;
+      flip?.classList.toggle('is-flipped', flipped);
+    }
+    const write = () => {
+      if (titleEl) titleEl.textContent = SERVICES[i].name;
+      if (lineEl) lineEl.textContent = SERVICES[i].line;
+      if (copyEl) copyEl.style.opacity = '1';
+    };
+    if (first || !animate) write();
+    else {
+      if (copyEl) copyEl.style.opacity = '0';
+      if (copyTimer) clearTimeout(copyTimer);
+      copyTimer = window.setTimeout(write, 260);
+    }
+    section!.classList.add('is-detail');
+    /* On a phone the strip centres the chosen one. */
+    if (isPhone())
+      cells[i].scrollIntoView({
+        inline: 'center',
+        block: 'nearest',
+        behavior: animate ? 'smooth' : 'auto',
+      });
+  }
+
+  cells.forEach((c, i) => c.addEventListener('click', () => select(i)));
+  /* Swiping the strip picks the item nearest its centre. */
+  if (gridIn) {
+    let t: number | null = null;
+    gridIn.addEventListener(
+      'scroll',
+      () => {
+        if (!isPhone() || !section!.classList.contains('is-detail')) return;
+        if (t) clearTimeout(t);
+        t = window.setTimeout(() => {
+          const mid = gridIn.getBoundingClientRect().left + gridIn.clientWidth / 2;
+          let best = 0;
+          let bd = Infinity;
+          cells.forEach((c, k) => {
+            const r = c.getBoundingClientRect();
+            const d = Math.abs(r.left + r.width / 2 - mid);
+            if (d < bd) {
+              bd = d;
+              best = k;
+            }
+          });
+          select(best);
+        }, 120);
+      },
+      { passive: true },
+    );
+  }
+
+  /* The detail layout applies only once the grid has landed; scrubbing
+     back through the zoom returns the full grid, the selection kept. */
+  function renderState(p: number) {
+    const landed = p >= WALL.zoomEnd - 1e-6;
+    if (landed && selected < 0 && autoTimer === null) {
+      autoTimer = window.setTimeout(() => select(0), 500);
+    }
+    section!.classList.toggle('is-detail', landed && selected >= 0);
+  }
+
   const proxy = { p: 0 };
   /* ---- the zoom to the grid --------------------------------------
      0.70 → 0.90 the device scales (log space) to the solved end and
@@ -421,6 +509,7 @@ export function initServices() {
     renderWall(proxy.p);
     renderEmergence(proxy.p);
     renderZoom(proxy.p);
+    renderState(proxy.p);
   };
   const remeasure = () => {
     measure();
@@ -431,11 +520,14 @@ export function initServices() {
   window.addEventListener('resize', remeasure);
   window.addEventListener('load', remeasure);
 
-  /* Reduced motion: the wall with the phone tile at centre, no travel. */
+  /* Reduced motion: the wall with the phone tile at centre, then the grid
+     and the card in flow, first service selected. No travel. */
   if (reducedMotion()) {
     section.classList.add('svc--static');
     proxy.p = WALL.wallEnd;
     remeasure();
+    select(0, false);
+    section.classList.add('is-detail');
     return;
   }
 
@@ -474,8 +566,9 @@ export function initServices() {
       settle() {
         tl.progress(st.progress);
         render();
-        return { progress: st.progress };
+        return { progress: st.progress, selected, flipped };
       },
+      select,
       goTo(p: number) {
         window.scrollTo(0, st.start + (st.end - st.start) * p);
         ScrollTrigger.update();
