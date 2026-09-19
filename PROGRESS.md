@@ -917,3 +917,10 @@ the component's `data-astro-cid-*`, so `.foot__amar { … }` matched
 nothing and the mark took the column's full width. Scope through a
 parent that does carry it: `.foot :global(.foot__amar)`. HeroScene hit
 the same thing and solved it with a global block.
+**Amar bKash accounts (Nahian, 2026-09-20):** Facebook, Instagram,
+YouTube and **TikTok** — TikTok is theirs alone, the company's row has
+none, so a fifth glyph joined `ICONS`. URLs stored verbatim as supplied.
+Checked: Instagram, YouTube and TikTok return 200; Facebook returns 400
+to any non-browser request — a control against `facebook.com/zuck` and
+bKash's own official page returns 400 too, so that is their bot
+blocking, not a bad link.

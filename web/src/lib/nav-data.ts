@@ -45,9 +45,9 @@ export type Social = { label: string; href: string };
    own links — it is an encyclopedia article, not an account, but it
    belongs in the same row.
 
-   AMAR_SOCIAL is EMPTY and the row does not render until it is filled:
-   the client's sheet carries no Amar bKash URLs, and a social account
-   under bKash's brand is not something to guess at. */
+   The Amar bKash accounts are not in the sheet — Nahian supplied them
+   on 2026-09-20, verbatim. TikTok is theirs alone; the company's row
+   has none. */
 export const SOCIAL: Social[] = [
   { label: 'Facebook', href: 'https://www.facebook.com/bkashlimited' },
   { label: 'YouTube', href: 'https://www.youtube.com/bkashlimited' },
@@ -56,7 +56,12 @@ export const SOCIAL: Social[] = [
   { label: 'Wikipedia', href: 'https://en.wikipedia.org/wiki/BKash' },
 ];
 
-export const AMAR_SOCIAL: Social[] = [];
+export const AMAR_SOCIAL: Social[] = [
+  { label: 'Facebook', href: 'https://www.facebook.com/amarbKash16247/' },
+  { label: 'Instagram', href: 'https://www.instagram.com/amarbkash/?hl=en' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@amarbkash16247' },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@amarbkash16247' },
+];
 
 export const FOOTER_COLUMNS: { label: string; items: NavItem[] }[] = [
   {
