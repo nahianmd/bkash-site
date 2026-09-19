@@ -7,7 +7,8 @@
    - Hand-written white-with-alpha becomes the --on-night tokens
      (audit X5).
    - The extra bottom padding that kept the legal line clear of the
-     demo page-switcher pill is gone with the pill.
+     demo page-switcher pill came back on 2026-09-20, when the search
+     bar took that spot — as --search-space, so there is one number.
 
    On the homepage the footer also does a job beyond navigation: the
    services section ends pinned, so without something after it there
@@ -67,7 +68,12 @@ const HREFS: Record<string, string> = { 'About bKash': '/about' };
   .foot {
     background: var(--night);
     color: var(--on-night-2);
-    padding-block: clamp(3rem, 7vh, 5rem);
+    /* Longhands, not `padding-block`: the CSS minifier drops a
+       `padding-bottom` that follows the shorthand when it carries a
+       var(), and the rule vanishes from the built sheet with no error. */
+    padding-top: clamp(3rem, 7vh, 5rem);
+    /* the search bar floats over the foot of the page */
+    padding-bottom: calc(clamp(3rem, 7vh, 5rem) + var(--search-space));
   }
 
   /* Four explicit columns, not auto-fit.

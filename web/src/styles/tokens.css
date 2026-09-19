@@ -67,6 +67,25 @@
   /* the pink that reads on a dark ground — eyebrows over night and photographs */
   --pink-lift: #ff2d87;
   --on-night-3: rgb(255 255 255 / 52%);
+
+  /* ---- floating glass control ----
+     The search bar sits at the bottom of the frame, over the street, the
+     night sections and paper in turn, so it cannot borrow either scheme:
+     a dark frosted ground with a light hairline is the one treatment
+     that reads on all three. */
+  --glass: rgb(25 19 22 / 52%);
+  --glass-lift: rgb(25 19 22 / 68%);
+  --glass-line: rgb(255 255 255 / 24%);
+  --glass-line-lift: rgb(255 255 255 / 40%);
+  --glass-ink: var(--on-night);
+
+  /* The bar's own height and its distance from the bottom edge, and the
+     vertical room anything beneath it must leave. The prototype's pill
+     was dropped for overlapping content in five places; one token is how
+     this one does not repeat that. */
+  --search-h: 2.75rem;
+  --search-gap: var(--s-5);
+  --search-space: calc(var(--search-gap) + var(--search-h) + var(--s-4));
   --on-night-line: rgb(255 255 255 / 12%);
 
   /* ---- type ----

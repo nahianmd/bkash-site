@@ -356,7 +356,9 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       left: var(--gutter);
       right: var(--gutter);
       top: auto;
-      bottom: var(--gutter);
+      /* clear of the fixed search bar; services.ts solves the phone's
+         band from the same token */
+      bottom: var(--search-space);
       align-content: end;
       justify-items: center;
       text-align: center;

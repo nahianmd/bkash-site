@@ -439,7 +439,10 @@ export function initServices() {
         const copyH = copy?.offsetHeight ?? 0;
         const gap = resolvePx(WALL.rest.phoneCopyGap, 64);
         const top = navH + gutter;
-        const bottom = vh - gutter - copyH - gap;
+        /* the copy sits at --search-space, not the gutter, so the search
+           bar has room beneath it (Services.astro) */
+        const copyBottom = resolvePx('var(--search-space)', 84);
+        const bottom = vh - copyBottom - copyH - gap;
         const avail = Math.max(0, bottom - top);
         const s = Math.min(1, avail / restH, (vw - 2 * gutter) / restW);
         slide = { dx: 0, dy: (top + bottom) / 2 - vh / 2, s };

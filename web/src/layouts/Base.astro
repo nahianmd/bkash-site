@@ -4,6 +4,7 @@ import { Font } from 'astro:assets';
 
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import Search from '../components/Search.astro';
 
 import '../styles/tokens.css';
 import '../styles/base.css';
@@ -52,6 +53,8 @@ const { title, description = '', noindex = true, current } = Astro.props;
     <slot />
 
     <Footer />
+
+    <Search />
 
     <script>
       import { initScroll } from '../lib/scroll';

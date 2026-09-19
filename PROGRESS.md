@@ -806,3 +806,30 @@ sat in the middle. `margin-inline: auto` on the box. The bird's centred
 titles already did this; nothing else on the site centres a capped
 heading. Measured at 1920: headline box 636–1269, midpoint 952.5 —
 exactly the eyebrow's.
+
+## Search bar — 2026-09-20 (Opus)
+
+`components/Search.astro`, in `Base.astro`, so both pages and both
+widths. A frosted pill fixed bottom-centre — where the prototype's
+page-switcher sat — with a magnifier and the word Search. It carries its
+own ground (`--glass*` tokens) rather than following the nav's
+light/dark state: the nav knows what is behind the TOP of the frame and
+this is at the bottom, where the answer differs. Dark frosted + a light
+hairline is the one treatment that reads on the street, the night
+sections and paper alike.
+
+**The overlap the prototype's pill was dropped for is handled by one
+token.** `--search-space` (its offset + height + air) is used by the
+phone section's mobile copy (`bottom`) — and by `services.ts`, which
+solves the 3D phone's resting band from the same number, so the phone
+resized itself to suit (0.759 → 0.668 at 390) — and by the footer.
+Measured at 390: link-to-pill 11px, legal-line-to-pill 71px, nothing
+hit; 1920: 85px under the legal line. Hero captions were already clear.
+
+**Gotcha: the CSS minifier silently drops a `padding-bottom` longhand
+that follows a `padding-block` shorthand when it carries a `var()`.** The
+rule was in the source, absent from the served sheet, no error anywhere —
+found by curling the compiled CSS. Write both padding longhands instead.
+
+**Open:** what the button does when clicked. Nothing is wired yet; the
+client's sheet lists a search button (Sheet1, B2) but no behaviour.
