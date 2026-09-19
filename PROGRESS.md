@@ -646,3 +646,9 @@ observer's class. The hero removes its marker when the scrub runs;
 reduced motion keeps it. Measured with the nav's transition disabled (it
 freezes in the hidden tab): transparent + white links at beats 0–3 and
 bird 0.5 / 0.79; solid from 0.81; solid over the wall.
+
+**Spacing (2026-09-20):** the resting phone stands one `--s-9` to the right
+of the copy's INK (a Range over the block's children — the boxes stretch
+to the column), never past the right gutter: 112px from the last
+character at 1920, the group left-aligned on the gutter. The sixteen get
+`--s-11` above them (12rem; 10 on a phone).

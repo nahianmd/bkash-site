@@ -61,7 +61,8 @@ const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
   .svcd {
     background: var(--paper);
     color: var(--ink);
-    padding-block: var(--s-9);
+    /* Clear air above, between the phone at rest and the sixteen. */
+    padding-block: var(--s-11) var(--s-10);
   }
   .svcd__in {
     display: grid;
@@ -186,7 +187,7 @@ const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
 
   @media (max-width: 767px) {
     .svcd {
-      padding-block: var(--s-8);
+      padding-block: var(--s-10) var(--s-9);
     }
     .svcd__in {
       grid-template-columns: 1fr;
