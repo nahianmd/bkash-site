@@ -247,7 +247,7 @@ export function initHero() {
     if (!on) return;
     const hud = document.createElement('div');
     hud.style.cssText =
-      'position:fixed;left:12px;bottom:12px;z-index:9999;padding:10px 12px;background:rgba(0,0,0,.82);color:#0f0;font:12px/1.5 ui-monospace,monospace;border-radius:8px;';
+      'position:fixed;left:12px;top:calc(var(--nav-h, 72px) + 12px);z-index:9999;padding:10px 12px;background:rgba(0,0,0,.82);color:#0f0;font:12px/1.5 ui-monospace,monospace;border-radius:8px;';
     document.body.appendChild(hud);
     let active = 1;
     const fields: (keyof Cut)[] = ['x', 'y', 'w', 'soft'];
