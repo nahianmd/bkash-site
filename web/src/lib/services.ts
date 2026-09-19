@@ -293,18 +293,6 @@ function resolvePx(expr: string, fallback: number): number {
 
 const ramp = (v: number, a: number, b: number) => Math.min(1, Math.max(0, (v - a) / (b - a)));
 
-/** The right edge of the INK in a block — the widest line box of its
-    children, not the boxes themselves, which stretch to the column. */
-function inkRight(block: HTMLElement): number {
-  let right = 0;
-  const range = document.createRange();
-  for (const child of block.children) {
-    range.selectNodeContents(child);
-    for (const r of range.getClientRects()) right = Math.max(right, r.right);
-  }
-  range.detach();
-  return right;
-}
 const DEG = Math.PI / 180;
 
 export function initServices() {
@@ -440,17 +428,17 @@ export function initServices() {
         const s = Math.min(1, avail / restH, (vw - 2 * gutter) / restW);
         slide = { dx: 0, dy: navH + gutter + avail / 2 - vh / 2, s };
       } else {
-        /* The phone stands one gap to the right of the copy's own right
-           edge — the widest line, measured — not in the middle of a
-           column, so the two read as one composition (Nahian,
-           2026-09-20). Centred in the space below the nav, no taller
-           than it, and never past the right gutter. */
+        /* The phone belongs to the right: the centre of the right column,
+           centred in the space below the nav, no taller than it. Copy and
+           phone are then gathered toward each other by ONE amount,
+           --svc-gather (the copy's CSS reads the same token), so the
+           distance shrinks slightly without either leaving its side
+           (Nahian, 2026-09-20). */
+        const colL = vw / 2 + gap / 2;
         const colR = vw - gutter;
-        const s = Math.min(1, (vh - navH - gutter) / restH);
-        const copyRight = copy ? Math.max(inkRight(copy), gutter) : vw / 2;
-        const pad = resolvePx('var(--s-9)', 96);
-        const cx = Math.min(copyRight + pad + (restW * s) / 2, colR - (restW * s) / 2);
-        slide = { dx: cx - vw / 2, dy: navH / 2, s };
+        const gather = resolvePx('var(--svc-gather)', 0);
+        const s = Math.min(1, (colR - colL) / restW, (vh - navH - gutter) / restH);
+        slide = { dx: (colL + colR) / 2 - gather - vw / 2, dy: navH / 2, s };
       }
     }
   }

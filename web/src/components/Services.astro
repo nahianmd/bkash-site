@@ -146,6 +146,10 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     /* One screen of pin plus the travel (config: travelScreens). */
     height: calc(var(--vh) * var(--svc-screens, 6.5));
     background: var(--paper);
+    /* How far copy and phone are gathered toward each other at rest on
+       desktop — the copy from its gutter, the phone from its column's
+       centre. One token, read by the CSS below and by services.ts. */
+    --svc-gather: var(--s-8);
   }
 
   .svc__pin {
@@ -311,7 +315,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   /* ---- the copy beside the phone ---------------------------------- */
   .svc__copy {
     position: absolute;
-    left: var(--gutter);
+    left: calc(var(--gutter) + var(--svc-gather));
     right: calc(50% + var(--s-6) / 2);
     top: var(--nav-h);
     bottom: 0;
