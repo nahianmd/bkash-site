@@ -69,7 +69,7 @@ export function initPeople() {
   };
   measure();
   const tl = gsap.timeline({ paused: true }).to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
-  ScrollTrigger.create({
+  const st = ScrollTrigger.create({
     id: 'people',
     trigger: section,
     start: 'top bottom',
@@ -79,4 +79,19 @@ export function initPeople() {
     onRefreshInit: measure,
     onRefresh: render,
   });
+
+  if (import.meta.env.DEV) {
+    const w = window as any;
+    w.__bkash = w.__bkash ?? {};
+    w.__bkash.people = {
+      rates: { back, mid, front },
+      /** Force the scrub to the trigger's progress and render — the hidden tab never ticks. */
+      settle() {
+        ScrollTrigger.update();
+        tl.progress(st.progress);
+        render();
+        return { progress: st.progress, cards: cardsPlane.style.transform, caps: caps[0]?.style.transform };
+      },
+    };
+  }
 }
