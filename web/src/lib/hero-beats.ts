@@ -32,6 +32,27 @@ export type Beat = { id: string; cam: Cam; cut?: Cut };
    time. Typed by hand, and a pixel of drift in it is not load-bearing. */
 export const PLATE = { w: 1678, h: 937 };
 
+/* CENTRING A SUBJECT. `poseFor` places cam.x/cam.y at the viewport's
+   centre, so a subject is centred exactly when its cam IS the centre of
+   its own cut box:
+
+     cam.x = cut.x + cut.w / 2
+     cam.y = cut.y + cut.w * (imgH / imgW) * (PLATE.w / PLATE.h) / 2
+
+   Amena was already built this way — (0.4100, 0.5000) against a true
+   centre of (0.4086, 0.5000). Rahim and Faysal were not: Rahim sat
+   0.0988 of the plate's height below centre. Both centred 2026-09-22 on
+   Nahian's ask, and zoomed in with it.
+
+   The zoom is not independent of the centring. The cover clamp in
+   `poseFor` keeps cam.y inside [vh/2H_s, 1 - vh/2H_s], and at s = 3
+   Rahim's centre (0.8388) falls outside it — it would have been clamped
+   back to 0.8333. s >= 3.25 clears it, so zooming in is what MAKES the
+   centring possible rather than a separate wish.
+
+   These are derived from the cut boxes, so they go stale if a cutout is
+   re-placed with `?place`. Re-derive from the two lines above; the panel
+   prints the cut box you need. */
 export const BEATS: Beat[] = [
   { id: 'open', cam: { x: 0.5, y: 0.5, s: 1 } },
   {
@@ -41,12 +62,12 @@ export const BEATS: Beat[] = [
   },
   {
     id: 'rahim',
-    cam: { x: 0.37, y: 0.74, s: 3 },
+    cam: { x: 0.3438, y: 0.8388, s: 3.75 },
     cut: { x: 0.3163, y: 0.7728, w: 0.055, soft: 0 },
   },
   {
     id: 'faysal',
-    cam: { x: 0.55, y: 0.78, s: 3.5 },
+    cam: { x: 0.5669, y: 0.8126, s: 4 },
     cut: { x: 0.5509, y: 0.75, w: 0.032, soft: 0 },
   },
 ];
