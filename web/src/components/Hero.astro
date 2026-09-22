@@ -113,19 +113,41 @@ import BirdOverlay from './BirdOverlay.astro';
     color: var(--on-night-2);
   }
 
+  /* The column spans gutter to gutter so a caption can anchor to either
+     edge; each block still measures 38rem, so beats 1 and 3 wrap exactly
+     as they did when the column itself was 38rem wide. */
   .hero__caps {
     position: absolute;
     left: var(--gutter);
+    right: var(--gutter);
     bottom: calc(var(--gutter) + var(--s-6));
-    width: min(38rem, calc(100% - var(--gutter) * 2));
   }
 
   .hero__cap {
     position: absolute;
     left: 0;
     bottom: 0;
+    max-width: min(38rem, 100%);
     opacity: 0;
     will-change: opacity, transform;
+  }
+
+  /* Beat 2 (Agent) mirrors to the right edge. Not a composition
+     preference — the scrim was the problem. `.on-photo` darkens its text
+     block plus --s-6 on every side and then feathers out over a further
+     5rem, and Rahim stands at x 0.3163 with the camera at x 0.37, which
+     puts him squarely under a left-anchored caption's underlay. He read
+     as dimmed at the exact beat that is meant to be focusing on him,
+     which fights Rule 4: the subject stays full while everything else
+     steps back. Moving the block off him is the fix; right-aligning it
+     is what keeps it looking deliberate rather than nudged.
+     Nahian, 2026-09-22. */
+  @media (min-width: 768px) {
+    .hero__cap[data-hero-cap='2'] {
+      left: auto;
+      right: 0;
+      text-align: right;
+    }
   }
 
   .hero__role {
