@@ -23,7 +23,7 @@ gesture (superseded: scroll-driven, 09-18).
 render in the bird; might be selectable.
 
 **Nahian, 2026-09-18, evening — supersedes the afternoon:** no scenes inside.
-The bird is a *window* that closes in on the whole display while zooming out.
+The bird is a _window_ that closes in on the whole display while zooming out.
 What is inside it is the hero's last frame. After it pins, what is inside
 **might be replaced** — later, not now.
 
@@ -34,8 +34,8 @@ the mechanism. The rest-pose question survives, below.
 
 Beat 5: `Writing Millions of Stories in Motion Across Bangladesh`. The story
 half ends here. You are looking at Faysal riding into the city — the hero's
-last frame. You scroll, and white closes in from the edges *in the shape of
-the bKash bird*. The street was inside the mark the whole time. It pins, and
+last frame. You scroll, and white closes in from the edges _in the shape of
+the bKash bird_. The street was inside the mark the whole time. It pins, and
 holds: a bird-shaped window onto the neighbourhood, on white, with the line.
 
 Then the page turns to real people (Rule 1).
@@ -59,13 +59,13 @@ The hero's final frame is retained as the content. Over it sits the mark as a
 **mask**: the viewer sees the content only through the bird's shape; outside
 it is the white ground.
 
-| Phase | Progress | What happens |
-|---|---|---|
-| A — inside | 0 | The mask is scaled so the **largest facet's interior covers the whole viewport**. No edge is on screen. What you see is the hero's last frame, unchanged. |
-| B — the edges | 0 → ~30% | The mask shrinks about a fixed point. White enters from the corners in straight cuts — the facet's edges. The thin lines between facets appear over the street. **The moment the idea lands.** |
-| C — the mark resolves | ~30 → ~70% | More of the silhouette enters. The street is now seen through a faceted window. |
-| D — settle | ~70 → ~80% | The complete mark at resting size. Copy resolves — opacity and a short rise on the front plane. |
-| E — hold | ~80 → 100% | Still. About half a screen before release. |
+| Phase                 | Progress   | What happens                                                                                                                                                                                   |
+| --------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A — inside            | 0          | The mask is scaled so the **largest facet's interior covers the whole viewport**. No edge is on screen. What you see is the hero's last frame, unchanged.                                      |
+| B — the edges         | 0 → ~30%   | The mask shrinks about a fixed point. White enters from the corners in straight cuts — the facet's edges. The thin lines between facets appear over the street. **The moment the idea lands.** |
+| C — the mark resolves | ~30 → ~70% | More of the silhouette enters. The street is now seen through a faceted window.                                                                                                                |
+| D — settle            | ~70 → ~80% | The complete mark at resting size. Copy resolves — opacity and a short rise on the front plane.                                                                                                |
+| E — hold              | ~80 → 100% | Still. About half a screen before release.                                                                                                                                                     |
 
 **Option (a): the content stays, the window shrinks.** The street keeps its
 size — Faysal readable, the plate receded behind him as the hero left it. A
@@ -101,7 +101,7 @@ any size. The nine-facet geometry in `reference/` stays only as a record.
 
 ### After the pin — future, not now
 
-*Nahian, 2026-09-18:* once the mark is still, what is inside it might be
+_Nahian, 2026-09-18:_ once the mark is still, what is inside it might be
 replaced. The mask makes that cheap — the content is one layer under a shape.
 Recorded so it is not reinvented; not designed here.
 
@@ -130,7 +130,7 @@ Copy leads by a few percent during the hold and on the way out.
 
 No set-piece. The bird holds; the section releases; the people section's dark
 ground rises beneath the white under ordinary scroll, and the register turns
-with it (Rule 1). Bridging copy: *millions of stories* → *meet three of them*
+with it (Rule 1). Bridging copy: _millions of stories_ → _meet three of them_
 (placeholder).
 
 ## Reduced motion
@@ -139,12 +139,12 @@ The still, not pinned.
 
 ## Content slots
 
-| Slot | Content | Status |
-|---|---|---|
-| The shape | official SVG or the nine-facet geometry | **VECTOR** — decision pending |
-| The content | the hero's final frame | **HERO** — nothing new |
+| Slot               | Content                                                       | Status                                                                   |
+| ------------------ | ------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| The shape          | official SVG or the nine-facet geometry                       | **VECTOR** — decision pending                                            |
+| The content        | the hero's final frame                                        | **HERO** — nothing new                                                   |
 | Eyebrow / headline | `Across Bangladesh` / `Writing Millions of Stories in Motion` | **CLIENT DECK**, split reorders the sentence — kept, flag at copy review |
-| Alt text | "The bKash mark, framing a neighbourhood street" | **PLACEHOLDER** |
+| Alt text           | "The bKash mark, framing a neighbourhood street"              | **PLACEHOLDER**                                                          |
 
 ## Audit rows closed
 
@@ -172,7 +172,11 @@ artifacts) · H10 mobile dead air and clipped copy.
 
 ## Explicitly NOT this
 
-- **NOT nine photographs.** No collage, no remake, no per-facet content.
+- **NOT nine photographs.** No collage, no remake, no per-facet content
+  _during the shrink_ — nothing flies in or assembles. Per-facet content at
+  **rest** was reserved in Provenance ("after it pins, what is inside might be
+  replaced — later, not now") and Nahian called it in on 2026-09-22; see the
+  revision below. The prohibition is on the mechanism, not the rest state.
 - **NOT the frame shrinking into a thumbnail** (option b).
 - **NOT a morph into the flat pink logo.** The mark is a window, and what is
   in the window is the street.
@@ -199,3 +203,116 @@ The nav stays transparent through the whole pin, the white included: its
 own dark underlay carries the links over anything. `navSolidAt` is gone;
 the hero section's end marker alone makes the switch, so the wall (on
 white) starts solid.
+
+## Revised 2026-09-22 — three facets hold the three characters
+
+> Status of this revision: **DRAFT**. Decisions are Nahian's, recorded here as
+> given; the geometry and timing below are measured, not proposed. One open
+> question (390) and the build itself are still to do, and both are tagged
+> **Fable 5.1**.
+
+_Nahian, 2026-09-22:_ "when the bird is pinned I want its inner image to
+change. 3 large triangle of the bird will hold 3 hero characters." Then, asked
+which facets, what content and when: **"2,1,6, scene crop, swap lands when the
+bird fully rests and when the copy is about to appear."**
+
+This is the option Provenance reserved on 2026-09-18. It does not contradict
+the shrink mechanism: the window still shrinks as one object, nothing
+assembles, and the swap happens only once the shrink is over.
+
+### The facets, and which character goes where
+
+Chosen on shape, not area. Facet 0 is the third-largest (17.8%) but its box is
+442x263 — landscape — and a standing figure does not fit it. Facet 6 is 208x483,
+aspect 0.429, which takes a standing figure naturally.
+
+| facet | who               | bbox (bird units) | aspect | centroid                  |
+| ----- | ----------------- | ----------------- | ------ | ------------------------- |
+| 2     | Amena (customer)  | 457 x 446         | 1.025  | (0.272, 0.177) upper left |
+| 1     | Rahim (agent)     | 442 x 463         | 0.955  | (0.546, 0.363) centre     |
+| 6     | Faysal (merchant) | 208 x 483         | 0.429  | (0.331, 0.770) lower left |
+
+**The character-to-facet assignment is Claude's, not Nahian's** — he named the
+facets and the characters but not the pairing. It follows the mark's reading
+order (upper left, centre, lower left), which lands customer -> agent ->
+merchant, the same order as the hero's beats and the deck's p.2. Worth one line
+of confirmation before it is built.
+
+### When the swap lands
+
+Nahian's two clauses — "when the bird fully rests" and "when the copy is about
+to appear" — look like different moments, because `motionEnd` is 0.8 and
+`copyFrom` is 0.7. They are not. `cubicInOut` front-loads the ease, so at
+**q = 0.70** the eased motion fraction is **0.9922** and the mark is **1.017x**
+its rest size — 1.7% off, invisible — while the copy is still at exactly zero
+opacity.
+
+| q        | eased motion | mark vs rest | copy opacity |
+| -------- | ------------ | ------------ | ------------ |
+| 0.60     | 0.9375       | 1.148x       | 0.00         |
+| 0.65     | 0.9736       | 1.060x       | 0.00         |
+| **0.70** | **0.9922**   | **1.017x**   | **0.00**     |
+| 0.75     | 0.9990       | 1.002x       | 0.50         |
+| 0.80     | 1.0000       | 1.000x       | 1.00         |
+
+So **q = 0.70 satisfies both clauses at once** and no change to `motionEnd` or
+`copyFrom` is needed. The swap completes there, and the sequence reads: window
+shrinks -> settles -> characters arrive -> copy rises. A crossfade ending at
+0.70 rather than a hard cut, to match the section's scrubbed idiom; where it
+begins is open (a `swapFrom` beside the existing `copyFrom`).
+
+### The collision this avoids
+
+`START_CANDIDATES = [1, 2]` — the reveal begins _inside_ facet 1 or 2, scaled
+until it covers the viewport. Two of the three chosen facets are therefore the
+ones the section opens inside. Had the characters been present from q = 0, the
+bird would open on a screen-filling portrait instead of the street continuing
+out of the hero, which is exactly the seam the one-pin redesign exists to
+prevent. Landing the swap at rest removes the problem entirely — but it is the
+reason the timing is load-bearing and not a preference.
+
+### The plate does not have the pixels — flag
+
+Measured at rest, desktop 1920x1080, DPR 2:
+
+| facet | who    | triangle  | needs     | = % of plate height | the beat frames | upscale   |
+| ----- | ------ | --------- | --------- | ------------------- | --------------- | --------- |
+| 2     | Amena  | 303 x 296 | 606 x 592 | 63.2%               | 25.0%           | **2.53x** |
+| 1     | Rahim  | 293 x 307 | 586 x 614 | 65.5%               | 33.3%           | **1.97x** |
+| 6     | Faysal | 138 x 320 | 276 x 640 | 68.3%               | 28.6%           | **2.39x** |
+
+A crop framed as tightly as its own beat is upscaled 2.0-2.5x to fill its
+triangle at retina. For pixel-exact crops at that framing the plate would need
+to be roughly 1850-2400px tall; it is **937**. This is
+`specs/diorama-integration.md` reappearing somewhere new, and it sharpens the
+open question there about whether the client's artwork exists larger.
+
+Three ways out, none of them free:
+
+1. **Accept the upscale.** The triangles are small and the mark reads as a
+   graphic device, so it may simply not matter. Cheapest, and needs an eye on
+   it rather than an argument.
+2. **Loosen the crops.** More context, less portrait — a crop 2.5x looser than
+   the beat is pixel-exact but is no longer a close-up of anyone.
+3. **Composite each crop live** from the plate plus the high-resolution cutout,
+   rather than pre-rendering a flat image with `getImage()`. The figure then
+   stays sharp and only the street behind it is soft — the same trade the hero
+   already makes at these zooms, so it at least stays consistent with itself.
+   Costs three posed scene layers instead of three images.
+
+### Open — 390
+
+Unanswered, and it is the one that needs a decision before this can be built.
+At rest on a phone the mark is `0.86 x 390 = 335px` wide, so `k = 0.335`:
+
+| facet | who    | desktop   | phone        |
+| ----- | ------ | --------- | ------------ |
+| 2     | Amena  | 303 x 296 | 153 x 150    |
+| 1     | Rahim  | 293 x 307 | 148 x 155    |
+| 6     | Faysal | 138 x 320 | **70 x 162** |
+
+Facet 6 at 70px wide is not a portrait. Facets 2 and 1 at ~150px square are
+marginal. Candidate answers: two characters on a phone and facet 6 keeps the
+street; a larger phone rest pose; a different facet set at 390; or characters
+on desktop only. CLAUDE.md is explicit that this is part of "designed", not a
+follow-up, so it is a real blocker on the build rather than a note.
