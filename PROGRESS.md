@@ -989,3 +989,34 @@ in future."
   place it by eye.
 - `plate.jpeg` is left on disk, unreferenced and unprocessed. It is the
   only high-resolution copy of the street and the bake would want it.
+
+**Gotcha: `npm run format` is not idempotent, and it drifts.**
+`prettier-plugin-astro` adds two spaces to the continuation line of every
+multi-line CSS comment inside an `.astro` `<style>` block, _every run_ —
+so the comments march rightward forever and `format:check` never agrees
+with `--write`. Eight files are affected: `Footer`, `Hero`, `HeroScene`,
+`Nav`, `Search`, `Services`, `ServicesDetail`, `about.astro` — every
+`.astro` file carrying a wrapped CSS comment.
+
+    /* Reaches well below the band and eases out, so it reads as a soft
+
+-               darkening of the top of the picture rather than a bar. */
+
+*                 darkening of the top of the picture rather than a bar. */
+
+Consequences, all of them annoying:
+
+- A blind `npm run format` before a commit sweeps 8 unrelated files into
+  it. It happened twice on 2026-09-22 and had to be split back out both
+  times. **Run `git status` after formatting, and stage by path.**
+- `format:check` cannot be used as a gate as it stands — it fails on a
+  freshly formatted tree.
+- One drift step is baked into `fc2b218` and was left there rather than
+  spend another commit on two spaces. Not worth reverting; worth not
+  repeating.
+
+Untangled options, for whenever it becomes worth fixing: collapse those
+comments to single lines, move them above the rule instead of inside it,
+bump `prettier-plugin-astro`, or drop `.astro` from the format glob and
+format only `ts`/`css`/`md`. Nahian's call — none of it is urgent, and
+all of it touches files that are otherwise finished.
