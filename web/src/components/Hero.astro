@@ -168,6 +168,42 @@ import BirdOverlay from './BirdOverlay.astro';
       width: calc(100% - var(--gutter) * 2);
     }
 
+    /* The ground at 390 (Nahian, 2026-09-22: the black box behind the
+       headline "doesn't look good"). Same change in kind as the 2026-09-20
+       softening — the number and the contract are unchanged, only the edge.
+
+       The block is full-bleed at this width, so `.on-photo`'s soft rectangle
+       had no short side to hug: every line dragged a gutter-to-gutter bar,
+       and the one-line cue dragged the widest bar of all. It read as a slab
+       laid over the sky rather than a ground under the text.
+
+       So on a phone the ground anchors to the top edge of the frame instead
+       of floating. It bleeds past both gutters and runs up under the nav,
+       which leaves it no visible top, left or right edge to read as a box;
+       the pin's overflow:hidden does the clipping. What is left is the sky
+       growing heavier toward the top — a photographic convention, not a
+       panel.
+
+       The contract holds exactly: --scrim-strength across the whole text
+       block, fading only BELOW the last line, over --scrim-feather. The
+       4.5:1 floor derived in tokens.css still passes by construction. */
+    .hero__open::before {
+      inset:
+        calc(-1 * (var(--nav-h) + var(--s-6)))
+        calc(-1 * var(--gutter))
+        calc(-1 * (var(--scrim-bleed) + var(--scrim-feather)));
+      background: linear-gradient(
+        to bottom,
+        var(--scrim-color) 0,
+        var(--scrim-color) calc(100% - var(--scrim-feather)),
+        transparent 100%
+      );
+      /* The gradient is the feather now. A radius and a glow are what a
+         floating box needs; this one has no free edges to soften. */
+      border-radius: 0;
+      box-shadow: none;
+    }
+
     .hero__caps {
       bottom: calc(var(--gutter) + var(--s-8));
     }
