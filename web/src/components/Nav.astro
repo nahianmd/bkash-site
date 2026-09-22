@@ -629,12 +629,20 @@ const MENUS = NAV_MENUS;
       display: none;
     }
 
+    /* Two auto start-margins in one flex row SPLIT the free space
+       between them, so the language pair sat near the middle of the bar
+       instead of at its right end (Nahian, 2026-09-22). The comment here
+       used to say the burger took the margin at this width; both did.
+
+       The meta block owns it now and the burger gives its up, so the
+       whole free space collects ahead of the language and it settles
+       beside the burger — one nav gap away, hard against the gutter. */
     .nav__burger {
       display: flex;
+      margin-inline-start: 0;
     }
 
     .nav__meta {
-      /* The burger takes the auto margin at this width. */
       margin-inline-start: auto;
     }
   }
