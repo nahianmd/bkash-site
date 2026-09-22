@@ -222,21 +222,46 @@ assembles, and the swap happens only once the shrink is over.
 
 ### The facets, and which character goes where
 
-Chosen on shape, not area. Facet 0 is the third-largest (17.8%) but its box is
-442x263 — landscape — and a standing figure does not fit it. Facet 6 is 208x483,
-aspect 0.429, which takes a standing figure naturally.
+**Settled by Nahian's annotated render, 2026-09-22** (`C` customer, `M`
+merchant, `A` agent, drawn over the live bird). Claude's earlier guess — the
+mark's reading order, landing customer -> agent -> merchant — was **wrong on
+two of the three**: the centre facet is the MERCHANT, not the agent, and the
+agent is the lower triangle. Recording the guess as a guess is what caught it.
 
-| facet | who               | bbox (bird units) | aspect | centroid                  |
-| ----- | ----------------- | ----------------- | ------ | ------------------------- |
-| 2     | Amena (customer)  | 457 x 446         | 1.025  | (0.272, 0.177) upper left |
-| 1     | Rahim (agent)     | 442 x 463         | 0.955  | (0.546, 0.363) centre     |
-| 6     | Faysal (merchant) | 208 x 483         | 0.429  | (0.331, 0.770) lower left |
+| facet  | who                        | bbox (bird units) | aspect | centroid                  |
+| ------ | -------------------------- | ----------------- | ------ | ------------------------- |
+| 2      | **Amena** (customer, `C`)  | 457 x 446         | 1.025  | (0.272, 0.177) upper left |
+| 1      | **Faysal** (merchant, `M`) | 442 x 463         | 0.955  | (0.546, 0.363) centre     |
+| 0 or 6 | **Rahim** (agent, `A`)     | below             | below  | lower                     |
 
-**The character-to-facet assignment is Claude's, not Nahian's** — he named the
-facets and the characters but not the pairing. It follows the mark's reading
-order (upper left, centre, lower left), which lands customer -> agent ->
-merchant, the same order as the hero's beats and the deck's p.2. Worth one line
-of confirmation before it is built.
+### Open — is the agent's triangle facet 0 or facet 6?
+
+Nahian's two answers disagree, and the difference is real.
+
+- **The text, earlier:** "2,1,6".
+- **The render, later:** the `A` sits at bird-fraction (0.484, 0.634), which is
+  **inside facet 0** by a point-in-triangle test, and nearest facet 0's
+  centroid at d=0.060 against facet 6's at d=0.205. Unambiguous.
+
+Claude's earlier objection to facet 0 — "landscape, a standing figure does not
+fit it" — **does not apply to a scene crop, and is withdrawn**. It was an
+argument about pasting a cutout edge-to-edge. A landscape crop of the stall
+with Rahim inside it is a framing choice, not a fit failure. So facet 0 is
+viable, and `2, 1, 0` carries a second virtue: they are the three _largest_
+facets, 75.7% of the mark, so the three biggest triangles hold the three people
+and every small one stays street. That is a cleaner rule than a mixed set.
+
+What facet 0 costs is the phone, where it is worse than facet 6:
+
+| facet | aspect | desktop   | phone        |
+| ----- | ------ | --------- | ------------ |
+| 0     | 1.68   | 293 x 175 | **148 x 88** |
+| 6     | 0.43   | 138 x 321 | 70 x 162     |
+
+88px of height cannot hold a person at all, so if the answer is facet 0 then
+the 390 composition almost certainly cannot carry three characters.
+
+`START_CANDIDATES = [1, 2]` either way, so the timing below is unaffected.
 
 ### When the swap lands
 
@@ -305,11 +330,12 @@ Three ways out, none of them free:
 Unanswered, and it is the one that needs a decision before this can be built.
 At rest on a phone the mark is `0.86 x 390 = 335px` wide, so `k = 0.335`:
 
-| facet | who    | desktop   | phone        |
-| ----- | ------ | --------- | ------------ |
-| 2     | Amena  | 303 x 296 | 153 x 150    |
-| 1     | Rahim  | 293 x 307 | 148 x 155    |
-| 6     | Faysal | 138 x 320 | **70 x 162** |
+| facet | who          | desktop   | phone        |
+| ----- | ------------ | --------- | ------------ |
+| 2     | Amena        | 303 x 296 | 153 x 150    |
+| 1     | Faysal       | 293 x 307 | 148 x 155    |
+| 6     | Rahim (if 6) | 138 x 320 | **70 x 162** |
+| 0     | Rahim (if 0) | 293 x 175 | **148 x 88** |
 
 Facet 6 at 70px wide is not a portrait. Facets 2 and 1 at ~150px square are
 marginal. Candidate answers: two characters on a phone and facet 6 keeps the
