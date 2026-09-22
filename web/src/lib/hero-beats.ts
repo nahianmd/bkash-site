@@ -4,7 +4,8 @@
    cutouts from the same numbers the camera uses).
 
    Camera targets and cutout boxes are fractions of the PLATE. The
-   plate (2748×1536, 2026-09-19) has the three figures removed; the
+   plate (1678×937, replated 2026-09-22 on the client's note; was
+   2748×1536) has the three figures removed; the
    cutouts are the only people, always visible, sitting where the
    figures were painted. Placed by Nahian with the placement panel
    (`?place`), 2026-09-19.
@@ -20,11 +21,32 @@ export type Cam = { x: number; y: number; s: number };
 export type Cut = { x: number; y: number; w: number; soft?: number };
 export type Beat = { id: string; cam: Cam; cut?: Cut };
 
-export const PLATE = { w: 2748, h: 1536 };
+/* Only the ASPECT of this is load-bearing — every consumer cover-fits
+   it into a box (scene-rig's `box`, Bird's mark, the placement panel's
+   `hOf`), so the pixel counts cancel. Kept truthful anyway. The replate
+   is 1.7908 against the old 1.7891: a 0.1% difference, so every `cam`
+   and `cut` fraction below carries over.
+
+   Unlike HeroScene's width ladder this cannot be read from the image:
+   the module stays import-free so the components can use it at build
+   time. Typed by hand, and a pixel of drift in it is not load-bearing. */
+export const PLATE = { w: 1678, h: 937 };
 
 export const BEATS: Beat[] = [
   { id: 'open', cam: { x: 0.5, y: 0.5, s: 1 } },
-  { id: 'amena', cam: { x: 0.41, y: 0.5, s: 4 }, cut: { x: 0.3951, y: 0.4737, w: 0.027, soft: 0 } },
-  { id: 'rahim', cam: { x: 0.37, y: 0.74, s: 3 }, cut: { x: 0.312, y: 0.745, w: 0.1, soft: 0 } },
-  { id: 'faysal', cam: { x: 0.55, y: 0.78, s: 3.5 }, cut: { x: 0.4912, y: 0.6677, w: 0.102, soft: 0 } },
+  {
+    id: 'amena',
+    cam: { x: 0.41, y: 0.5, s: 4 },
+    cut: { x: 0.3951, y: 0.4737, w: 0.027, soft: 0 },
+  },
+  {
+    id: 'rahim',
+    cam: { x: 0.37, y: 0.74, s: 3 },
+    cut: { x: 0.312, y: 0.745, w: 0.1, soft: 0 },
+  },
+  {
+    id: 'faysal',
+    cam: { x: 0.55, y: 0.78, s: 3.5 },
+    cut: { x: 0.4912, y: 0.6677, w: 0.102, soft: 0 },
+  },
 ];

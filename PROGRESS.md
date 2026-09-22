@@ -3,12 +3,14 @@
 Durable memory across context resets. Update as sections land.
 
 ## Done
+
 - Repo initialized, original prototype checkpointed (`cd128bc`)
 - Prototype reverse-engineered: 3-level self-extracting bundle, DC canvas docs
 - CLAUDE.md + scope contract written
 - Content received and inventoried; icons unpacked to `build/tmp/icons/`
 
 ## Decisions locked
+
 - **No WebP encoding needed.** No brew/ImageMagick/cwebp on this machine and
   `sips` cannot write WebP. Irrelevant: everything is inlined in a local file,
   so transfer size doesn't exist. Pipeline is sips-resized JPEG for photos,
@@ -19,6 +21,7 @@ Durable memory across context resets. Update as sections land.
   shrink, or we inflate small files into big blurry ones.
 
 ## Content gaps — raised with client 2026-09-16
+
 - `Agent.jpg` is **685x386**; Customer and Merchant are **6000x4000**. Same
   visual weight in the story row, ~100x less pixel data.
 - Board portraits range **175x175 to 1792x2400**, mixed aspect ratios. Cannot
@@ -28,6 +31,7 @@ Durable memory across context resets. Update as sections land.
 ## Built — homepage (`dist/index.html`, 9.8 MB)
 
 **Foundation**
+
 - `src/` source tree + `build.py` -> one self-contained `dist/bkash-demo.html`
   (8.5 MB, 34 assets inlined, zero network refs, zero `import` statements).
   Build self-checks for leaks, surviving template literals and stray imports.
@@ -38,6 +42,7 @@ Durable memory across context resets. Update as sections land.
   phase, live dimensions. **Strip before the demo ships.**
 
 **Section 1 — hero (stepped)**
+
 - Four beats: wide establishing, Amena, Faisal, Rahim. One gesture = one beat,
   1100ms tween between composed frames. Wheel, touch, keyboard and clicker all
   drive the same stepper; gesture debouncing stops a trackpad flick skipping.
@@ -46,6 +51,7 @@ Durable memory across context resets. Update as sections land.
   the wing panel so the handover is invisible, fading out early.
 
 **Section 2 — people stories**
+
 - Row of three tiles, real photography with real names from the reference
   project (Anisul Haque, Munni Barua, Shajib Ahmed). Hovered tile takes three
   shares, neighbours drop to 0.55 — the row always sums to the same width.
@@ -58,6 +64,7 @@ is no signal whether the page has ended or the scroll has jammed. Viewers were
 reporting exactly that confusion.
 
 **Section 3 — phone bento**
+
 - Bento grid, one screen, centred, 6 photo cards + 1 copy card.
 - Middle column sized in JS to a true 360/760 so the phone tile is authentic
   and the app screen needs no cropping.
@@ -88,6 +95,7 @@ directors, CEO quote, Journey Wall, voices, careers + road ahead + footer.
   Equal-width grid columns break this — they clip the long wordmarks.
 
 ## Next
+
 - Content mapping: real names into the hero (needs A7), real story copy (A3/A4)
 - **Strip the debug HUD** before the demo ships (`initDebug()` in main.js)
 - Responsive pass on the actual demo machine once B1/B3 are answered
@@ -99,6 +107,7 @@ Both pages: no horizontal overflow, burger nav, switcher pill present.
 About collapses to 1 column throughout except the board at 2.
 
 Three real breaks were found and fixed:
+
 - **Hero showed only 26% of the plate.** The wide plate is 16:9; on a
   portrait phone cover-crop shows a quarter of its width, while the cutouts
   are positioned against the VIEWPORT — so people stood in the wrong places
@@ -126,6 +135,7 @@ own width. Watch for the iframe's scrollbar making `innerWidth` 15px wider
 than the content, which reads as a small centring offset that is not real.
 
 ## Gotchas logged
+
 - **A sticky pin unsticks the instant its container runs out**, so if the
   animation is scrubbed across the pin's full travel it finishes at exactly
   the moment the section starts scrolling away. The phone's services became
@@ -180,6 +190,7 @@ than the content, which reads as a small centring offset that is not real.
   heading itself, or use rem.
 
 ## Blocked / needs Nahian
+
 - Demo machine + screen (needs.md B1/B3) — still unanswered
 - **needs.md A0**: the hero is AI-generated imagery. Everything built since —
   the people row, the bento, the About page — is real photography, so the page
@@ -260,7 +271,6 @@ display-band guard the same plan proposed, so the 390 display steps widened to
 a `[data-nav-dark-end]` marker), FOIT on throttled Slow 4G, the reduced-motion
 pass, and screen-reader announcement of the inert Bangla toggle.
 
-
 ## Built — hero (`web/`, 2026-09-18, Fable)
 
 `specs/sections/hero.md` · `specs/hero/plan.md` · `web/src/components/Hero.astro`,
@@ -281,6 +291,7 @@ beat 0 with no trigger.
 **Audit rows closed.** H1 H2 H3 H4 H7 H8 H9 H11.
 
 **What measurement caught that reading would not have.**
+
 - The headline "on open road, bottom-right" was on Faysal's road. Seen in the
   first look; the sky is the one region the plate leaves open at every width.
 - The phone lift had its sign backwards: aiming the camera higher pushes the
@@ -327,7 +338,6 @@ micro-adjustments.** Formula-level fixes, for the hero's next pass:
   beats. Map the first and last ~25% of each segment's scroll distance to a
   hold; move only in the middle half. Move–hold–move–hold at any speed; a
   single tick still snaps forward. Plus ~1.5 screens per beat.
-
 
 ## Built — bird (`web/`, 2026-09-19, Fable)
 
@@ -383,7 +393,6 @@ the beats land at their scaled positions with exact scene scales; the mask
 is fully open through the beats; a forward tick from beat 0 snaps to beat 1,
 back from beat 1 to 0, and past beat 3 there is no snap.
 
-
 ## Built — services (`web/`, 2026-09-19, Fable)
 
 `specs/sections/services.md` · `specs/services/plan.md` ·
@@ -418,6 +427,7 @@ card and copy and strip do not overlap, `scrollWidth 375` — no horizontal
 overflow. Dist gates: 0 inline styles, 0 `<br>`, `noindex` on both pages.
 
 **What measurement caught that reading would not have.**
+
 - The phone column ran out beneath the phone tile — the wall showed its floor
   before arrival. Tiles now follow the phone tile in its column.
 - `offsetLeft` on the tiles was column-relative: `will-change: transform` makes
@@ -442,6 +452,7 @@ widths, the title tile's paper-on-dark, and the card's idle breath.
 **Revised 2026-09-19 (evening) — the phone in the hand; the grid's size.**
 Nahian's two notes after the first look, plus a photograph he shot for it
 (`phone.jpg`: a hand, the home screen up, held at a slight turn).
+
 - The device is now **posed in 3D over the photographed screen** and
   stands up out of the hand. The screen's four corners were fitted from
   the photograph's pixels (edges as lines, intersected — `PHONE_QUAD`),
@@ -473,6 +484,7 @@ Nahian's two notes after the first look, plus a photograph he shot for it
 The client asked for 3D, not a flat plane turned in 3D. Nahian downloaded
 `iphone_16_-_free.glb` (Sketchfab Standard); it ships as
 `web/src/assets/models/phone.glb`, meshopt-compressed 2.46MB → 305KB.
+
 - `lib/device.ts` — the handset's numbers read from the model's vertices
   (display 6.5266×14.085 at z 0.3901, body 7.1832×14.7387, corner radii
   solved from the outermost diagonal vertex, the island) plus the pose
@@ -515,13 +527,14 @@ The client asked for 3D, not a flat plane turned in 3D. Nahian downloaded
 **Revised 2026-09-19 (late) — the phone stays a phone; the sixteen get
 their own section; the tilt is the photograph's.** Nahian's four notes
 after the object shipped (spec: "Revised … the phone stays a phone").
+
 - **The tilt.** The object leaned the wrong way. Diagnosed, not nudged:
   at tile scale the quad's perspective signal is ~1px, so the solver
   could not tell a tilt from its mirror — and the CSS camera (1500px
   eye, object 2500px back) is far more orthographic than the lens that
   took the photograph, so the two minima are not even mirrors. The tilt
   is now solved ONCE in the photograph's own pixels (`tools/
-  photo-pose.mjs`, weak perspective, 4.3px rms on a 1600px phone): the
+photo-pose.mjs`, weak perspective, 4.3px rms on a 1600px phone): the
   quad's shear fixes both angles and the sign of their product; which
   side of the handset the photograph shows fixes the rest. Top back
   11.4°, right side 16.4° nearer, roll 0.6° — `PHONE_QUAD.tilt`. Per
@@ -557,10 +570,10 @@ after the object shipped (spec: "Revised … the phone stays a phone").
   moving `--vh`; the button's scroll to `#services-detail`; the detail
   grid's labels at 390.
 
-
 ## Hero — revised 2026-09-19 (night): the empty street (Fable)
 
 Nahian supplied `plate.jpeg` (2748×1536) with the three figures removed.
+
 - Cutouts always on; focus = the street and the other two recede (token
   set), the subject full. `scene-rig.applyFocus(p, weight)` — the bird
   lifts the recede on street and cutouts alike as it pulls wide.
@@ -610,6 +623,7 @@ Nahian's list after a full scroll: the wall on white; the detail grid
 smaller and further from the copy; the sliding row back on mobile; the
 placeholder block gone; a softer ground under the transparent nav; the
 hero copies' ground softer.
+
 - `.on-photo` is now a soft-edged rectangle: full strength (0.62, the
   derived contract) over the text block + `--scrim-bleed` (2rem), then a
   static blurred shadow in the scrim's own colour feathers the edge over
@@ -692,6 +706,7 @@ triad, board, investors, voices — the prototype's lists verbatim) ·
 `lib/about.ts` (reveals, counters, the investors' shared logo size, the
 Journey Wall on a ScrollTrigger pin with `--vh`). Assets copied to
 `assets/img/about/` (27 files, 2.7MB), all through astro:assets.
+
 - The hero copy sits on `.on-photo` (Rule 3); the banner is dark, so the
   page places `[data-nav-dark-end]` at its end — the observer path,
   which is what it is for on an unpinned page.
@@ -717,7 +732,6 @@ Journey Wall on a ScrollTrigger pin with `--vh`). Assets copied to
   it under real scrolling (the observer path, unpinned — the hidden tab
   never fires it); the counters; the wall's pan on a phone; the scrim on
   the hero copy against the banner; the board treatment by eye.
-
 
 ## People — BUILT 2026-09-20 (Fable)
 
@@ -745,20 +759,20 @@ at 0.759 (was 0.821) with 57px from the display's bottom to the title.
 `web/src/assets/Website_N_1.pdf` (12pp) is the real copy. Extracted with
 PyPDF2 and applied:
 
-| Where | Now |
-|---|---|
-| Hero beat 0 | Powering Financial Access / Across Millions of Lives |
-| Beat 1: Amena | 7 in 10 Adults in Bangladesh / Control Their Money with bKash (unchanged) |
-| Beat 3: Faysal | From Floating Stalls to Digital Storefronts / Empowering Millions of Cashless Commerce — Merchant |
-| Beat 2: Rahim | At Least One Human ATM Every 2 KM / The Largest Agent Network in Bangladesh — Agent |
-| Bird | A Financial Ecosystem / Reaching Every Corner (eyebrow dropped) |
-| People | Stories Behind the Numbers |
-| The wall's title tile | Writing Millions of Stories in Motion (eyebrow and subline dropped — the deck gives one line) |
-| The phone | Everything You Need to Manage Your Money / Send, receive, pay, save, borrow. All in one app, always within your reach. |
-| About: stats | full stops removed (the deck says so); `.stats__note` capped at 28ch for the deck's "two lines" — three of four reach two, "Democratizing digital payments" is too short to |
-| About: journey wall | 15 Years of Moving Bangladesh Forward |
-| About: careers | Build What Matters / the 15-years paragraph / "Five values shape how we work:" / Customer-Centric… / "We challenge convention…" / CTA "Come Build What's Next" |
-| About: road ahead | The Road Ahead + the deck's two paragraphs (the eyebrow dropped — it duplicated the title) |
+| Where                 | Now                                                                                                                                                                         |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hero beat 0           | Powering Financial Access / Across Millions of Lives                                                                                                                        |
+| Beat 1: Amena         | 7 in 10 Adults in Bangladesh / Control Their Money with bKash (unchanged)                                                                                                   |
+| Beat 3: Faysal        | From Floating Stalls to Digital Storefronts / Empowering Millions of Cashless Commerce — Merchant                                                                           |
+| Beat 2: Rahim         | At Least One Human ATM Every 2 KM / The Largest Agent Network in Bangladesh — Agent                                                                                         |
+| Bird                  | A Financial Ecosystem / Reaching Every Corner (eyebrow dropped)                                                                                                             |
+| People                | Stories Behind the Numbers                                                                                                                                                  |
+| The wall's title tile | Writing Millions of Stories in Motion (eyebrow and subline dropped — the deck gives one line)                                                                               |
+| The phone             | Everything You Need to Manage Your Money / Send, receive, pay, save, borrow. All in one app, always within your reach.                                                      |
+| About: stats          | full stops removed (the deck says so); `.stats__note` capped at 28ch for the deck's "two lines" — three of four reach two, "Democratizing digital payments" is too short to |
+| About: journey wall   | 15 Years of Moving Bangladesh Forward                                                                                                                                       |
+| About: careers        | Build What Matters / the 15-years paragraph / "Five values shape how we work:" / Customer-Centric… / "We challenge convention…" / CTA "Come Build What's Next"              |
+| About: road ahead     | The Road Ahead + the deck's two paragraphs (the eyebrow dropped — it duplicated the title)                                                                                  |
 
 **Resolved (Nahian, 2026-09-20):** the deck's p.2 has the two names
 against each other's line — **Rahim is the agent, Faysal the merchant**.
@@ -776,7 +790,7 @@ About's voices, board, investors and CEO quote.
 **About — the Revolution gets the collage mark (2026-09-20).** Nahian
 supplied the bKash mark built from customer photographs. The file came
 with an opaque `#f7f7f7` ground, so `tools/key-out.mjs` floods the
-background from the border only — whites *inside* the photographs (a
+background from the border only — whites _inside_ the photographs (a
 laptop, shirts) survive — and mattes the anti-aliased ring by
 un-premultiplying it, which is what stops a grey halo on the section's
 tint. 75.1% cleared, 4002px matted. Layout: copy left / mark right on a
@@ -894,6 +908,7 @@ pick up a full replacement. Restarting the dev server fixed it. Measure
 the served CSS, not the file, when a change appears not to land.
 
 **Footer, second brand and Wikipedia (Nahian, 2026-09-20).**
+
 - Wikipedia joins bKash Limited's row (`https://en.wikipedia.org/wiki/BKash`,
   checked — the lowercase `Bkash` spelling 404s). Its icon is the
   wordmark's **W**, not the puzzle globe, which does not survive being
@@ -924,3 +939,53 @@ Checked: Instagram, YouTube and TikTok return 200; Facebook returns 400
 to any non-browser request — a control against `facebook.com/zuck` and
 bKash's own official page returns 400 too, so that is their bot
 blocking, not a bad link.
+
+## 2026-09-22 — the replate
+
+**The plate is now `plate.png`, 1678×937** (was `plate.jpeg`, 2748×1536).
+Client requirement, supplied by Nahian. Wired through both consumers —
+`HeroScene.astro` and `Bird.astro` — and `PLATE` in `hero-beats.ts`.
+
+Only the plate's **aspect** is load-bearing: every consumer cover-fits it
+into a box (`scene-rig`'s `box`, the bird mark, the placement panel's
+`hOf`), so the pixel counts cancel. 1.7919 against 1.7891 is a 0.16%
+difference, so all four `cam` targets and all three `cut` boxes carried
+over untouched.
+
+**Gotcha: a PNG source emits a PNG fallback ladder.** The moment the plate
+stopped being a JPEG, `<Picture>` generated 8.3MB of PNG fallbacks — one
+variant re-encoded _larger_ than the 2.1MB source. This is the same trap
+the cutouts hit (13.8MB) and the same fix: `fallbackFormat="webp"`, now on
+every image in HeroScene. `dist` went 47MB → 39MB. The ladder also
+topped out at 2748, above the new source. It now reads `plate.width`
+from the import instead of a typed number: Astro does not enlarge, so
+asking for more only emits duplicates, and the plate changed size twice
+in one morning (1679 then 1678 wide) — a typed number desyncs on the
+next swap, a derived one cannot.
+
+**Also noticed, not fixed:** `dist` carries a 2.1MB copy of the raw
+`plate.png` that no page references. Astro emits the original for an
+image imported into a component even when only `getImage()` output is
+used (`Bird.astro`). Pre-existing — `plate.jpeg` did the same — and it
+costs deploy weight only, never a visitor's connection. Worth closing
+when the bake lands and the plate import gets restructured anyway.
+
+**Deferred, documented: `specs/diorama-integration.md`.** Nahian's read is
+that the cutouts look pasted because their rendering resolution differs
+from the plate's. Correct instinct, inverted sign — they carry 5–13× the
+plate's local acuity (now ~21× for Amena after the replate), plus no light
+wrap, hard mattes and no contact shadows. The recommendation is to bake
+the figures into the plate and drive the highlight from alpha masks over
+the plate's own pixels, which costs nothing because `parallaxLead` is
+already 0. Reposition first, bake last. Nahian, 2026-09-22: "we will do it
+in future."
+
+- **`rahim.png` turned portrait** — 1381×1732, was 1600×1277. The box
+  aspect follows the artwork automatically but `cut.w` is fixed at 0.10,
+  so his box height went 14.3% → 22.5% of the plate and, with `y` pinned
+  at the top edge, his feet dropped from 88.8% to 97.0% down the plate.
+  Needs `?place`. Feet-preserving `y` would be ~0.663 **if** the new
+  artwork keeps the old headroom/footroom proportions, which is a guess —
+  place it by eye.
+- `plate.jpeg` is left on disk, unreferenced and unprocessed. It is the
+  only high-resolution copy of the street and the bake would want it.

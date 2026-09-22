@@ -15,8 +15,8 @@
 
 ## Job
 
-The claim, then three lives in one street. Beat 0 says *300 transactions every
-second*. Beats 1–3 make it human: a customer, an agent, a merchant, all in the
+The claim, then three lives in one street. Beat 0 says _300 transactions every
+second_. Beats 1–3 make it human: a customer, an agent, a merchant, all in the
 same picture. The hero is the **story** half of the site (Rule 1).
 
 It ends on the merchant, framed so the bird's largest facet can take the
@@ -45,24 +45,24 @@ the build:
   road. The camera travels up, down, then out — a path, not three cuts.
 - **It is illustrated, and that makes Rule 1 stronger, not weaker.** A
   storybook street, then real people. The seam is more deliberate than the
-  AI-photoreal plate ever managed. After the shoot the hero becomes *staged*
-  real photography against *candid* real photography — a softer seam, still
+  AI-photoreal plate ever managed. After the shoot the hero becomes _staged_
+  real photography against _candid_ real photography — a softer seam, still
   a designed one.
 
 ## The three, in the new order
 
-*Nahian, 2026-09-18: Amena, then Rahim, then Faysal.* Same copy order as the
+_Nahian, 2026-09-18: Amena, then Rahim, then Faysal._ Same copy order as the
 client's beats 2–4; the subjects are re-cast against the new scene.
 
-| Beat | Subject | Where in the plate | Copy |
-|---|---|---|---|
-| 1 | **Amena — customer** | On the balcony, phone in hand, the pink glow of the screen on her face | `7 in 10 Adults in Bangladesh` / `Control Their Money with bKash` |
-| 2 | **Rahim — agent** | The tea stall under the banner. The banner *is* the branch. | `One Agent Every 2 KM` / `Your Neighborhood is the Branch` |
-| 3 | **Faysal — merchant** | On the scooter, goods stacked to the sky, riding into the city | `From Floating Stalls to Digital Storefronts` / `Moving Millions of Cashless Commerce` |
+| Beat | Subject               | Where in the plate                                                     | Copy                                                                                   |
+| ---- | --------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| 1    | **Amena — customer**  | On the balcony, phone in hand, the pink glow of the screen on her face | `7 in 10 Adults in Bangladesh` / `Control Their Money with bKash`                      |
+| 2    | **Rahim — agent**     | The tea stall under the banner. The banner _is_ the branch.            | `One Agent Every 2 KM` / `Your Neighborhood is the Branch`                             |
+| 3    | **Faysal — merchant** | On the scooter, goods stacked to the sky, riding into the city         | `From Floating Stalls to Digital Storefronts` / `Moving Millions of Cashless Commerce` |
 
-Beat 3 pushes *out along the road* toward the skyline. That is the right
+Beat 3 pushes _out along the road_ toward the skyline. That is the right
 direction to hand over on — the story leaves the street and opens into
-*millions of stories* — and it is also why the bird has to change (below).
+_millions of stories_ — and it is also why the bird has to change (below).
 
 **One of the three is weaker than the other two.** `Rahim.png` is three men at
 a table — a group, seen from the side, and none of them is the agent. Amena and
@@ -91,22 +91,22 @@ Starting camera estimates, read off the plate — **set by eye against the
 build, with the `nudge()` helper kept in dev.** These are not the old targets;
 those were framed to a different photograph and are dead.
 
-| Beat | ~x, y (% of plate) | ~scale | Note |
-|---|---|---|---|
-| 1 | 41, 50 | 4× | Amena is small; the cutout carries the detail |
-| 2 | 37, 74 | 3× | Frame the table *and* the banner above it |
-| 3 | 55, 78 | 3.5× | Faysal right of centre, road and skyline open to the right |
+| Beat | ~x, y (% of plate) | ~scale | Note                                                       |
+| ---- | ------------------ | ------ | ---------------------------------------------------------- |
+| 1    | 41, 50             | 4×     | Amena is small; the cutout carries the detail              |
+| 2    | 37, 74             | 3×     | Frame the table _and_ the banner above it                  |
+| 3    | 55, 78             | 3.5×   | Faysal right of centre, road and skyline open to the right |
 
 ### 390 — one wide plate, a small window, and the camera slides
 
-*Nahian, 2026-09-18: the phone loads the whole picture, shows the slice that
+_Nahian, 2026-09-18: the phone loads the whole picture, shows the slice that
 fits, and when a beat focuses something outside the slice the picture slides
-to bring it in.* That is the camera as already specified — translate is the
+to bring it in._ That is the camera as already specified — translate is the
 slide, scale is the zoom — so **there is no portrait plate.** One wide picture
 serves every screen shape.
 
 Why the prototype needed a second photograph: a bug, not a limit. It placed
-the cutouts as percentages of the *viewport* while the plate underneath was
+the cutouts as percentages of the _viewport_ while the plate underneath was
 cover-cropped, so on a phone the plate shifted and the people did not. The fix
 is to **anchor the cutouts to the plate's rendered box**, not the viewport.
 `anchorPortrait()` and the portrait plate are retired; the re-derivation of
@@ -160,18 +160,18 @@ Beat 0 as a composed still, not pinned.
 
 ## Resolution — measured against these files
 
-| Asset | Pixels | At beat 0, 1920 wide | At its beat, 2× DPR |
-|---|---|---|---|
-| `hero.jpeg` | 1600×893 | **1.2× upscaled before the camera moves** | 4–5× |
-| `amena.png` | 1008×1236 | — | ~0.7× native at 4× zoom: soft |
-| `Rahim.png` | 1600×1277 | — | comfortable at 3× |
-| `Faysal.png` | 1546×1600 | — | comfortable at 3.5× |
+| Asset        | Pixels    | At beat 0, 1920 wide                      | At its beat, 2× DPR           |
+| ------------ | --------- | ----------------------------------------- | ----------------------------- |
+| `hero.jpeg`  | 1600×893  | **1.2× upscaled before the camera moves** | 4–5×                          |
+| `amena.png`  | 1008×1236 | —                                         | ~0.7× native at 4× zoom: soft |
+| `Rahim.png`  | 1600×1277 | —                                         | comfortable at 3×             |
+| `Faysal.png` | 1546×1600 | —                                         | comfortable at 3.5×           |
 
 The plate is the problem, not the cutouts. As previs for the shoot it does not
 matter.
 
-*Nahian, 2026-09-18: build with the current files; upscale later once things
-are assembled. Asset quality is a pass of its own, after the sections exist.*
+_Nahian, 2026-09-18: build with the current files; upscale later once things
+are assembled. Asset quality is a pass of its own, after the sections exist._
 The acceptance row about upscaling is therefore deferred, not failed, until
 that pass. **If the illustrated hero ships**, the plate needs to be delivered at
 ≥3200px wide, and Amena at ≥2000px. Illustrations can be regenerated at size;
@@ -207,13 +207,13 @@ illustration does:
 
 ## Content slots
 
-| Slot | Content | Status |
-|---|---|---|
-| Plate, cutouts | the four illustrated files | **ILLUSTRATED — previs.** Real photography to follow. Old AI assets stay in `reference/` for the record only. |
-| Layered plate | — | **REQUESTED** |
-| Copy, beats 0–3 | the client's lines | **CLIENT DECK** |
-| Scroll cue | `Scroll to meet them` | **PLACEHOLDER** |
-| Names | Amena, Rahim, Faysal | **NAHIAN'S** — on screen this time? Open question 3 |
+| Slot            | Content                    | Status                                                                                                        |
+| --------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Plate, cutouts  | the four illustrated files | **ILLUSTRATED — previs.** Real photography to follow. Old AI assets stay in `reference/` for the record only. |
+| Layered plate   | —                          | **REQUESTED**                                                                                                 |
+| Copy, beats 0–3 | the client's lines         | **CLIENT DECK**                                                                                               |
+| Scroll cue      | `Scroll to meet them`      | **PLACEHOLDER**                                                                                               |
+| Names           | Amena, Rahim, Faysal       | **NAHIAN'S** — on screen this time? Open question 3                                                           |
 
 ## Audit rows closed
 
@@ -245,6 +245,16 @@ re-painted with baskets; the cash-out banner is gone with it — flag for
 the client). The cutouts are the only people, **always visible**, placed
 as fractions of the plate where the figures were. Nothing can ghost:
 there is no drawn twin under a cutout, and no opacity ramp on a subject.
+
+**Replated 2026-09-22 (client requirement).** `plate.png`, **1678×937**,
+replaces `plate.jpeg`. The aspect is 1.7919 against the old 1.7891 — a
+0.16% difference — so every `cam` and `cut` fraction carries over
+unchanged; only `PLATE` in `hero-beats.ts` and the two imports moved. The
+resolution drop widens the cutout mismatch documented in
+`specs/diorama-integration.md` (the 4× beat is now a 4.6× upscale of the
+plate, not 2.8×). Cutout artwork is being replaced in the same pass;
+`rahim.png` turned portrait (1381×1732, was 1600×1277) and needs
+repositioning.
 
 - **Focus is Rule 4 alone.** While a subject is focused, the street AND
   the other two recede by the token set; the subject stays full. One
