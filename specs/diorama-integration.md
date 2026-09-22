@@ -27,6 +27,23 @@ that was in place when this was diagnosed:
 | Rahim  | 0.100 × 2748 = 275 px | 1600 px    | **5.8×**     |
 | Faysal | 0.102 × 2748 = 280 px | 1546 px    | **5.5×**     |
 
+**Re-measured 2026-09-22**, after the replate to 1678×937 and Nahian's
+re-placement against new, narrower cutout artwork. Every ratio got worse,
+because the plate lost resolution while the boxes got smaller and the cutouts
+did not:
+
+|        | plate px it occupies | source PNG | detail ratio |
+| ------ | -------------------- | ---------- | ------------ |
+| Amena  | 0.027 × 1678 = 45 px | 948 px     | **20.9×**    |
+| Rahim  | 0.055 × 1678 = 92 px | 1194 px    | **12.9×**    |
+| Faysal | 0.032 × 1678 = 54 px | 732 px     | **13.6×**    |
+
+On screen at each figure's own beat, the plate is upscaled 4.6× / 3.5× / 4.0×
+while the figure is _downsampled_ 4.5× / 3.7× / 3.4×. Rahim and Faysal are now
+as badly mismatched as Amena was when this was first written, and Amena is
+half again worse. The problem is not drifting toward resolution — it is
+drifting away from it with each asset delivery.
+
 On screen it is worse, because the camera pushes in. At 1920×1080 the plate
 cover-fits to ~1930 CSS px wide; Amena's beat is `s: 4`, so the plate is
 stretched to ~7730 px — a **2.8× upscale**. Amena at that moment is 209 px
