@@ -206,10 +206,17 @@ white) starts solid.
 
 ## Revised 2026-09-22 — three facets hold the three characters
 
-> Status of this revision: **DRAFT**. Decisions are Nahian's, recorded here as
-> given; the geometry and timing below are measured, not proposed. One open
-> question (390) and the build itself are still to do, and both are tagged
-> **Fable 5.1**.
+> Status of this revision: **BUILT** — 2026-09-22, on Opus 5. The spec's header
+> tags the bird **Fable 5.1**; that was raised before starting and Nahian waved
+> it on. Decisions are his; the geometry and timing are measured, not proposed.
+> Not verified — `/verify` has not run. SIGNED-OFF is Nahian's alone.
+>
+> Built without a `/plan` pass, deliberately: Nahian, 2026-09-22 — "this is a
+> new spec on an existing implementation, it's rather a modification or
+> extension spec." `/implement` first stopped on its own rule about an
+> incomplete plan, which was the letter of the process past its purpose for a
+> modification to a BUILT section. What the build then settled is recorded in
+> `specs/bird/plan.md` under its own 2026-09-22 revision.
 
 _Nahian, 2026-09-22:_ "when the bird is pinned I want its inner image to
 change. 3 large triangle of the bird will hold 3 hero characters." Then, asked

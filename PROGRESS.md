@@ -1020,3 +1020,52 @@ comments to single lines, move them above the rule instead of inside it,
 bump `prettier-plugin-astro`, or drop `.astro` from the format glob and
 format only `ts`/`css`/`md`. Nahian's call — none of it is urgent, and
 all of it touches files that are otherwise finished.
+
+## 2026-09-22 (later) — the cast inside the mark
+
+Three of the bird's facets now hold the three characters instead of the
+street: **top wing** Amena (customer), **middle** Faysal (merchant),
+**flat** Rahim (agent). From Nahian's annotated render; the crossfade
+lands at `q = 0.70`, as the mark comes to rest and just before the copy
+rises. `specs/sections/bird.md` revision BUILT; not verified.
+
+**The facets have names now.** `FACETS` is indexed in the logo file's own
+path order, which is meaningless to a person looking at a bird — Nahian,
+2026-09-22: "you numbered triangle in a way that is not human readable."
+`FACET` maps `topWing / middle / flat / tail / head / beak / wingtip /
+sliver`. Use the names.
+
+**Gotcha: `plate.png` has no people in it.** The figures were removed
+2026-09-19, so "a scene crop" cannot be a crop of the plate — there is
+nothing in it to crop to. Every window composites the plate _and_ that
+character's cutout, two `<image>`s inside one clip. This is worth
+remembering for anything else that wants "the scene at beat N": the
+scene is always two layers, never one file.
+
+**The trick that made it work: size the figure and the background
+separately.** A crop framed at the scale a character occupies in the
+plate has no pixels — Amena is 0.027 of the plate wide, 45px, so a crop
+around her is ~81x79 source against a 606x591 window at retina. 7.5x.
+Mush. But her _cutout_ is 948x1030. So the figure is drawn from its own
+cutout (sharp, ~2.5x downsampled) and the background is a deliberately
+loose 0.22-of-plate crop (1.64x, soft). The window reads as a portrait
+with shallow depth of field, and the plate's weakness became the look
+instead of a defect. Nobody reads the two layers as being at different
+scales.
+
+**A wrong turn worth not repeating:** sizing the figure to fit _wholly
+inside_ the triangle. The half-plane solve for the largest inscribed box
+is exact and was discarded — it put Amena at 84x91px inside a 303x296
+window, 28% of its height, which reads as a sticker centred in a shape.
+The triangle **cropping** the figure is what makes it a window. `fill` is
+a fraction of the facet's bounding box; the clip does the rest.
+
+**Process note.** `/implement` stopped itself on its "STOP if the plan is
+incomplete" rule, because `specs/bird/plan.md` is a finished plan for the
+original build and covers none of this. That was the letter of the rule
+past its purpose: this is a modification to a BUILT section, not new work
+needing the full ceremony. Nahian, 2026-09-22: "this is a new spec on an
+existing implementation, it's rather a modification or extension spec."
+For an extension, spec-to-implement is the path, and the plan gets a
+written-after record of what the build settled — which is what
+`specs/bird/plan.md`'s 2026-09-22 revision now is.

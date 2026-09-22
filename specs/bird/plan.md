@@ -25,6 +25,50 @@ without JS or under reduced motion — the plate clipped to the mark in an SVG
 `viewBox`, no machinery. The seam rows in Verification are moot by
 construction; the solver, the pull-back and `content: 'wide'` are unchanged.
 
+## Revised 2026-09-22 — the cast in three facets
+
+No `/plan` pass ran for this one. It is an extension to a BUILT section and
+Nahian took it spec-to-implement on purpose; this section is the record of
+what the build settled, written after, so the plan stays a truthful account
+rather than a fiction.
+
+**Built:** `lib/bird-cast.ts` (new) holds the cast and its geometry;
+`bird-shape.ts` gains `FACET` (human names) and `facetBox()`;
+`BirdOverlay.astro` gains a clipPath per cast facet and a
+`<g data-bird-cast>` between the sheet and the seams; `bird.ts` gains
+`swapFrom`/`swapTo` and writes the cast's transform and opacity;
+`Bird.astro` carries the same windows for the static path.
+
+**What the build settled, that the spec did not:**
+
+1. **Two images per window, not one crop.** `plate.png` has no people in it,
+   so there is nothing to crop. Each window composites the plate and that
+   character's cutout.
+2. **The figure and the background are sized independently.** A crop at the
+   scale a character sits in the plate has no pixels — Amena is 45px wide in
+   the plate, so a crop around her is ~81x79 source against a 606x591 window.
+   The figure is drawn from its own cutout (sharp) and the background is a
+   loose 0.22-of-plate crop (1.64x, soft). The softness became the look —
+   shallow depth of field — instead of a defect to fight.
+3. **`fill` is a fraction of the facet's bounding box, and the triangle crops
+   the overflow.** An exact largest-inscribed-box solve was tried and
+   discarded: it put Amena at 84x91 in a 303x296 window, which reads as a
+   sticker centred in a shape. The crop is what makes it a window.
+4. **`swapFrom: 0.58`.** The spec fixed where the crossfade lands (0.70), not
+   where it starts.
+
+**Per-frame cost:** one opacity write on the cast group, and the cast's
+transform folded into the `setMask` write that already existed. No new
+per-frame maths.
+
+**Left for Nahian's eye,** in `CAST_TUNING`: `fill` (how tight each figure
+reads), `bg` (framing against softness), `lift` (vertical nudge in the
+triangle). All three are per character.
+
+**Not looked at in a browser.** Implement has no browser and the extension is
+not connected here, so every number above is from the build output and the
+geometry. `/verify` is where it gets seen.
+
 ## What exists today
 
 **In `web/` (hero, built):**
