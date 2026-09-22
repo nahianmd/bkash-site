@@ -326,7 +326,9 @@ export function initHero() {
             const v = parseFloat(inp.value);
             if (!Number.isFinite(v)) return;
             b.cut =
-              k === 'w' ? resized(i, b.cut!, v) : { ...b.cut!, [k]: +v.toFixed(k === 'soft' ? 2 : 4) };
+              k === 'w'
+                ? resized(i, b.cut!, v)
+                : { ...b.cut!, [k]: +v.toFixed(k === 'soft' ? 2 : 4) };
             active = i;
             rig.measure();
             render();
@@ -421,7 +423,7 @@ export function initHero() {
       if (document.activeElement instanceof HTMLInputElement) return;
       const b = HERO.beats[active];
       if (!b?.cut) return;
-      const step = (ev.shiftKey ? 0.01 : 0.001);
+      const step = ev.shiftKey ? 0.01 : 0.001;
       if (ev.key === '[' || ev.key === ']') {
         ev.preventDefault();
         b.cut = resized(active, b.cut, b.cut.w + (ev.key === ']' ? step : -step));

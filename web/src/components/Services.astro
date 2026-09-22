@@ -39,11 +39,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
 ];
 ---
 
-<section
-  class="svc"
-  data-services
-  aria-label="Millions of stories, and the bKash app"
->
+<section class="svc" data-services aria-label="Millions of stories, and the bKash app">
   <div class="svc__pin" data-services-pin>
     {walls.map(({ key, cols }) => (
       <div class={`wall wall--${key}`} data-wall={key}>
@@ -97,7 +93,8 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       data-device-3d
       data-model={phoneModel}
       data-screen={screenTex.src}
-      aria-hidden="true"></canvas>
+      aria-hidden="true"
+    ></canvas>
     <!-- The CSS device: the same handset's proportions (body, display,
          corners, island — services.ts writes them from device.ts), sized
          to Rest B. It takes over from the object for the zoom into the
@@ -128,13 +125,15 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       <p class="t-lead svc__line">
         Send, receive, pay, save, borrow. All in one app, always within your reach.
       </p>
-      <a class="btn btn--primary svc__cta" href="#services-detail">See details of our services</a>
+      <a class="btn btn--primary svc__cta" href="#services-detail">
+        See details of our services
+      </a>
       {/* On a phone the copy is the title and this link alone. */}
-      <a class="svc__textlink t-sm" href="#services-detail">See details of our services →</a>
+      <a class="svc__textlink t-sm" href="#services-detail">
+        See details of our services →
+      </a>
     </div>
-
   </div>
-
 </section>
 
 <style is:global set:html={posCss}></style>
@@ -146,8 +145,8 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     height: calc(var(--vh) * var(--svc-screens, 6.5));
     background: var(--paper);
     /* How far copy and phone are gathered toward each other at rest on
-       desktop — the copy from its gutter, the phone from its column's
-       centre. One token, read by the CSS below and by services.ts. */
+             desktop — the copy from its gutter, the phone from its column's
+             centre. One token, read by the CSS below and by services.ts. */
     --svc-gather: var(--s-8);
   }
 
@@ -250,8 +249,8 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   .device {
     position: absolute;
     /* Size, position, radius and the display's inset are written by
-       services.ts once per resize from the handset's proportions; only
-       the transform changes per frame. */
+             services.ts once per resize from the handset's proportions; only
+             the transform changes per frame. */
     left: 0;
     top: 0;
     width: 100px;
@@ -357,7 +356,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       right: var(--gutter);
       top: auto;
       /* clear of the fixed search bar; services.ts solves the phone's
-         band from the same token */
+                     band from the same token */
       bottom: var(--search-space);
       align-content: end;
       justify-items: center;

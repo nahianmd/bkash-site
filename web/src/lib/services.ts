@@ -397,7 +397,9 @@ export function initServices() {
     if (device) {
       const B = MODEL.body;
       const Dp = MODEL.display;
-      restH = isPhone() ? (WALL.rest.phoneWidthFrac * vw * B.h) / B.w : WALL.rest.desktopHeightFrac * vh;
+      restH = isPhone()
+        ? (WALL.rest.phoneWidthFrac * vw * B.h) / B.w
+        : WALL.rest.desktopHeightFrac * vh;
       restW = (restH * B.w) / B.h;
       screenW = (restW * Dp.w) / B.w;
       screenH = (restH * Dp.h) / B.h;

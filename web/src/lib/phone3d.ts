@@ -117,7 +117,11 @@ export async function createPhone3D(
     shot.offset.set(0, 1 - MODEL.visibleFrac);
     shot.needsUpdate = true;
     const old = display.material;
-    display.material = new MeshBasicMaterial({ map: shot, toneMapped: false, depthTest: false });
+    display.material = new MeshBasicMaterial({
+      map: shot,
+      toneMapped: false,
+      depthTest: false,
+    });
     display.renderOrder = 1000;
     if (!Array.isArray(old)) old.dispose();
   }
@@ -189,7 +193,8 @@ export async function createPhone3D(
   function bounds() {
     const m = new Box3().setFromObject(model);
     const d = display ? new Box3().setFromObject(display) : new Box3();
-    const f = (b: Box3) => [b.min.x, b.min.y, b.min.z, b.max.x, b.max.y, b.max.z].map((n) => +n.toFixed(3));
+    const f = (b: Box3) =>
+      [b.min.x, b.min.y, b.min.z, b.max.x, b.max.y, b.max.z].map((n) => +n.toFixed(3));
     return { model: f(m), display: f(d) };
   }
 

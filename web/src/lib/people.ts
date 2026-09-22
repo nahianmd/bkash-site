@@ -41,7 +41,8 @@ export function initPeople() {
     if (!to || !section.contains(to)) pick(null);
   });
   document.addEventListener('pointerdown', (e) => {
-    if (section.classList.contains('is-picked') && !section.contains(e.target as Node)) pick(null);
+    if (section.classList.contains('is-picked') && !section.contains(e.target as Node))
+      pick(null);
   });
 
   /* ---- depth: the planes drift at the token rates ----
@@ -51,7 +52,8 @@ export function initPeople() {
      (front − back). Felt, not noticed. */
   if (reducedMotion() || !cardsPlane) return;
   const css = getComputedStyle(document.documentElement);
-  const rate = (name: string, fallback: number) => parseFloat(css.getPropertyValue(name)) || fallback;
+  const rate = (name: string, fallback: number) =>
+    parseFloat(css.getPropertyValue(name)) || fallback;
   const back = rate('--plane-back', 0.94);
   const mid = rate('--plane-mid', 1);
   const front = rate('--plane-front', 1.06);
@@ -68,7 +70,9 @@ export function initPeople() {
     vh = window.innerHeight;
   };
   measure();
-  const tl = gsap.timeline({ paused: true }).to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
+  const tl = gsap
+    .timeline({ paused: true })
+    .to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
   const st = ScrollTrigger.create({
     id: 'people',
     trigger: section,
@@ -90,7 +94,11 @@ export function initPeople() {
         ScrollTrigger.update();
         tl.progress(st.progress);
         render();
-        return { progress: st.progress, cards: cardsPlane.style.transform, caps: caps[0]?.style.transform };
+        return {
+          progress: st.progress,
+          cards: cardsPlane.style.transform,
+          caps: caps[0]?.style.transform,
+        };
       },
     };
   }

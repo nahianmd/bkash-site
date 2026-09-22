@@ -111,8 +111,19 @@ export const NAV_MENUS: NavMenu[] = [
     id: 'consumers',
     label: 'Consumers',
     groups: [
-      { label: 'Send', items: list('/services', ['Send money', 'Group send money', 'bKash to bank', 'Remittance']) },
-      { label: 'Fund loading', items: list('/services', ['Cash-in', 'Add money', 'Agent', 'Priyo agent']) },
+      {
+        label: 'Send',
+        items: list('/services', [
+          'Send money',
+          'Group send money',
+          'bKash to bank',
+          'Remittance',
+        ]),
+      },
+      {
+        label: 'Fund loading',
+        items: list('/services', ['Cash-in', 'Add money', 'Agent', 'Priyo agent']),
+      },
       {
         label: 'Pay',
         items: list('/services', [
@@ -128,7 +139,10 @@ export const NAV_MENUS: NavMenu[] = [
       },
       { label: 'Borrow', items: list('/services', ['Loan']) },
       { label: 'Save', items: list('/services', ['Savings']) },
-      { label: 'Ticket & travelling', items: list('/services', ['Train', 'Plane', 'Bus', 'Launch', 'Hotel']) },
+      {
+        label: 'Ticket & travelling',
+        items: list('/services', ['Train', 'Plane', 'Bus', 'Launch', 'Hotel']),
+      },
       {
         label: 'Purchase',
         items: list('/services', [
@@ -141,7 +155,17 @@ export const NAV_MENUS: NavMenu[] = [
           'BCS study materials',
         ]),
       },
-      { label: 'Subscriptions', items: list('/services', ['Bongo', 'Boighor', 'Chorki', 'Toffee', 'Music', 'Audiobook']) },
+      {
+        label: 'Subscriptions',
+        items: list('/services', [
+          'Bongo',
+          'Boighor',
+          'Chorki',
+          'Toffee',
+          'Music',
+          'Audiobook',
+        ]),
+      },
       { label: 'Learning center', href: '/services/learning-center' },
       { label: 'Game zone', href: '/services/game-zone' },
     ],

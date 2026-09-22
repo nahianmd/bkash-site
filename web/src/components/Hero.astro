@@ -69,10 +69,10 @@ import BirdOverlay from './BirdOverlay.astro';
   .hero {
     position: relative;
     /* Four beats, about one screen of travel each (plan). The pin is
-                   one --vh; the section is the travel. Never 100vh. */
+                         one --vh; the section is the travel. Never 100vh. */
     /* One screen of pin plus the travel: the hero's beats and the bird's
-         reveal, on the same pin. hero.ts writes --hero-screens from the two
-         configs; 6.5 is the matching fallback. Never 100vh. */
+               reveal, on the same pin. hero.ts writes --hero-screens from the two
+               configs; 6.5 is the matching fallback. Never 100vh. */
     height: calc(var(--vh) * var(--hero-screens, 6.5));
     background: var(--night);
   }
@@ -138,7 +138,7 @@ import BirdOverlay from './BirdOverlay.astro';
      (Rule 3). Same block, moved. */
   @media (max-width: 767px) {
     /* Top third: the sky. The people occupy the middle and bottom thirds
-               of the phone's slice (Rule 3). */
+                     of the phone's slice (Rule 3). */
     .hero__open {
       bottom: auto;
       top: calc(var(--nav-h) + var(--s-6));

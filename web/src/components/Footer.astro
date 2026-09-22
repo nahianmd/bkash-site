@@ -130,8 +130,8 @@ const ICONS: Record<string, string> = {
     background: var(--night);
     color: var(--on-night-2);
     /* Longhands, not `padding-block`: the CSS minifier drops a
-       `padding-bottom` that follows the shorthand when it carries a
-       var(), and the rule vanishes from the built sheet with no error. */
+             `padding-bottom` that follows the shorthand when it carries a
+             var(), and the rule vanishes from the built sheet with no error. */
     padding-top: clamp(3rem, 7vh, 5rem);
     /* the search bar floats over the foot of the page */
     padding-bottom: calc(clamp(3rem, 7vh, 5rem) + var(--search-space));
@@ -163,7 +163,7 @@ const ICONS: Record<string, string> = {
     display: block;
     width: 8.5rem;
     /* The mark's letterforms ride currentColor; on the night ground
-       that has to be the light ink, not the body's dimmed one. */
+             that has to be the light ink, not the body's dimmed one. */
     color: var(--on-night);
   }
 

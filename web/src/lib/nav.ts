@@ -168,7 +168,10 @@ function initDrawer(): void {
 function initMenus(nav: HTMLElement): void {
   const buttons = [...nav.querySelectorAll<HTMLButtonElement>('[data-menu-button]')];
   const panels = new Map(
-    [...nav.querySelectorAll<HTMLElement>('[data-menu-panel]')].map((p) => [p.dataset.menuPanel!, p]),
+    [...nav.querySelectorAll<HTMLElement>('[data-menu-panel]')].map((p) => [
+      p.dataset.menuPanel!,
+      p,
+    ]),
   );
   if (buttons.length === 0) return;
   const canHover = window.matchMedia('(hover: hover)').matches;
@@ -258,12 +261,19 @@ function initMenus(nav: HTMLElement): void {
     if (openId && to && !nav.contains(to)) closeAll();
   });
   /* A choice made: the panel closes behind the navigation. */
-  for (const a of nav.querySelectorAll('[data-menu-panel] a')) a.addEventListener('click', closeAll);
+  for (const a of nav.querySelectorAll('[data-menu-panel] a'))
+    a.addEventListener('click', closeAll);
 
   if (import.meta.env.DEV) {
     const w = window as any;
     w.__bkash = w.__bkash ?? {};
-    w.__bkash.nav = { open: show, close: closeAll, get openId() { return openId; } };
+    w.__bkash.nav = {
+      open: show,
+      close: closeAll,
+      get openId() {
+        return openId;
+      },
+    };
   }
 }
 

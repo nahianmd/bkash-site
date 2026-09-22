@@ -12,7 +12,12 @@ const icons = import.meta.glob<{ default: ImageMetadata }>('../assets/icons/*.sv
 const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
 ---
 
-<section class="svcd" id="services-detail" data-services-detail aria-label="Our sixteen services">
+<section
+  class="svcd"
+  id="services-detail"
+  data-services-detail
+  aria-label="Our sixteen services"
+>
   <div class="wrap svcd__in">
     <!-- The stage: a 3D card that flips to the chosen service, the copy
          beneath it. -->
@@ -187,8 +192,8 @@ const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
 
   @media (max-width: 767px) {
     /* On a phone the extra above goes — 128px of blank white is a
-       screenful to scroll past — and the section takes the phone
-       rhythm like every other. */
+             screenful to scroll past — and the section takes the phone
+             rhythm like every other. */
     .svcd {
       padding-block: var(--section-pad-phone);
     }
@@ -205,8 +210,8 @@ const icon = (id: string) => icons[`../assets/icons/${id}.svg`].default;
       letter-spacing: -0.022em;
     }
     /* The sixteen as a row that slides: 56px icons, snap to item, the
-       chosen one centred; a swipe selects. Labels off — the card names
-       the service. */
+             chosen one centred; a swipe selects. Labels off — the card names
+             the service. */
     .grid {
       width: 100vw;
       margin-inline: calc(-1 * var(--gutter));

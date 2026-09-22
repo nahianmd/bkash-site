@@ -22,11 +22,34 @@ const portrait = (id: string) => portraits[`../assets/img/people/${id}.jpg`].def
    for public use is a client question (spec). Crops are per photograph:
    faces in the upper third. */
 const PEOPLE = [
-  { id: 'anisul', tag: 'Customer', name: 'Anisul Haque', role: 'CNG driver', cta: 'Know his story', pos: '50% 30%' },
-  { id: 'munni', tag: 'Agent', name: 'Munni Barua', role: 'Known as “bKash Didi”', cta: 'Know her story', pos: '50% 40%' },
-  { id: 'shajib', tag: 'Merchant', name: 'Shajib Ahmed', role: 'Book shop owner', cta: 'Know his story', pos: '50% 30%' },
+  {
+    id: 'anisul',
+    tag: 'Customer',
+    name: 'Anisul Haque',
+    role: 'CNG driver',
+    cta: 'Know his story',
+    pos: '50% 30%',
+  },
+  {
+    id: 'munni',
+    tag: 'Agent',
+    name: 'Munni Barua',
+    role: 'Known as “bKash Didi”',
+    cta: 'Know her story',
+    pos: '50% 40%',
+  },
+  {
+    id: 'shajib',
+    tag: 'Merchant',
+    name: 'Shajib Ahmed',
+    role: 'Book shop owner',
+    cta: 'Know his story',
+    pos: '50% 30%',
+  },
 ];
-const posCss = PEOPLE.map((p) => `.people__card[data-people-card="${p.id}"] img{object-position:${p.pos}}`).join('');
+const posCss = PEOPLE.map(
+  (p) => `.people__card[data-people-card="${p.id}"] img{object-position:${p.pos}}`,
+).join('');
 ---
 
 <section class="people" data-people aria-label="Three of the 85 million">
@@ -54,7 +77,9 @@ const posCss = PEOPLE.map((p) => `.people__card[data-people-card="${p.id}"] img{
             <p class="t-h3 people__name">{p.name}</p>
             <p class="t-sm people__role">{p.role}</p>
             <div class="people__cta-wrap">
-              <a class="btn btn--outline people__cta" href="#">{p.cta} →</a>
+              <a class="btn btn--outline people__cta" href="#">
+                {p.cta} →
+              </a>
             </div>
           </div>
         </article>

@@ -106,7 +106,8 @@ function initInvestors(): void {
       const widest = imgs.reduce((m, im) => Math.max(m, parseFloat(im.dataset.w ?? '0')), 0);
       if (cell > 0 && widest > 0) divisor = Math.max(LOGO_DIVISOR, widest / (cell * LOGO_FILL));
     }
-    for (const im of imgs) im.style.width = `${(parseFloat(im.dataset.w ?? '0') / divisor).toFixed(1)}px`;
+    for (const im of imgs)
+      im.style.width = `${(parseFloat(im.dataset.w ?? '0') / divisor).toFixed(1)}px`;
   };
   fit();
   window.addEventListener('resize', fit);
@@ -138,7 +139,9 @@ function initWall(): void {
   };
   measure();
   render();
-  const tl = gsap.timeline({ paused: true }).to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
+  const tl = gsap
+    .timeline({ paused: true })
+    .to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
   ScrollTrigger.create({
     id: 'journey-wall',
     trigger: section,

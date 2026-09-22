@@ -18,18 +18,25 @@ import careers from '../assets/img/about/careers.jpg';
 import road from '../assets/img/about/road-ahead.jpg';
 import collage from '../assets/img/about/collage-bird.png';
 
-const boardImgs = import.meta.glob<{ default: ImageMetadata }>('../assets/img/about/board/*.jpg', {
-  eager: true,
-});
+const boardImgs = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/img/about/board/*.jpg',
+  {
+    eager: true,
+  },
+);
 const investorImgs = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/img/about/investors/*.png',
   { eager: true },
 );
-const voiceImgs = import.meta.glob<{ default: ImageMetadata }>('../assets/img/about/voices/*.jpg', {
-  eager: true,
-});
+const voiceImgs = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/img/about/voices/*.jpg',
+  {
+    eager: true,
+  },
+);
 const boardImg = (f: string) => boardImgs[`../assets/img/about/board/${f}.jpg`].default;
-const investorImg = (f: string) => investorImgs[`../assets/img/about/investors/${f}.png`].default;
+const investorImg = (f: string) =>
+  investorImgs[`../assets/img/about/investors/${f}.png`].default;
 const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`].default;
 ---
 
@@ -60,7 +67,9 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
             Bridging the everyday economy and digital finance, bKash brought millions into the
             formal economy who now have controls on their own money.
           </p>
-          <a class="btn btn--primary ab-hero__cta" href="#story">Be part of the story →</a>
+          <a class="btn btn--primary ab-hero__cta" href="#story">
+            Be part of the story →
+          </a>
         </div>
       </div>
       <!-- The nav is transparent over the banner, solid below it. -->
@@ -74,7 +83,9 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
           {STATS.map((s) => (
             <div class="stats__item" data-reveal data-reveal-group="stats">
               <p class="stats__num t-num">
-                <span data-count={s.count} data-suffix={s.suffix}>0</span>
+                <span data-count={s.count} data-suffix={s.suffix}>
+                  0
+                </span>
               </p>
               <p class="stats__label">{s.label}</p>
               <p class="stats__note t-sm">{s.note}</p>
@@ -92,15 +103,17 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
             ends on. Documentary photographs, so Rule 1 holds. */}
         <div class="revolution">
           <div class="ab-head revolution__copy">
-            <p class="t-eyebrow ab-head__eyebrow" data-reveal>The Revolution</p>
+            <p class="t-eyebrow ab-head__eyebrow" data-reveal>
+              The Revolution
+            </p>
             <h2 class="t-h1" data-reveal>
-              bKash started with one core idea: everyone should have the power to control their own
-              money
+              bKash started with one core idea: everyone should have the power to control their
+              own money
             </h2>
             <p class="t-lead ab-head__lead" data-reveal>
-              With its unmatched last-mile reach, that one idea changed how Bangladesh transacts.
-              Today, millions use bKash to access crucial financial services, turning everyday
-              inclusion into an entire financial ecosystem.
+              With its unmatched last-mile reach, that one idea changed how Bangladesh
+              transacts. Today, millions use bKash to access crucial financial services, turning
+              everyday inclusion into an entire financial ecosystem.
             </p>
           </div>
           <Picture
@@ -130,8 +143,12 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     <section class="ab-section" aria-label="Our investors">
       <div class="wrap">
         <div class="ab-head">
-          <p class="t-eyebrow ab-head__eyebrow" data-reveal>Backed by</p>
-          <h2 class="t-h1" data-reveal>The best in the business</h2>
+          <p class="t-eyebrow ab-head__eyebrow" data-reveal>
+            Backed by
+          </p>
+          <h2 class="t-h1" data-reveal>
+            The best in the business
+          </h2>
         </div>
         <div class="investors" data-investors>
           {INVESTORS.map((v) => {
@@ -150,8 +167,12 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     <section class="ab-section ab-section--tint" aria-label="Board of directors">
       <div class="wrap">
         <div class="ab-head">
-          <p class="t-eyebrow ab-head__eyebrow" data-reveal>Leadership</p>
-          <h2 class="t-h1" data-reveal>Board of directors</h2>
+          <p class="t-eyebrow ab-head__eyebrow" data-reveal>
+            Leadership
+          </p>
+          <h2 class="t-h1" data-reveal>
+            Board of directors
+          </h2>
         </div>
         <div class="board">
           {BOARD.map((p) => (
@@ -190,11 +211,11 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
           <div data-reveal>
             <blockquote class="t-quote">
               “Millions of Bangladeshis once hid their money under the mattress simply because
-              access to financial services was out of reach. bKash became the collective mattress
-              for the country, putting money within people’s control and giving them the freedom
-              to use it on their terms. And somewhere along the way, bKash became a verb. That was
-              never accidental. It was planned. And our ambition remains just as deliberate: to
-              keep going until we ensure financial inclusion for all.”
+              access to financial services was out of reach. bKash became the collective
+              mattress for the country, putting money within people’s control and giving them
+              the freedom to use it on their terms. And somewhere along the way, bKash became a
+              verb. That was never accidental. It was planned. And our ambition remains just as
+              deliberate: to keep going until we ensure financial inclusion for all.”
             </blockquote>
             <p class="quote__attr t-sm">
               <strong>Kamal Quadir</strong>Founder &amp; Chief Executive Officer, bKash
@@ -223,7 +244,9 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
             />
           </div>
         </div>
-        <div class="wall__bar"><div class="wall__fill" data-wall-fill></div></div>
+        <div class="wall__bar">
+          <div class="wall__fill" data-wall-fill></div>
+        </div>
       </div>
     </section>
 
@@ -231,8 +254,12 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     <section class="ab-section" aria-label="Voices of bKash">
       <div class="wrap">
         <div class="ab-head">
-          <p class="t-eyebrow ab-head__eyebrow" data-reveal>Voices of bKash</p>
-          <h2 class="t-h1" data-reveal>In their own words</h2>
+          <p class="t-eyebrow ab-head__eyebrow" data-reveal>
+            Voices of bKash
+          </p>
+          <h2 class="t-h1" data-reveal>
+            In their own words
+          </h2>
         </div>
         <div class="voices">
           {VOICES.map((v) => (
@@ -264,20 +291,29 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
       <div class="wrap">
         <div class="split">
           <div class="split__copy">
-            <p class="t-eyebrow ab-head__eyebrow" data-reveal>Careers at bKash</p>
-            <h2 class="t-h1 split__title" data-reveal>Build What Matters</h2>
-            <p class="t-lead ab-head__lead split__lead" data-reveal>
-              For 15 years, bKash has been expanding financial access across Bangladesh. What began
-              as a way to move money has grown into a financial ecosystem reaching every corner.
+            <p class="t-eyebrow ab-head__eyebrow" data-reveal>
+              Careers at bKash
             </p>
-            <p class="t-body split__values-head" data-reveal>Five values shape how we work:</p>
+            <h2 class="t-h1 split__title" data-reveal>
+              Build What Matters
+            </h2>
+            <p class="t-lead ab-head__lead split__lead" data-reveal>
+              For 15 years, bKash has been expanding financial access across Bangladesh. What
+              began as a way to move money has grown into a financial ecosystem reaching every
+              corner.
+            </p>
+            <p class="t-body split__values-head" data-reveal>
+              Five values shape how we work:
+            </p>
             <p class="careers__values" data-reveal>
               Customer-Centric. Collaborative. Innovative. Agile. Ethical.
             </p>
             <p class="t-body split__body" data-reveal>
               We challenge convention, work together, put customers first, and do what is right.
             </p>
-            <a class="btn btn--primary split__cta" href="#" data-reveal>Come Build What’s Next</a>
+            <a class="btn btn--primary split__cta" href="#" data-reveal>
+              Come Build What’s Next
+            </a>
           </div>
           <Image
             src={careers}
@@ -296,16 +332,18 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     <section class="ab-section ab-section--dark road" aria-label="The road ahead">
       <div class="wrap">
         <div class="ab-head road__head">
-          <h2 class="t-h1" data-reveal>The Road Ahead</h2>
+          <h2 class="t-h1" data-reveal>
+            The Road Ahead
+          </h2>
           <p class="t-lead ab-head__lead" data-reveal>
             The next chapter is bigger than access. We are building towards a country where
             cashless is the norm, every transaction is secure, digital finance is understood and
             trusted, and advanced financial services are within everyone’s reach.
           </p>
           <p class="t-body road__body" data-reveal>
-            After 15 years of transforming how Bangladesh moves money, the ambition is not simply
-            to keep up with a changing Bangladesh, but to keep changing it, at a scale that matters
-            to the entire economy.
+            After 15 years of transforming how Bangladesh moves money, the ambition is not
+            simply to keep up with a changing Bangladesh, but to keep changing it, at a scale
+            that matters to the entire economy.
           </p>
         </div>
       </div>
@@ -422,7 +460,7 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   .stats__note {
     color: var(--ink-3);
     /* The deck asks for two lines under every figure; 28ch is the measure
-       at which all four wrap to two and none to three. */
+             at which all four wrap to two and none to three. */
     max-width: 28ch;
   }
 
@@ -430,8 +468,8 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
   .revolution {
     display: grid;
     /* 1.6 : 1 is where the headline settles at four lines — measured at
-       1920, it runs to six at 1.1 and five at 1.35, and taking the mark
-       below this buys no further line. */
+             1920, it runs to six at 1.1 and five at 1.35, and taking the mark
+             below this buys no further line. */
     grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: clamp(2rem, 5vw, 4.5rem);
     align-items: center;
@@ -587,7 +625,7 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     align-content: center;
     gap: clamp(1rem, 2.5vh, 1.75rem);
     /* Tight chrome on purpose: the artwork is 6:1, so every pixel of
-       height given back to it is six pixels of readable width. */
+             height given back to it is six pixels of readable width. */
     padding-block: clamp(3rem, 7vh, 4.5rem);
   }
   .wall__head {
@@ -768,8 +806,8 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
 
   @media (max-width: 767px) {
     /* One rhythm for every section on a phone. The road keeps its zero
-       bottom — its illustration runs full-bleed off the foot of the
-       section, and this rule comes after `.road` in the file. */
+             bottom — its illustration runs full-bleed off the foot of the
+             section, and this rule comes after `.road` in the file. */
     .ab-section {
       padding-block: var(--section-pad-phone);
     }
@@ -793,9 +831,9 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
       aspect-ratio: 16 / 10;
     }
     /* One column; the portrait takes the full column so the picture and
-       the quote share one set of edges. Justification is desktop-only:
-       the column here carries about 26 characters a line, and justifying
-       that opens rivers rather than setting type. */
+             the quote share one set of edges. Justification is desktop-only:
+             the column here carries about 26 characters a line, and justifying
+             that opens rivers rather than setting type. */
     .quote {
       grid-template-columns: 1fr;
       gap: var(--s-6);
@@ -804,11 +842,11 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
       text-align: start;
     }
     /* Three across, two rows (Nahian, 2026-09-20). A grid, not the
-       desktop flex row: every mark gets the same cell and is centred in
-       it, and `grid-auto-rows: 1fr` makes both rows the same height, so
-       the six read as one block however tall each logo happens to be.
-       about.ts still solves ONE divisor from the widest wordmark and the
-       cell, so the area normalisation survives the narrower cell. */
+             desktop flex row: every mark gets the same cell and is centred in
+             it, and `grid-auto-rows: 1fr` makes both rows the same height, so
+             the six read as one block however tall each logo happens to be.
+             about.ts still solves ONE divisor from the widest wordmark and the
+             cell, so the area normalisation survives the narrower cell. */
     .investors {
       display: grid;
       grid-template-columns: repeat(3, 1fr);

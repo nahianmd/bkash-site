@@ -12,7 +12,12 @@ export type Voice = { file: string; tag: string; quote: string; name: string; ci
 /* Deck p.8, verbatim — and its two notes: the sublines run to two lines
    (a measure on `.stats__note`), and they carry NO full stop. */
 export const STATS = [
-  { count: 85, suffix: 'M+', label: 'Customers', note: '1 in 20 global MFS transactions by bKash' },
+  {
+    count: 85,
+    suffix: 'M+',
+    label: 'Customers',
+    note: '1 in 20 global MFS transactions by bKash',
+  },
   {
     count: 350,
     suffix: 'K+',
