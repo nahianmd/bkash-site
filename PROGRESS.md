@@ -1015,6 +1015,15 @@ Consequences, all of them annoying:
   spend another commit on two spaces. Not worth reverting; worth not
   repeating.
 
+A second, smaller trap in the same area: **prettier only runs from
+`web/`.** `web/.prettierrc` declares `prettier-plugin-astro`, which
+resolves from `web/node_modules`, so `npx prettier --write
+web/src/...` from the repo root dies with "Cannot find package
+'prettier-plugin-astro'" — and with `>/dev/null` on it, silently, taking
+the rest of a `&&` chain with it. Root-level files (`specs/`,
+`PROGRESS.md`) format fine from the root because they never pick up that
+config. `npm run format` is unaffected; it already runs in `web/`.
+
 Untangled options, for whenever it becomes worth fixing: collapse those
 comments to single lines, move them above the rule instead of inside it,
 bump `prettier-plugin-astro`, or drop `.astro` from the format glob and

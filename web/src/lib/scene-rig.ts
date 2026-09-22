@@ -49,14 +49,58 @@ export function poseFor(cam: Cam, box: Box, vw: number, vh: number) {
 export const cubicInOut = (t: number) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
+/**
+ * How far to pull back during a move, so the travel does not happen at
+ * full magnification.
+ *
+ * THE PROBLEM. Screen travel is (plate distance) x (scale). Two subjects
+ * both centred at ~4x and far apart in the plate therefore slide a long
+ * way: Amena to Rahim is 0.345 of the plate at s ~ 3.86, which is 1.33
+ * viewport heights — 1439px on a 1080 screen. No easing fixes that; it
+ * is geometry. The eye reads it as a pan, not a push, which is what
+ * Nahian saw (2026-09-22): "it zooms and then slides to make it
+ * centered. can we not directly do it."
+ *
+ * THE RULE, derived not tuned. Pull back to whatever scale makes the
+ * mid-move travel exactly one viewport, and no further:
+ *
+ *     s_mid x d = 1   =>   pull = s_mid x d - 1,  floored at 0
+ *
+ * `d` is in plate fractions and the threshold is 1 because the cover
+ * box's HEIGHT equals the viewport's on any viewport narrower than the
+ * plate's own aspect (1.79) — which is every phone and every ordinary
+ * desktop — so a plate fraction of vertical travel maps 1:1 to viewport
+ * heights. It is isotropic in plate space rather than per-axis, which is
+ * a simplification that costs nothing here because the move it exists to
+ * fix is almost entirely vertical.
+ *
+ * Being floored at 0 is what makes it self-targeting: a segment whose
+ * travel is already under one viewport gets no pull-back at all. Of the
+ * four moves in the hero and the bird, only Amena to Rahim triggers it.
+ */
+function pullback(a: Cam, b: Cam, scaleEase: number): number {
+  const d = Math.hypot(b.x - a.x, b.y - a.y);
+  if (d === 0) return 0;
+  /* The scale this move would otherwise pass through at its midpoint. */
+  const mid = Math.exp(
+    Math.log(a.s) + (Math.log(b.s) - Math.log(a.s)) * Math.pow(0.5, scaleEase),
+  );
+  return Math.max(0, mid * d - 1);
+}
+
 /** Camera between two beats. Position eases; scale eases in LOG space. */
 export function camBetween(a: Cam, b: Cam, f: number, scaleEase = 0.86): Cam {
   const e = cubicInOut(f);
   const es = Math.pow(e, scaleEase);
+  const s = Math.exp(Math.log(a.s) + (Math.log(b.s) - Math.log(a.s)) * es);
+  /* 4f(1-f): zero at both beats, peak between — the same shape the
+     depth lead uses, so a beat's own pose is never touched and only the
+     journey between two of them dips. */
+  const dip = 1 + pullback(a, b, scaleEase) * 4 * f * (1 - f);
   return {
     x: a.x + (b.x - a.x) * e,
     y: a.y + (b.y - a.y) * e,
-    s: Math.exp(Math.log(a.s) + (Math.log(b.s) - Math.log(a.s)) * es),
+    s: s / dip,
   };
 }
 
