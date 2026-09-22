@@ -234,34 +234,24 @@ agent is the lower triangle. Recording the guess as a guess is what caught it.
 | 1      | **Faysal** (merchant, `M`) | 442 x 463         | 0.955  | (0.546, 0.363) centre     |
 | 0 or 6 | **Rahim** (agent, `A`)     | below             | below  | lower                     |
 
-### Open — is the agent's triangle facet 0 or facet 6?
+### Resolved — the agent's triangle is facet 0
 
-Nahian's two answers disagree, and the difference is real.
-
-- **The text, earlier:** "2,1,6".
-- **The render, later:** the `A` sits at bird-fraction (0.484, 0.634), which is
-  **inside facet 0** by a point-in-triangle test, and nearest facet 0's
-  centroid at d=0.060 against facet 6's at d=0.205. Unambiguous.
+Nahian's two answers disagreed: the text said "2,1,6", the render put the `A`
+at bird-fraction (0.484, 0.634) — inside facet 0 by a point-in-triangle test,
+and nearest facet 0's centroid at d=0.060 against facet 6's at d=0.205.
+**Nahian, 2026-09-22: trust the render.** The set is `2, 1, 0`.
 
 Claude's earlier objection to facet 0 — "landscape, a standing figure does not
 fit it" — **does not apply to a scene crop, and is withdrawn**. It was an
 argument about pasting a cutout edge-to-edge. A landscape crop of the stall
-with Rahim inside it is a framing choice, not a fit failure. So facet 0 is
-viable, and `2, 1, 0` carries a second virtue: they are the three _largest_
-facets, 75.7% of the mark, so the three biggest triangles hold the three people
-and every small one stays street. That is a cleaner rule than a mixed set.
+with Rahim inside it is a framing choice, not a fit failure.
 
-What facet 0 costs is the phone, where it is worse than facet 6:
+`2, 1, 0` also carries a second virtue: they are the three _largest_ facets,
+75.7% of the mark, so the rule reads as **the big triangles hold the people,
+every small one stays street** — cleaner than a mixed set.
 
-| facet | aspect | desktop   | phone        |
-| ----- | ------ | --------- | ------------ |
-| 0     | 1.68   | 293 x 175 | **148 x 88** |
-| 6     | 0.43   | 138 x 321 | 70 x 162     |
-
-88px of height cannot hold a person at all, so if the answer is facet 0 then
-the 390 composition almost certainly cannot carry three characters.
-
-`START_CANDIDATES = [1, 2]` either way, so the timing below is unaffected.
+`START_CANDIDATES = [1, 2]`, so two of the three are the facets the reveal
+opens inside. See the collision note below; the timing is what defuses it.
 
 ### When the swap lands
 
@@ -325,20 +315,48 @@ Three ways out, none of them free:
    already makes at these zooms, so it at least stays consistent with itself.
    Costs three posed scene layers instead of three images.
 
-### Open — 390
+### 390 — the same as desktop
 
-Unanswered, and it is the one that needs a decision before this can be built.
+**Nahian, 2026-09-22: "same as desktop."** All three characters on a phone,
+at whatever size they land. Decided with the measurement in hand, not around
+it — so this is an accepted cost, not an oversight.
+
 At rest on a phone the mark is `0.86 x 390 = 335px` wide, so `k = 0.335`:
 
-| facet | who          | desktop   | phone        |
-| ----- | ------------ | --------- | ------------ |
-| 2     | Amena        | 303 x 296 | 153 x 150    |
-| 1     | Faysal       | 293 x 307 | 148 x 155    |
-| 6     | Rahim (if 6) | 138 x 320 | **70 x 162** |
-| 0     | Rahim (if 0) | 293 x 175 | **148 x 88** |
+| facet | who    | desktop   | phone        |
+| ----- | ------ | --------- | ------------ |
+| 2     | Amena  | 303 x 296 | 153 x 150    |
+| 1     | Faysal | 293 x 307 | 148 x 155    |
+| 0     | Rahim  | 293 x 175 | **148 x 88** |
 
-Facet 6 at 70px wide is not a portrait. Facets 2 and 1 at ~150px square are
-marginal. Candidate answers: two characters on a phone and facet 6 keeps the
-street; a larger phone rest pose; a different facet set at 390; or characters
-on desktop only. CLAUDE.md is explicit that this is part of "designed", not a
-follow-up, so it is a real blocker on the build rather than a note.
+One composition at both widths, no branch, no second rule to keep in step —
+which is worth something in itself. What it buys at 390 is that the agent's
+window is 88px on its short axis: at that size a scene crop reads as texture
+and colour rather than as a person, and Amena and Faysal at ~150px square are
+legible but not portraits.
+
+The thing to actually look at when it is built: whether three small windows of
+street-with-a-figure still read as _people_ on a phone, or whether the mark
+just looks busier. If it is the latter, the fallbacks are already costed — two
+windows on a phone with facet 0 keeping the street, or desktop-only — and
+neither needs the mechanism rebuilt, only a media query. Nahian's eye, not a
+measurement.
+
+### Status of this revision
+
+Every question this revision opened is now closed:
+
+- facets — `2, 1, 0` (Nahian, from the render)
+- pairing — 2 Amena / 1 Faysal / 0 Rahim (Nahian, from the render)
+- content — scene crop (Nahian)
+- timing — swap completes at `q = 0.70` (measured; satisfies both of Nahian's
+  clauses at once)
+- 390 — same as desktop (Nahian)
+
+What is left is the build, plus the one thing no decision closes: the plate
+does not have the pixels for these crops (2.0-2.5x upscale at retina, see
+above). That is `specs/diorama-integration.md`'s open question about whether
+the client's artwork exists larger, and it is worth asking the client before
+the crops are baked rather than after.
+
+**Model: Fable 5.1** for the build, per this spec's own header.
