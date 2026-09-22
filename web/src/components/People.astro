@@ -53,38 +53,44 @@ const posCss = PEOPLE.map(
 ---
 
 <section class="people" data-people aria-label="Three of the 85 million">
+  <!-- The head keeps the page wrap — gutter and --page — so this heading
+       stays in line with every other section's. The cards deliberately do
+       not: they are a SIBLING of the wrap rather than a child, which is
+       what lets them run the full width without a negative-margin trick,
+       and without a 100vw that would overshoot by the scrollbar.
+       Nahian, 2026-09-22. -->
   <div class="wrap people__in">
     <div class="people__head">
       <p class="t-eyebrow people__eyebrow">Meet three of them</p>
       <h2 class="t-h1 people__title">Stories Behind the Numbers</h2>
     </div>
+  </div>
 
-    <div class="people__cards" data-people-cards>
-      {PEOPLE.map((p) => (
-        <article class="people__card" data-people-card={p.id} tabindex="0">
-          <Picture
-            src={portrait(p.id)}
-            alt={`${p.name}, ${p.role}`}
-            widths={[480, 720, 960, 1500]}
-            sizes="(max-width: 767px) 100vw, 33vw"
-            formats={['avif', 'webp']}
-            layout="none"
-            loading="lazy"
-            pictureAttributes={{ class: 'people__pic' }}
-          />
-          <div class="people__cap on-photo" data-people-caps>
-            <p class="t-eyebrow people__tag">{p.tag}</p>
-            <p class="t-h3 people__name">{p.name}</p>
-            <p class="t-sm people__role">{p.role}</p>
-            <div class="people__cta-wrap">
-              <a class="btn btn--outline people__cta" href="#">
-                {p.cta} →
-              </a>
-            </div>
+  <div class="people__cards" data-people-cards>
+    {PEOPLE.map((p) => (
+      <article class="people__card" data-people-card={p.id} tabindex="0">
+        <Picture
+          src={portrait(p.id)}
+          alt={`${p.name}, ${p.role}`}
+          widths={[480, 720, 960, 1500]}
+          sizes="(max-width: 767px) 100vw, 33vw"
+          formats={['avif', 'webp']}
+          layout="none"
+          loading="lazy"
+          pictureAttributes={{ class: 'people__pic' }}
+        />
+        <div class="people__cap on-photo" data-people-caps>
+          <p class="t-eyebrow people__tag">{p.tag}</p>
+          <p class="t-h3 people__name">{p.name}</p>
+          <p class="t-sm people__role">{p.role}</p>
+          <div class="people__cta-wrap">
+            <a class="btn btn--outline people__cta" href="#">
+              {p.cta} →
+            </a>
           </div>
-        </article>
-      ))}
-    </div>
+        </div>
+      </article>
+    ))}
   </div>
 </section>
 
@@ -109,8 +115,14 @@ const posCss = PEOPLE.map(
     margin-bottom: var(--s-4);
   }
 
-  /* Three objects on a field: inside the gutter, one row, one crop.
-     Each card is a flex share; the whole expansion is the share. */
+  /* Three objects on a field: edge to edge, one row, one crop. Each
+     card is a flex share; the whole expansion is the share.
+
+     Full-bleed on the wide composition (Nahian, 2026-09-22): the row
+     used to sit inside the wrap, so on a 1920 screen it stopped 288px
+     short of each edge on --page alone, before the gutter. It is a
+     sibling of the wrap now, so the width is simply the section's.
+     The phone keeps its gutter — see the 767 block. */
   .people__cards {
     display: flex;
     gap: var(--s-5);
@@ -247,10 +259,13 @@ const posCss = PEOPLE.map(
     .people {
       padding-block: var(--section-pad-phone);
     }
+    /* The cards left the wrap for the desktop full-bleed, so the phone
+         has to state the gutter it used to inherit. 390 is unchanged. */
     .people__cards {
       flex-direction: column;
       height: auto;
       gap: var(--s-5);
+      padding-inline: var(--gutter);
     }
     .people__card,
     .people__cards:has(.people__card:hover) .people__card,
