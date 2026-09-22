@@ -8,9 +8,41 @@
    not exist — there is no second frame to hand over to. Nahian,
    2026-09-19: "could we not do it so that bird does its thing where
    hero ends, not scrolling down to another section?" */
+import { getImage } from 'astro:assets';
 import { FACETS, facetPath } from '../lib/bird-shape';
+import { castWindows } from '../lib/bird-cast';
+import plate from '../assets/img/hero/plate.png';
 
 const paths = FACETS.map((_, i) => facetPath(i));
+
+/* The cast: three facets hold a person instead of the street (spec,
+   revised 2026-09-22). Geometry is bird-box units from lib/bird-cast,
+   so these drop into the same space as the mask paths and inherit the
+   mask's transform — bird.ts writes one transform for hole, lines and
+   cast alike, so the windows track the shrink for nothing.
+
+   The widths are chosen to land on variants the hero already emits, so
+   the cast costs no extra bytes on desktop: the plate at its own width
+   and the cutouts at 600 are both in the hero's ladders. */
+const cuts = import.meta.glob<{ default: ImageMetadata }>('../assets/img/hero/*.png', {
+  eager: true,
+});
+const meta = (id: string) => cuts[`../assets/img/hero/${id}.png`].default;
+const cast = castWindows({
+  amena: meta('amena'),
+  faysal: meta('faysal'),
+  rahim: meta('rahim'),
+});
+
+const bg = await getImage({ src: plate, width: plate.width, format: 'avif' });
+const figs = Object.fromEntries(
+  await Promise.all(
+    cast.map(async (c) => [
+      c.id,
+      (await getImage({ src: meta(c.id), width: 600, format: 'avif' })).src,
+    ]),
+  ),
+);
 ---
 
 <div class="bird" data-bird-live>
@@ -24,8 +56,26 @@ const paths = FACETS.map((_, i) => facetPath(i));
           ))}
         </g>
       </mask>
+      {cast.map((c) => (
+        <clipPath id={c.clipId} clipPathUnits="userSpaceOnUse">
+          <path d={facetPath(c.facet)}></path>
+        </clipPath>
+      ))}
     </defs>
     <rect class="bird__sheet" width="100%" height="100%" mask="url(#bird-hole)"></rect>
+
+    <!-- The cast, over the street and under the seams: each window is the
+         plate and one cutout, clipped to its facet. Two images, not one
+         crop — the plate has no people of its own. -->
+    <g class="bird__cast" data-bird-cast>
+      {cast.map((c) => (
+        <g clip-path={`url(#${c.clipId})`}>
+          <image href={bg.src} x={c.bg.x} y={c.bg.y} width={c.bg.w} height={c.bg.h} />
+          <image href={figs[c.id]} x={c.fig.x} y={c.fig.y} width={c.fig.w} height={c.fig.h} />
+        </g>
+      ))}
+    </g>
+
     <g class="bird__lines" data-bird-lines fill="none">
       {paths.map((d) => (
         <path d={d} vector-effect="non-scaling-stroke"></path>
@@ -61,6 +111,16 @@ const paths = FACETS.map((_, i) => facetPath(i));
   .bird__lines path {
     stroke: var(--paper);
     stroke-width: 2;
+  }
+
+  /* The cast crossfades in over the last of the shrink — bird.ts writes
+     the opacity, from zero, so nothing is visible while the window is
+     still large enough to fill the frame. Two of the three facets are
+     START_CANDIDATES: without this the section would open on a
+     screen-filling portrait instead of the street. */
+  .bird__cast {
+    opacity: 0;
+    will-change: opacity;
   }
 
   /* Centred beneath the mark; --bird-bottom is written on resize by

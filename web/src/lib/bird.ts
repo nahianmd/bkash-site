@@ -26,6 +26,22 @@ export const BIRD = {
   motionEnd: 0.8,
   copyFrom: 0.7,
   copyTo: 0.8,
+  /* The cast crossfades in and LANDS at 0.70 — Nahian, 2026-09-22: "swap
+     lands when the bird fully rests and when the copy is about to appear."
+     Those read as two moments, because motionEnd is 0.8 and copyFrom 0.7,
+     and they are not: cubicInOut front-loads the ease, so at q = 0.70 the
+     eased motion is 0.9922 and the mark is 1.017x its rest size — 1.7%
+     off, invisible — while the copy is still at exactly zero. So 0.70 is
+     both "fully rested" and "copy about to appear", and neither motionEnd
+     nor copyFrom had to move.
+
+     It cannot start much earlier than this. topWing and middle are the
+     START_CANDIDATES, so at q = 0 one of the two cast facets is scaled
+     until it covers the frame; a cast visible then would open the section
+     on a screen-filling portrait instead of the street continuing out of
+     the hero — the seam the one-pin design exists to prevent. */
+  swapFrom: 0.58,
+  swapTo: 0.7,
   /* What the street does while the window shrinks.
      'wide' — the camera pulls back from beat 3 to the establishing shot
               and the recede lifts: the mark rests on the bright, whole
@@ -59,6 +75,9 @@ export function createBirdOverlay(
   if (!hole || !lines) return null;
   const holeEl: SVGGElement = hole;
   const linesEl: SVGGElement = lines;
+  /* Optional: the static poster has no cast group, and neither does a
+     build where the spec's revision is reverted. */
+  const castEl = root.querySelector<SVGGElement>('[data-bird-cast]');
 
   let vw = 1;
   let vh = 1;
@@ -122,6 +141,9 @@ export function createBirdOverlay(
     const t = `translate(${ox.toFixed(2)} ${oy.toFixed(2)}) scale(${k.toFixed(5)})`;
     holeEl.setAttribute('transform', t);
     linesEl.setAttribute('transform', t);
+    /* One transform for all three groups: the cast's geometry is in
+       bird-box units, so it tracks the shrink with no maths of its own. */
+    if (castEl) castEl.setAttribute('transform', t);
   };
 
   function measure() {
@@ -147,6 +169,10 @@ export function createBirdOverlay(
       /* The street and the other two come back as the window opens; the
          cutouts stay — the plate has no people of its own. */
       rig.applyFocus(1, 1 - e);
+    }
+    if (castEl) {
+      const w = Math.min(1, Math.max(0, (q - BIRD.swapFrom) / (BIRD.swapTo - BIRD.swapFrom)));
+      castEl.style.opacity = w.toFixed(3);
     }
     if (copy) {
       const c = Math.min(1, Math.max(0, (q - BIRD.copyFrom) / (BIRD.copyTo - BIRD.copyFrom)));

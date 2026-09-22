@@ -61,8 +61,35 @@ export const FACETS: Tri[] = [
   ],
 ];
 
+/* Human names for the facets. FACETS is indexed in the logo file's own path
+   order, which is meaningless to anyone looking at a bird — Nahian, 2026-09-22:
+   "you numbered triangle in a way that is not human readable". Refer to them
+   by name; the indices stay only because the arrays are indexed. */
+export const FACET = {
+  flat: 0, // centre-lower, wide and shallow
+  middle: 1, // the big central body
+  topWing: 2, // the big upper-left wing
+  wingtip: 3, // the sliver above the wing
+  head: 4, // upper right
+  sliver: 5, // the thin one under the head
+  tail: 6, // tall, lower left
+  beak: 7, // the far-right tip
+} as const;
+
+export type FacetName = keyof typeof FACET;
+
 /** The two facets large enough to start inside; the solver picks per viewport. */
-export const START_CANDIDATES = [1, 2];
+export const START_CANDIDATES = [FACET.middle, FACET.topWing];
+
+/** A facet's bounding box in bird-box px: [x, y, w, h]. */
+export function facetBox(i: number): [number, number, number, number] {
+  const p = facetPx(i);
+  const xs = p.map((q) => q[0]);
+  const ys = p.map((q) => q[1]);
+  const x = Math.min(...xs);
+  const y = Math.min(...ys);
+  return [x, y, Math.max(...xs) - x, Math.max(...ys) - y];
+}
 
 /** A facet's vertices in bird-box px. */
 export const facetPx = (i: number) =>
