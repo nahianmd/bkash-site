@@ -139,9 +139,20 @@ const figHref = Object.fromEntries(people.map((p) => [p.id, p.href]));
     color: var(--ink);
   }
 
+  /* The auto margins are the centring, not text-align. The block is
+     text-align: center gutter to gutter, but each child centres its text
+     inside its OWN box — and .t-lead carries max-width: --measure-tight
+     (46ch), so without these the line box sat flush against the left
+     gutter and its text centred on that box rather than on the section.
+     The title has carried them all along, which is why the two disagreed.
+
+     Only visible on the wide composition: below 767px the column is
+     already narrower than 46ch, so the margins resolve to 0 and nothing
+     moves. Nahian, 2026-09-22. */
   .bird-still__line {
     color: var(--ink-2);
     margin-top: var(--s-4);
+    margin-inline: auto;
   }
 
   .bird-still__title {
