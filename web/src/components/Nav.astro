@@ -7,7 +7,19 @@
    once for the drawer's accordion. Support and the language switch
    stay as they were. Link targets are PLACEHOLDER routes.
 */
-import Logo from './Logo.astro';
+import { Picture } from 'astro:assets';
+/* The Bangla mark (Nahian, 2026-09-22). Two files, not one: the nav goes
+   transparent over the hero, and `কাশ` is near-black in the supplied
+   artwork, so a single raster would go invisible exactly where the old
+   inline SVG used to flip to paper via currentColor.
+
+   `bikash-on-dark.webp` is that file with ONLY its desaturated pixels
+   remapped to --paper (10,877 of them); all 41,418 brand-colour pixels
+   are byte-identical. Deliberately not `filter: brightness(0) invert(1)`
+   — the trick Logo.astro's own comment rejects, because it flattens the
+   three pinks to white along with the type. */
+import bikash from '../assets/img/brand/bikash.webp';
+import bikashOnDark from '../assets/img/brand/bikash-on-dark.webp';
 import { NAV_MENUS } from '../lib/nav-data';
 
 interface Props {
@@ -26,7 +38,30 @@ const MENUS = NAV_MENUS;
 
 <header class="nav" data-nav>
   <a class="nav__logo" href="/" aria-label="bKash home">
-    <Logo class="nav__mark" />
+    {/* alt="" on both: the <a> already carries the accessible name, so a
+        label here would announce the logo twice. */}
+    <Picture
+      src={bikash}
+      alt=""
+      widths={[bikash.width]}
+      sizes="6.4rem"
+      formats={['avif', 'webp']}
+      fallbackFormat="webp"
+      layout="none"
+      loading="eager"
+      pictureAttributes={{ class: 'nav__mark nav__mark--paper' }}
+    />
+    <Picture
+      src={bikashOnDark}
+      alt=""
+      widths={[bikashOnDark.width]}
+      sizes="6.4rem"
+      formats={['avif', 'webp']}
+      fallbackFormat="webp"
+      layout="none"
+      loading="eager"
+      pictureAttributes={{ class: 'nav__mark nav__mark--dark' }}
+    />
   </a>
 
   <nav class="nav__links" aria-label="Primary">
@@ -271,12 +306,45 @@ const MENUS = NAV_MENUS;
   .nav__logo {
     flex: none;
     display: block;
+    /* The two marks stack here. 2.175:1 against the old SVG's 2.186:1,
+       so 6.4rem still resolves to the bar height it always had. */
+    position: relative;
     width: 6.4rem;
   }
 
-  .nav__mark {
+  /* :global on the marks because <Picture> renders its own <picture> and
+     <img>, and neither carries this component's scope attribute — the
+     same reason Footer.astro reaches its own picture globally. */
+  .nav :global(.nav__mark) {
+    display: block;
+    transition: opacity var(--t-base) var(--ease-io);
+  }
+
+  .nav :global(.nav__mark img) {
+    display: block;
     width: 100%;
     height: auto;
+  }
+
+  /* The dark-ground twin sits exactly over the paper one and crossfades
+     on the nav's own duration and easing, so the mark turns with the
+     bar's background and colour rather than a beat behind them. Stacked
+     rather than display-toggled: swapping `display` would relayout the
+     bar mid-transition and flash. */
+  .nav :global(.nav__mark--dark) {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .nav.is-over-dark :global(.nav__mark--paper),
+  :global(html[data-nav-ground='dark']) .nav :global(.nav__mark--paper) {
+    opacity: 0;
+  }
+
+  .nav.is-over-dark :global(.nav__mark--dark),
+  :global(html[data-nav-ground='dark']) .nav :global(.nav__mark--dark) {
+    opacity: 1;
   }
 
   /* ---- top-level links ----
