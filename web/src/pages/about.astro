@@ -223,7 +223,7 @@ const STAT_ICONS: Record<string, string> = {
     </section>
 
     <!-- ============================== CEO QUOTE ============================== -->
-    <section class="ab-section ab-section--dark" aria-label="From the Chief Executive">
+    <section class="ab-section ab-section--dark ab-ceo" aria-label="From the Chief Executive">
       <div class="wrap">
         <div class="quote">
           <Image
@@ -235,7 +235,7 @@ const STAT_ICONS: Record<string, string> = {
             loading="lazy"
             data-reveal
           />
-          <div data-reveal>
+          <div class="quote__body" data-reveal>
             <blockquote class="t-quote">
               “Millions of Bangladeshis once hid their money under the mattress simply because
               access to financial services was out of reach. bKash became the collective
@@ -612,17 +612,29 @@ const STAT_ICONS: Record<string, string> = {
   }
 
   /* ---- the CEO ---- */
-  /* The portrait column is narrower than the page's usual split so the
-     quote's left edge moves left and it runs to fewer lines: measured at
-     1920 it is eleven lines at 18rem against the 34ch quote measure,
-     ten once the measure is lifted, and nine at 16rem — and no fewer
-     however narrow the portrait goes, so 16rem is the least it gives up.
-     (Nahian, 2026-09-20.) */
+  /* A cinematic split (Nahian, 2026-09-23). The photograph is composed
+     for it: him on the right third, plain brick on the left two. So the
+     photo runs from the section's right, top and bottom edges across a
+     bit over half its width, and its left side — the empty wall, never
+     him — fades into --night, the same dissolve as the phone's. The
+     quote sits on the dark in the left column and ends where the fade
+     begins. The photo is barely cropped from its own landscape, so it
+     is barely enlarged. */
+  .ab-ceo {
+    position: relative;
+    overflow: hidden;
+  }
   .quote {
     display: grid;
-    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
     gap: var(--s-7);
     align-items: center;
+  }
+  /* Above the photo: the panel is positioned and the text is not, so
+     without this the photo would paint over the quote's last words. */
+  .quote__body {
+    position: relative;
+    z-index: 1;
   }
   /* This is a long executive quote in a column, not a pull quote, so it
      takes the lead measure rather than the quote measure — still a named
@@ -633,20 +645,28 @@ const STAT_ICONS: Record<string, string> = {
     text-align: justify;
     text-wrap: normal;
   }
-  /* The portrait is as tall as the text beside it (Nahian, 2026-09-23):
-     its top meets the quote's first line and its foot the designation's
-     last. It stretches to the grid row, which the text sizes — a height
-     of 100% counts as auto while the row is measured, so the photo
-     never makes the row taller. The column keeps its 16rem, so the
-     quote's line count holds. His face is at ~76% across a 1200x669
-     frame; anchoring the crop right keeps it in the column. */
+  /* The panel: out of the grid, against the section's right, top and
+     bottom, 58% wide. Its left 45% is the fade. The crop is anchored at
+     85% across, which keeps his face (~76% of the frame) in the solid
+     part at every width: ~57% across the panel at 900px, where the
+     section is tall and the crop tight, ~72% at 1440 and ~75% at 1920.
+     The mask is static, composited once. */
   .quote :global(.quote__portrait) {
-    align-self: stretch;
-    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 58%;
     height: 100%;
     object-fit: cover;
-    object-position: 100% 50%;
-    border-radius: var(--r-lg);
+    object-position: 85% 50%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 45%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 45%);
+  }
+  /* Fade only: the reveal's 20px rise would open a gap along an edge
+     that is meant to be the section's own. */
+  .quote :global(.quote__portrait[data-reveal]) {
+    transform: none;
   }
   .quote__attr {
     margin-top: var(--s-5);
@@ -918,6 +938,8 @@ const STAT_ICONS: Record<string, string> = {
        right, his face lands at ~57% across. The mask is static — it
        composites once, it is not animated. */
     .quote :global(.quote__portrait) {
+      /* back in flow, above the quote — the desktop panel is absolute */
+      position: static;
       width: calc(100% + 2 * var(--gutter));
       max-width: none;
       height: auto;
