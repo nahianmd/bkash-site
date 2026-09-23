@@ -236,12 +236,23 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
      display's proportions (device.ts); only the transform changes per
      frame. preserve-3d, not overflow:hidden, on the device itself, so
      the shadow can sit behind it in depth. */
+  /* The frame, after "bKash Mobile.png" (Nahian, 2026-09-24): a light
+     rim a few px wide around the screen — white at its inner edge, a
+     soft grey toward its outer — and the 1px pink line round the rim's
+     outside. services.ts writes --rim and --screen-r; the rim's corners
+     are the screen's plus the rim, so the two curves stay parallel. */
   .device {
     position: absolute;
     left: 0;
     top: 0;
     width: 100px;
     height: 211px;
+    border-radius: calc(var(--screen-r, var(--r-md)) + var(--rim, 8px));
+    background: linear-gradient(160deg, var(--device-rim-hi), var(--device-rim-lo));
+    box-shadow:
+      0 0 0 1px var(--pink),
+      inset 0 0 0 1px var(--device-rim-edge),
+      inset 0 0 calc(var(--rim, 8px) * 0.8) var(--device-rim-shade);
     transform-origin: 50% 50%;
     transform-style: preserve-3d;
     will-change: transform, opacity;
@@ -250,11 +261,10 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   }
   .device__screen {
     position: absolute;
-    inset: 0;
+    inset: var(--rim, 8px);
     border-radius: var(--screen-r, var(--r-md));
     overflow: hidden;
     background: var(--paper);
-    box-shadow: 0 0 0 1px var(--pink);
   }
   /* The shadow, seen from the side: a soft light-grey shape set back
      behind the screen and drawn up past its top, so as the screen leans

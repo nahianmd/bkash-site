@@ -164,6 +164,12 @@ export const WALL = {
        — the bottom stays square to you, the top recedes. Eased in with
        the slide; the life plays on top of it. */
     leanDeg: 14,
+    /* The rim (Nahian, 2026-09-24, from "bKash Mobile.png"): a light
+       bezel between the screen and the pink line, as a fraction of the
+       screen's width — 16px on the reference's 600. The same on every
+       side, so the screen's centre, which the emergence is solved
+       about, does not move. */
+    rimFrac: 0.027,
   },
   /* Over the first part of the emergence the device fades in over the
      photographed screen it is posed on; the wall (hand included) fades
@@ -343,6 +349,7 @@ export function initServices() {
   let restH = 1;
   let screenW = 1;
   let screenH = 1;
+  let rim = 0;
   let cam: Camera = { cx: 0, cy: 0, d: 1500, ox: 0, oy: 0 };
   /* The slide: where the phone rests beside the copy, and its size there,
      relative to Rest B. Solved from the copy's own measured height. */
@@ -409,14 +416,19 @@ export function initServices() {
       restW = (restH * B.w) / B.h;
       screenW = (restW * Dp.w) / B.w;
       screenH = (restH * Dp.h) / B.h;
-      /* The device IS the screen now: sized to the display, centred, its
-         corners the display's. Its centre is still the display's, which
-         is what the placement below is solved about. */
-      device.style.width = `${screenW.toFixed(1)}px`;
-      device.style.height = `${screenH.toFixed(1)}px`;
-      device.style.left = `${((vw - screenW) / 2).toFixed(1)}px`;
-      device.style.top = `${((vh - screenH) / 2).toFixed(1)}px`;
-      device.style.setProperty('--screen-r', `${((screenW * Dp.r) / Dp.w).toFixed(1)}px`);
+      /* The device is the screen plus its rim, centred: the rim is equal
+         on every side, so the centre is still the display's, which is
+         what the placement below is solved about. */
+      rim = screenW * WALL.rest.rimFrac;
+      const dw = screenW + 2 * rim;
+      const dh = screenH + 2 * rim;
+      device.style.width = `${dw.toFixed(1)}px`;
+      device.style.height = `${dh.toFixed(1)}px`;
+      device.style.left = `${((vw - dw) / 2).toFixed(1)}px`;
+      device.style.top = `${((vh - dh) / 2).toFixed(1)}px`;
+      const screenR = (screenW * Dp.r) / Dp.w;
+      device.style.setProperty('--screen-r', `${screenR.toFixed(1)}px`);
+      device.style.setProperty('--rim', `${rim.toFixed(1)}px`);
       /* The pin's camera, read, not assumed. The placement is solved for
          the DISPLAY — the photographed corners are the screen's — about the
          device's centre, which is the display's; the tilt is the photo's. */
@@ -447,7 +459,7 @@ export function initServices() {
         const copyBottom = resolvePx('var(--search-space)', 140);
         const bottom = vh - copyBottom - copyH - gap;
         const avail = Math.max(0, bottom - top);
-        const s = Math.min(1, avail / screenH, (vw - 2 * gutter) / screenW);
+        const s = Math.min(1, avail / dh, (vw - 2 * gutter) / dw);
         slide = { dx: 0, dy: (top + bottom) / 2 - vh / 2, s };
       } else {
         /* The phone belongs to the right: the centre of the right column,
@@ -459,7 +471,7 @@ export function initServices() {
         const colL = vw / 2 + gap / 2;
         const colR = vw - gutter;
         const gather = resolvePx('var(--svc-gather)', 0);
-        const s = Math.min(1, (colR - colL) / screenW, (vh - navH - gutter) / screenH);
+        const s = Math.min(1, (colR - colL) / dw, (vh - navH - gutter) / dh);
         slide = { dx: (colL + colR) / 2 - gather - vw / 2, dy: navH / 2, s };
       }
     }
@@ -521,7 +533,8 @@ export function initServices() {
     const L = liveAt(p, now);
     const l = cubicInOut(ramp(p, WALL.restEnd, WALL.slideEnd));
     const t = WALL.rest.leanDeg * DEG * l + L.rx;
-    const h = screenH / 2;
+    /* half the device's height: the pivot is the rim's bottom edge */
+    const h = screenH / 2 + rim;
     return (
       `translate3d(${L.dx.toFixed(2)}px, ${L.dy.toFixed(2)}px, 0) scale(${L.s.toFixed(4)}) ` +
       `translate3d(0, ${(h * (1 - Math.cos(t))).toFixed(2)}px, ${(-h * Math.sin(t)).toFixed(2)}px) ` +
