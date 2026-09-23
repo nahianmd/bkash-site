@@ -38,6 +38,22 @@ const boardImg = (f: string) => boardImgs[`../assets/img/about/board/${f}.jpg`].
 const investorImg = (f: string) =>
   investorImgs[`../assets/img/about/investors/${f}.png`].default;
 const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`].default;
+
+/* The stats' icons (Nahian, 2026-09-23): line drawings on a 24 grid,
+   stroked in currentColor so the CSS colours them. People for
+   customers; a person and a banknote for agents, the "human ATMs"; a
+   shopfront for merchants; an app grid with room for more for products
+   and services. */
+const STAT_ICONS: Record<string, string> = {
+  customers:
+    '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M16.2 13.6h.3c2.5 0 4.5 2 4.5 4.6"/>',
+  agents:
+    '<circle cx="8" cy="7" r="3"/><path d="M2.5 18.5c0-3 2.5-5.3 5.5-5.3 1.3 0 2.5.4 3.4 1.2"/><rect x="12.5" y="13" width="9" height="6" rx="1"/><circle cx="17" cy="16" r="1.3"/>',
+  merchants:
+    '<path d="M3.5 9.5 5 4.5h14l1.5 5"/><path d="M3.5 9.5a2.8 2.8 0 0 0 5.67 0 2.8 2.8 0 0 0 5.66 0 2.8 2.8 0 0 0 5.67 0"/><path d="M5 12v7.5h14V12"/><path d="M10 19.5V15h4v4.5"/>',
+  products:
+    '<rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><path d="M16.75 13.5V20M13.5 16.75H20"/>',
+};
 ---
 
 <Base
@@ -82,6 +98,17 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
         <div class="stats">
           {STATS.map((s) => (
             <div class="stats__item" data-reveal data-reveal-group="stats">
+              <svg
+                class="stats__icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                set:html={STAT_ICONS[s.icon]}
+              />
               <p class="stats__num t-num">
                 <span data-count={s.count} data-suffix={s.suffix}>
                   0
@@ -441,20 +468,30 @@ const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`]
     grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
     gap: clamp(1.5rem, 3vw, 3rem);
   }
+  /* Quieter (Nahian, 2026-09-23): a hairline over each figure, the
+     figure in dark ash, and the pink moved to the icon and the label. */
   .stats__item {
-    border-top: 2px solid var(--pink);
+    border-top: 1px solid var(--pink);
     padding-top: var(--s-5);
+  }
+  .stats__icon {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    color: var(--pink);
+    margin-bottom: var(--s-4);
   }
   .stats__num {
     font-size: var(--fs-display);
     line-height: 1;
     letter-spacing: -0.035em;
     font-weight: 700;
-    color: var(--pink);
+    color: var(--ink-2);
     margin-bottom: var(--s-3);
   }
   .stats__label {
     font-weight: 600;
+    color: var(--pink);
     margin-bottom: var(--s-2);
   }
   .stats__note {
