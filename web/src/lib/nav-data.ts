@@ -144,7 +144,7 @@ export const NAV_MENUS: NavMenu[] = [
         items: list('/services', ['Train', 'Plane', 'Bus', 'Launch', 'Hotel']),
       },
       {
-        label: 'Purchase',
+        label: 'Value added service',
         items: list('/services', [
           'GP packages',
           'Metrorail tickets',
