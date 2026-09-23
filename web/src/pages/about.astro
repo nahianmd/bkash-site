@@ -937,6 +937,9 @@ const STAT_ICONS: Record<string, string> = {
     .split :global(.split__img) {
       order: -1;
       aspect-ratio: 16 / 10;
+      /* 16:10 from the 4:3 photograph drops a sixth of its height; take
+         it all from the foot, so the headroom above the two stays. */
+      object-position: 50% 0;
       width: calc(100% + 2 * var(--gutter));
       max-width: none;
       margin-inline: calc(-1 * var(--gutter));
