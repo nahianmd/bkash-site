@@ -663,8 +663,18 @@ const STAT_ICONS: Record<string, string> = {
     height: 100%;
     object-fit: cover;
     object-position: 85% 50%;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 45%);
-    mask-image: linear-gradient(to right, transparent 0%, #000 45%);
+    /* A little zoom, pivoting on the right edge so the photo still meets
+       it and his face comes left: ~74% → ~68% across the panel at 1440
+       (Nahian, 2026-09-23). `scale`, not transform, so the reveal's
+       transform cannot cancel it. The mask scales with the element, so
+       its stops are written in the element's own space to land where
+       the unzoomed fade did on screen — transparent at the panel's left
+       edge, solid 45% in: stop = 1 − (1 − p) / 1.2. The section's
+       overflow clips the zoom's top and bottom. */
+    scale: 1.2;
+    transform-origin: 100% 50%;
+    -webkit-mask-image: linear-gradient(to right, transparent 16.7%, #000 54.2%);
+    mask-image: linear-gradient(to right, transparent 16.7%, #000 54.2%);
   }
   /* Fade only: the reveal's 20px rise would open a gap along an edge
      that is meant to be the section's own. */
@@ -951,12 +961,19 @@ const STAT_ICONS: Record<string, string> = {
          across the square; 100% is the furthest left the frame allows
          without a gap at the right edge, ~57% (Nahian, 2026-09-23). */
       object-position: 100% 50%;
+      /* …and the zoom takes it to the centre: 1.16 about the top-right
+         corner puts his face at 50% across, the photo still flush with
+         the right edge and the section's top. */
+      scale: 1.16;
+      transform-origin: 100% 0;
       margin-inline: calc(-1 * var(--gutter));
       margin-top: calc(-1 * var(--section-pad-phone));
       margin-bottom: calc(-1 * var(--s-9));
       border-radius: 0;
-      -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
-      mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+      /* Stops divided by the 1.16 zoom, so the fade still runs from 45%
+         of the square to its foot on screen. */
+      -webkit-mask-image: linear-gradient(to bottom, #000 38.8%, transparent 86.2%);
+      mask-image: linear-gradient(to bottom, #000 38.8%, transparent 86.2%);
     }
     /* Three across, two rows (Nahian, 2026-09-20). A grid, not the
              desktop flex row: every mark gets the same cell and is centred in
