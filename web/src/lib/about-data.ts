@@ -87,7 +87,7 @@ export const VOICES: Voice[] = [
     quote:
       'I receive my salary in bKash and then spend that money for all my needs through bKash — easily and safely.',
     name: 'Rima Akter',
-    city: 'Sylhet',
+    city: 'Savar',
   },
   {
     file: 'tashrif-khan',
@@ -103,7 +103,7 @@ export const VOICES: Voice[] = [
     quote:
       'Countless people like me depend on remittances. bKash has made life simpler for everyone — remittances now arrive right here.',
     name: 'Farhana Akter Dil',
-    city: 'Dhaka',
+    city: 'Sylhet',
   },
 ];
 
