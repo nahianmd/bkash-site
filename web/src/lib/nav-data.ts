@@ -13,7 +13,9 @@
 
 export type NavItem = { label: string; href: string };
 /** A subsection: a link, or a heading over a list of links. */
-export type NavGroup = { label: string; href?: string; items?: NavItem[] };
+/** A list with no label has no heading: in a menu of one list, the
+    menu's own title names it. */
+export type NavGroup = { label?: string; href?: string; items?: NavItem[] };
 /** A top-level menu: a panel of groups. */
 export type NavMenu = {
   id: 'consumers' | 'business' | 'company';
@@ -181,7 +183,7 @@ export const NAV_MENUS: NavMenu[] = [
     label: 'Business',
     groups: [
       {
-        label: 'For business',
+        /* No heading: "Business" says it (Nahian, 2026-09-23). */
         items: [
           { label: 'Online business', href: '/online-merchants' },
           ...list('/business', [
@@ -202,7 +204,8 @@ export const NAV_MENUS: NavMenu[] = [
     label: 'Company',
     groups: [
       {
-        label: 'Company overview',
+        /* No heading, and Newsroom joins the one list — "Company" says
+           it (Nahian, 2026-09-23). */
         items: [
           { label: 'About us', href: '/about' },
           ...list('/company', [
@@ -212,10 +215,10 @@ export const NAV_MENUS: NavMenu[] = [
             'Risk management',
             'Code of conduct',
             'Governance',
+            'Newsroom',
           ]),
         ],
       },
-      { label: 'News', items: [{ label: 'Newsroom', href: '/company/newsroom' }] },
     ],
   },
 ];

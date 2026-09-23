@@ -192,9 +192,10 @@ function initMenus(nav: HTMLElement): void {
   function place(panel: HTMLElement, btn: HTMLElement) {
     const navBox = nav.getBoundingClientRect();
     const btnBox = btn.getBoundingClientRect();
-    /* how far in from the card's edge its first title starts — the
-       cells carry the padding, not the card */
-    const title = panel.querySelector('.nav__group-label');
+    /* how far in from the card's edge its text starts — the cells carry
+       the padding, not the card; a menu with no titles aligns by its
+       first link */
+    const title = panel.querySelector('.nav__group-label, .nav__list a');
     const inset = title
       ? title.getBoundingClientRect().left - panel.getBoundingClientRect().left
       : 0;

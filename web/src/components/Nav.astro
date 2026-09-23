@@ -146,7 +146,7 @@ const cellsOf = (m: NavMenu): NavGroup[][] => {
                 <div class="nav__group">
                   {g.items ? (
                     <>
-                      <p class="nav__group-label">{g.label}</p>
+                      {g.label && <p class="nav__group-label">{g.label}</p>}
                       <ul class="nav__list">
                         {g.items.map((it) => (
                           <li>
@@ -204,7 +204,15 @@ const cellsOf = (m: NavMenu): NavGroup[][] => {
           </summary>
           <div class="nav__acc-body">
             {m.groups.map((g) =>
-              g.items ? (
+              g.items && !g.label ? (
+                /* An unheaded list opens straight under the menu: no
+                   sub-accordion for a heading that is not there. */
+                g.items.map((it) => (
+                  <a class="nav__acc-link nav__acc-link--aside" href={it.href}>
+                    {it.label}
+                  </a>
+                ))
+              ) : g.items ? (
                 <details class="nav__acc nav__acc--sub">
                   <summary class="nav__acc-sum nav__acc-sum--sub">
                     {g.label}
@@ -518,9 +526,6 @@ const cellsOf = (m: NavMenu): NavGroup[][] => {
     margin-top: var(--s-3);
     padding-top: var(--s-3);
     border-top: 1px solid var(--rule);
-  }
-  .nav__panel--company .nav__groups {
-    grid-template-columns: repeat(2, auto);
   }
   /* Titles: sentence case, set apart by weight and the brand colour
      rather than capitals (Nahian, 2026-09-23). */
