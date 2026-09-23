@@ -28,8 +28,11 @@ const investorImgs = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/img/about/investors/*.png',
   { eager: true },
 );
+/* Face crops of the voice photographs (thumbs/, cut 2026-09-24): the
+   full frames carry a printed "… bKash" pill across their foot and are
+   520px wide, so the byline uses a square around each face instead. */
 const voiceImgs = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/img/about/voices/*.jpg',
+  '../assets/img/about/voices/thumbs/*.jpg',
   {
     eager: true,
   },
@@ -37,7 +40,8 @@ const voiceImgs = import.meta.glob<{ default: ImageMetadata }>(
 const boardImg = (f: string) => boardImgs[`../assets/img/about/board/${f}.jpg`].default;
 const investorImg = (f: string) =>
   investorImgs[`../assets/img/about/investors/${f}.png`].default;
-const voiceImg = (f: string) => voiceImgs[`../assets/img/about/voices/${f}.jpg`].default;
+const voiceImg = (f: string) =>
+  voiceImgs[`../assets/img/about/voices/thumbs/${f}.jpg`].default;
 
 /* The stats' icons (Nahian, 2026-09-23): line drawings on a 24 grid,
    stroked in currentColor so the CSS colours them. People for
@@ -300,21 +304,22 @@ const STAT_ICONS: Record<string, string> = {
         <div class="voices">
           {VOICES.map((v) => (
             <figure class="voices__card" data-reveal data-reveal-group="voices">
-              <Image
-                src={voiceImg(v.file)}
-                alt={v.name}
-                width={voiceImg(v.file).width}
-                layout="none"
-                class="voices__face"
-                loading="lazy"
-              />
-              <figcaption>
-                <p class="t-eyebrow voices__tag">{v.tag}</p>
-                <blockquote class="t-body voices__quote">“{v.quote}”</blockquote>
-                <p class="voices__who t-sm">
+              <p class="t-eyebrow voices__tag">{v.tag}</p>
+              <blockquote class="t-body voices__quote">“{v.quote}”</blockquote>
+              <figcaption class="voices__who t-sm">
+                {/* alt="": the name is right beside it. */}
+                <Image
+                  src={voiceImg(v.file)}
+                  alt=""
+                  width={168}
+                  layout="none"
+                  class="voices__face"
+                  loading="lazy"
+                />
+                <span>
                   <strong>{v.name}</strong>
                   {v.city}
-                </p>
+                </span>
               </figcaption>
             </figure>
           ))}
@@ -774,34 +779,31 @@ const STAT_ICONS: Record<string, string> = {
   }
 
   /* ---- voices ---- */
+  /* Words first, the face as a byline (Nahian, 2026-09-24). The round,
+     ringed faces in bordered cards were the page's only circles and its
+     last boxes. Now each voice is open under a pink hairline — the
+     stats' and the triad's treatment and rhythm, so the three read as
+     one family — and the photograph is a small square at the board's
+     radius beside the name. */
   .voices {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: clamp(1rem, 2vw, 1.75rem);
+    gap: clamp(1.5rem, 3vw, 3rem);
   }
-  /* The page's own language (Nahian, 2026-09-23): the round, ringed
-     faces in bordered cards were the only circles and the last boxes on
-     the page. Now open, like the stats and the triad, and each voice
-     leads with a photograph the way the board's do — a full-width
-     rectangle at the board's radius. 6:5 is the photographs' own
-     shape (520x435), so nothing is cropped away. */
   .voices__card {
     margin: 0;
     display: flex;
     flex-direction: column;
+    border-top: 1px solid var(--pink);
+    padding-top: var(--s-5);
   }
   .voices :global(.voices__face) {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 6 / 5;
+    flex: none;
+    width: 3.5rem;
+    height: 3.5rem;
     object-fit: cover;
-    object-position: 50% 30%;
     border-radius: var(--r-md);
     background: var(--paper-2);
-    margin-bottom: var(--s-5);
-  }
-  .voices__card figcaption {
-    display: contents;
   }
   .voices__tag {
     color: var(--pink);
@@ -813,6 +815,9 @@ const STAT_ICONS: Record<string, string> = {
   }
   .voices__who {
     margin-top: var(--s-5);
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
     color: var(--ink-3);
   }
   .voices__who strong {
