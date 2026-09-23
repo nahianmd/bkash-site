@@ -929,9 +929,23 @@ const STAT_ICONS: Record<string, string> = {
     .split {
       grid-template-columns: 1fr;
     }
+    /* The picture above the copy, to the boundary (Nahian, 2026-09-24):
+       out past the gutter on both sides and the section's top padding,
+       so it meets the screen's edges and the section's top. No radius
+       or shadow at an edge, and a fade-only reveal, since the 20px rise
+       would open a gap along the top. */
     .split :global(.split__img) {
       order: -1;
       aspect-ratio: 16 / 10;
+      width: calc(100% + 2 * var(--gutter));
+      max-width: none;
+      margin-inline: calc(-1 * var(--gutter));
+      margin-top: calc(-1 * var(--section-pad-phone));
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .split :global(.split__img[data-reveal]) {
+      transform: none;
     }
     /* One column, the portrait above the quote. Justified here too
        (Nahian, 2026-09-23), with hyphenation on: at ~26 characters a
