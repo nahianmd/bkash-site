@@ -857,14 +857,22 @@ const STAT_ICONS: Record<string, string> = {
        drawing is hidden; the head lands at ~83% across. The
        PNG's ground is transparent, so the bleed shows no box. Overflow
        to the left cannot be scrolled to, so the page does not widen. */
+    /* Even air around the drawing, not the file (Nahian, 2026-09-23):
+       the PNG carries 7.28% of its height as transparent margin above
+       the bird and 5.65% below — measured from its alpha — so at 128vw
+       those are pulled back with negative margins, and the gap above
+       and the section's space below are the same --s-6. */
     .revolution {
       grid-template-columns: 1fr;
-      gap: var(--s-7);
+      gap: var(--s-6);
+      margin-bottom: var(--s-6);
     }
     .revolution :global(.revolution__mark) {
       width: 128vw;
       max-width: none;
       margin-inline-start: calc(-1 * var(--gutter) - 41vw);
+      margin-top: calc(-0.0728 * 128vw);
+      margin-bottom: calc(-0.0565 * 128vw);
     }
     .split {
       grid-template-columns: 1fr;
