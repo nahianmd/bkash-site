@@ -61,7 +61,7 @@ const posCss = PEOPLE.map(
        and without a 100vw that would overshoot by the scrollbar.
        Nahian, 2026-09-22. -->
   <div class="wrap people__in">
-    <div class="people__head">
+    <div class="people__head" data-people-head>
       <p class="t-eyebrow people__eyebrow">Meet three of them</p>
       <h2 class="t-h1 people__title">Stories Behind the Numbers</h2>
     </div>
@@ -102,10 +102,13 @@ const posCss = PEOPLE.map(
   .people {
     background: var(--night-2);
     color: var(--on-night);
-    padding-block: var(--s-10);
+    /* No foot: the cards end the section, flush against the next one
+       (Nahian, 2026-09-23). */
+    padding-top: var(--s-10);
   }
   .people__head {
     margin-bottom: var(--s-8);
+    will-change: transform;
   }
   /* The title on one line; the measure is the frame's. */
   .people__title {
@@ -128,7 +131,6 @@ const posCss = PEOPLE.map(
     display: flex;
     gap: var(--s-5);
     height: min(calc(var(--vh) * 0.62), 40rem);
-    will-change: transform;
   }
   .people__card {
     position: relative;
@@ -292,7 +294,7 @@ const posCss = PEOPLE.map(
      capped so the open card stays inside one screen. */
   @media (max-width: 767px) {
     .people {
-      padding-block: var(--section-pad-phone);
+      padding-top: var(--section-pad-phone);
       container-type: inline-size;
     }
     .people__cards {

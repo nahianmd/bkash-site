@@ -3,7 +3,7 @@
    specs/sections/people.md
 
    Two things only. The recede state (Rule 4) for tap and keyboard —
-   hover is CSS. And the depth (Rule 2): three planes, ground / cards /
+   hover is CSS. And the depth (Rule 2): three planes, heading / cards /
    captions, drifting at the token rates as the section crosses the
    viewport. One transform per plane per frame; no pin.
    ============================================================ */
@@ -15,7 +15,7 @@ export function initPeople() {
   if (!section) return;
   const cards = [...section.querySelectorAll<HTMLElement>('[data-people-card]')];
   const caps = [...section.querySelectorAll<HTMLElement>('[data-people-caps]')];
-  const cardsPlane = section.querySelector<HTMLElement>('[data-people-cards]');
+  const head = section.querySelector<HTMLElement>('[data-people-head]');
 
   /* ---- focus: tap and keyboard mirror hover ---- */
   const pick = (el: HTMLElement | null) => {
@@ -52,10 +52,13 @@ export function initPeople() {
 
   /* ---- depth: the planes drift at the token rates ----
      t runs −0.5 → 0.5 as the section's centre crosses the viewport's.
-     The ground is the section itself (rate --plane-back); the cards
-     lead it by (mid − back) of the viewport height, the captions by
-     (front − back). Felt, not noticed. */
-  if (reducedMotion() || !cardsPlane) return;
+     The cards lead the heading by (mid − back) of the viewport height,
+     the captions lead the cards by (front − mid). Felt, not noticed.
+     The cards hold still with the section and the HEADING takes that
+     relative drift the other way: the cards are the section's foot now
+     (Nahian, 2026-09-23), and a drifting foot would open a strip of
+     ground against the next section. */
+  if (reducedMotion() || !head) return;
   const css = getComputedStyle(document.documentElement);
   const rate = (name: string, fallback: number) =>
     parseFloat(css.getPropertyValue(name)) || fallback;
@@ -66,9 +69,9 @@ export function initPeople() {
   const proxy = { p: 0 };
   const render = () => {
     const t = proxy.p - 0.5;
-    const dyCards = -(mid - back) * vh * t;
+    const dyHead = (mid - back) * vh * t;
     const dyCaps = -(front - mid) * vh * t;
-    cardsPlane.style.transform = `translate3d(0, ${dyCards.toFixed(1)}px, 0)`;
+    head.style.transform = `translate3d(0, ${dyHead.toFixed(1)}px, 0)`;
     for (const c of caps) c.style.transform = `translate3d(0, ${dyCaps.toFixed(1)}px, 0)`;
   };
   const measure = () => {
@@ -101,7 +104,7 @@ export function initPeople() {
         render();
         return {
           progress: st.progress,
-          cards: cardsPlane.style.transform,
+          head: head.style.transform,
           caps: caps[0]?.style.transform,
         };
       },
