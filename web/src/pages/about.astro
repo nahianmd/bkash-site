@@ -28,9 +28,9 @@ const investorImgs = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/img/about/investors/*.png',
   { eager: true },
 );
-/* Face crops of the voice photographs (thumbs/, cut 2026-09-24): the
-   full frames carry a printed "… bKash" pill across their foot and are
-   520px wide, so the byline uses a square around each face instead. */
+/* Face crops for the byline (thumbs/, 336px squares): each cut from the
+   person's photograph in voices/ — the new portraits Nahian supplied on
+   2026-09-24, which replaced the old social-media frames. */
 const voiceImgs = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/img/about/voices/thumbs/*.jpg',
   {

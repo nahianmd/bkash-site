@@ -79,7 +79,7 @@ export const VOICES: Voice[] = [
     quote:
       'I keep my digital money in bKash and handle all my expenses digitally, effortlessly. Day or night, for every kind of spending, bKash is my cash money.',
     name: 'Golam Bariul Mojib',
-    city: 'Dhaka',
+    city: 'Chittagong',
   },
   {
     file: 'rima-akter',
@@ -87,7 +87,7 @@ export const VOICES: Voice[] = [
     quote:
       'I receive my salary in bKash and then spend that money for all my needs through bKash — easily and safely.',
     name: 'Rima Akter',
-    city: 'Savar',
+    city: 'Sylhet',
   },
   {
     file: 'tashrif-khan',
