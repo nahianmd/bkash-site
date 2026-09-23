@@ -192,8 +192,12 @@ function initMenus(nav: HTMLElement): void {
   function place(panel: HTMLElement, btn: HTMLElement) {
     const navBox = nav.getBoundingClientRect();
     const btnBox = btn.getBoundingClientRect();
-    const cs = getComputedStyle(panel);
-    const inset = parseFloat(cs.paddingLeft) + parseFloat(cs.borderLeftWidth);
+    /* how far in from the card's edge its first title starts — the
+       cells carry the padding, not the card */
+    const title = panel.querySelector('.nav__group-label');
+    const inset = title
+      ? title.getBoundingClientRect().left - panel.getBoundingClientRect().left
+      : 0;
     const gutter = parseFloat(getComputedStyle(nav).paddingLeft);
     const max = navBox.width - gutter - panel.offsetWidth;
     const x = Math.max(gutter, Math.min(btnBox.left - navBox.left - inset, max));

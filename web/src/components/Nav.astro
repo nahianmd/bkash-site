@@ -20,7 +20,7 @@ import { Picture } from 'astro:assets';
    three pinks to white along with the type. */
 import bikash from '../assets/img/brand/bikash.webp';
 import bikashOnDark from '../assets/img/brand/bikash-on-dark.webp';
-import { NAV_MENUS } from '../lib/nav-data';
+import { NAV_MENUS, type NavGroup, type NavMenu } from '../lib/nav-data';
 
 interface Props {
   /* Which top-level entry is current. Drives aria-current on both
@@ -34,6 +34,17 @@ const { current } = Astro.props;
    accordion cannot drift apart the way the prototype's two
    hand-written copies did (audit A7). */
 const MENUS = NAV_MENUS;
+
+/* The bar's panels are laid out in cells. Consumers' short groups — a
+   bare link or a single item (Borrow, Save, Learning center, Game zone)
+   — stack together in one cell on the left, so they do not each claim a
+   whole column (Nahian, 2026-09-23). Every other group is its own cell. */
+const isShort = (g: NavGroup) => !g.items || g.items.length <= 1;
+const cellsOf = (m: NavMenu): NavGroup[][] => {
+  if (m.id !== 'consumers') return m.groups.map((g) => [g]);
+  const stack = m.groups.filter(isShort);
+  return [stack, ...m.groups.filter((g) => !isShort(g)).map((g) => [g])];
+};
 ---
 
 <header class="nav" data-nav>
@@ -125,24 +136,28 @@ const MENUS = NAV_MENUS;
     >
       <div class="nav__panel-in">
         <div class="nav__groups">
-          {m.groups.map((g) => (
-            <div class="nav__group">
-              {g.items ? (
-                <>
-                  <p class="nav__group-label">{g.label}</p>
-                  <ul class="nav__list">
-                    {g.items.map((it) => (
-                      <li>
-                        <a href={it.href}>{it.label}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : (
-                <a class="nav__group-label nav__group-link" href={g.href}>
-                  {g.label}
-                </a>
-              )}
+          {cellsOf(m).map((cell) => (
+            <div class:list={['nav__cell', { 'nav__cell--stack': cell.length > 1 }]}>
+              {cell.map((g) => (
+                <div class="nav__group">
+                  {g.items ? (
+                    <>
+                      <p class="nav__group-label">{g.label}</p>
+                      <ul class="nav__list">
+                        {g.items.map((it) => (
+                          <li>
+                            <a href={it.href}>{it.label}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <a class="nav__group-label nav__group-link" href={g.href}>
+                      {g.label}
+                    </a>
+                  )}
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -442,8 +457,10 @@ const MENUS = NAV_MENUS;
     left: var(--panel-x, var(--gutter));
     width: max-content;
     max-width: calc(100% - 2 * var(--gutter));
-    padding: var(--s-5) var(--s-6);
-    border: 1px solid var(--pink-line);
+    /* No padding of its own: the cells carry it, so the dividers run
+       to the card's edges. */
+    padding: 0;
+    border: 1px solid var(--rule);
     border-radius: var(--r-lg);
     background: var(--paper);
     color: var(--ink);
@@ -463,14 +480,32 @@ const MENUS = NAV_MENUS;
   }
   .nav__panel-in {
     display: grid;
-    gap: var(--s-5);
   }
+  /* A thin grey line between every group (Nahian, 2026-09-23): the
+     grid's 1px gaps over a --rule ground, each cell on paper — so the
+     lines meet cleanly and never double up. Every grid here is full,
+     so no empty cell shows the ground. */
   .nav__groups {
     display: grid;
-    gap: var(--s-5) var(--s-6);
+    gap: 1px;
+    background: var(--rule);
   }
+  .nav__cell {
+    background: var(--paper);
+    padding: var(--s-4) var(--s-5);
+  }
+  /* Consumers: the short groups stacked on the left, then the six
+     lists three across, two down. */
   .nav__panel--consumers .nav__groups {
-    grid-template-columns: repeat(5, auto);
+    grid-template-columns: repeat(4, auto);
+  }
+  .nav__cell--stack {
+    grid-row: span 2;
+  }
+  .nav__cell--stack .nav__group + .nav__group {
+    margin-top: var(--s-3);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
   }
   .nav__panel--company .nav__groups {
     grid-template-columns: repeat(2, auto);
@@ -502,8 +537,8 @@ const MENUS = NAV_MENUS;
     display: flex;
     flex-wrap: wrap;
     gap: var(--s-2) var(--s-6);
-    padding-top: var(--s-4);
-    border-top: 1px solid var(--pink-line);
+    padding: var(--s-4) var(--s-5);
+    border-top: 1px solid var(--rule);
   }
   .nav__aside-link {
     font-size: var(--fs-sm);

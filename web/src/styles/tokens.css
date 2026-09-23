@@ -46,6 +46,8 @@
   --ink-2: #574a50;
   --ink-3: #8d7f86;
   --ink-4: #b9adb3;
+  /* the neutral hairline between items on paper — menu dividers */
+  --rule: #ece8ea;
   --ink-mark: #231f20; /* the wordmark's own black, from the mark */
 
   /* ---- ground ---- */
