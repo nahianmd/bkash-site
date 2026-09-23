@@ -229,7 +229,7 @@ const STAT_ICONS: Record<string, string> = {
           <Image
             src={ceo}
             alt="Kamal Quadir, Founder and Chief Executive Officer of bKash"
-            width={720}
+            width={ceo.width}
             layout="none"
             class="quote__portrait"
             loading="lazy"
@@ -633,11 +633,17 @@ const STAT_ICONS: Record<string, string> = {
     text-align: justify;
     text-wrap: normal;
   }
+  /* The portrait is as tall as the text beside it (Nahian, 2026-09-23):
+     its top meets the quote's first line and its foot the designation's
+     last. It stretches to the grid row, which the text sizes — a height
+     of 100% counts as auto while the row is measured, so the photo
+     never makes the row taller. The column keeps its 16rem, so the
+     quote's line count holds. His face is at ~76% across a 1200x669
+     frame; anchoring the crop right keeps it in the column. */
   .quote :global(.quote__portrait) {
+    align-self: stretch;
     width: 100%;
-    height: auto;
-    /* His face is at ~76% across a 1200x669 frame; 6/7 centres on it. */
-    aspect-ratio: 6 / 7;
+    height: 100%;
     object-fit: cover;
     object-position: 100% 50%;
     border-radius: var(--r-lg);
@@ -898,6 +904,17 @@ const STAT_ICONS: Record<string, string> = {
     }
     .quote blockquote {
       text-align: start;
+    }
+    /* The portrait edge to edge (Nahian, 2026-09-23): out past the
+       gutter on both sides, no radius at the screen's edge, and back to
+       its own 6:7 shape — here it sits above the quote, not beside it. */
+    .quote :global(.quote__portrait) {
+      width: calc(100% + 2 * var(--gutter));
+      max-width: none;
+      height: auto;
+      aspect-ratio: 6 / 7;
+      margin-inline: calc(-1 * var(--gutter));
+      border-radius: 0;
     }
     /* Three across, two rows (Nahian, 2026-09-20). A grid, not the
              desktop flex row: every mark gets the same cell and is centred in
