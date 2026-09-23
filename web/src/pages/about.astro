@@ -905,16 +905,28 @@ const STAT_ICONS: Record<string, string> = {
     .quote blockquote {
       text-align: start;
     }
-    /* The portrait edge to edge (Nahian, 2026-09-23): out past the
-       gutter on both sides, no radius at the screen's edge, and back to
-       its own 6:7 shape — here it sits above the quote, not beside it. */
+    /* The portrait dissolves into the section (Nahian, 2026-09-23): no
+       edge the eye can close into a box. Out past the gutter on both
+       sides and the section's top padding, so it is the section's own
+       ground rather than a picture placed on it; its lower half fades
+       into --night, where his dark suit already nearly is; and the quote
+       starts inside the fade, so the words come up out of the photo.
+
+       Square, not 6:7: a smaller enlargement of the 1200x669 landscape,
+       so it stays sharper, and more of the wall around him. Anchored
+       right, his face lands at ~57% across. The mask is static — it
+       composites once, it is not animated. */
     .quote :global(.quote__portrait) {
       width: calc(100% + 2 * var(--gutter));
       max-width: none;
       height: auto;
-      aspect-ratio: 6 / 7;
+      aspect-ratio: 1;
       margin-inline: calc(-1 * var(--gutter));
+      margin-top: calc(-1 * var(--section-pad-phone));
+      margin-bottom: calc(-1 * var(--s-9));
       border-radius: 0;
+      -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
     }
     /* Three across, two rows (Nahian, 2026-09-20). A grid, not the
              desktop flex row: every mark gets the same cell and is centred in
