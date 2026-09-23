@@ -37,13 +37,16 @@ const MENUS = NAV_MENUS;
 
 /* The bar's panels are laid out in cells. Consumers' short groups — a
    bare link or a single item (Borrow, Save, Learning center, Game zone)
-   — stack together in one cell on the left, so they do not each claim a
-   whole column (Nahian, 2026-09-23). Every other group is its own cell. */
+   — stack together in one cell in the right-hand column, so they do not
+   each claim a whole column; the aside links take the cell beneath it
+   (Nahian, 2026-09-23). Every other group is its own cell. The stack
+   comes LAST in the markup: nav.ts aligns the card by its first title,
+   which has to be the left-hand one. */
 const isShort = (g: NavGroup) => !g.items || g.items.length <= 1;
 const cellsOf = (m: NavMenu): NavGroup[][] => {
   if (m.id !== 'consumers') return m.groups.map((g) => [g]);
   const stack = m.groups.filter(isShort);
-  return [stack, ...m.groups.filter((g) => !isShort(g)).map((g) => [g])];
+  return [...m.groups.filter((g) => !isShort(g)).map((g) => [g]), stack];
 };
 ---
 
@@ -126,7 +129,8 @@ const cellsOf = (m: NavMenu): NavGroup[][] => {
 
   {/* The panels: one per menu, a card under its own button, collapsed
       until opened (nav.ts places it). Consumers is the big one — the
-      services in their groups, the four links set apart beneath. */}
+      services in their groups, the four plain links in a cell of their
+      own. */}
   {MENUS.map((m) => (
     <div
       class:list={['nav__panel', `nav__panel--${m.id}`]}
@@ -160,16 +164,16 @@ const cellsOf = (m: NavMenu): NavGroup[][] => {
               ))}
             </div>
           ))}
+          {m.aside && (
+            <div class="nav__cell nav__cell--aside">
+              {m.aside.map((it) => (
+                <a class="nav__aside-link" href={it.href}>
+                  {it.label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
-        {m.aside && (
-          <div class="nav__aside">
-            {m.aside.map((it) => (
-              <a class="nav__aside-link" href={it.href}>
-                {it.label}
-              </a>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   ))}
@@ -494,13 +498,21 @@ const cellsOf = (m: NavMenu): NavGroup[][] => {
     background: var(--paper);
     padding: var(--s-4) var(--s-5);
   }
-  /* Consumers: the short groups stacked on the left, then the six
-     lists three across, two down. */
+  /* Consumers: the six lists three across, two down; the right-hand
+     column is the short groups stacked, and the aside links beneath. */
   .nav__panel--consumers .nav__groups {
     grid-template-columns: repeat(4, auto);
   }
   .nav__cell--stack {
-    grid-row: span 2;
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .nav__cell--aside {
+    grid-column: 4;
+    grid-row: 2;
+    display: grid;
+    align-content: start;
+    gap: var(--s-2);
   }
   .nav__cell--stack .nav__group + .nav__group {
     margin-top: var(--s-3);
@@ -532,14 +544,7 @@ const cellsOf = (m: NavMenu): NavGroup[][] => {
   .nav__list a:hover {
     color: var(--pink);
   }
-  /* Consumers' four plain links: a row along the card's foot. */
-  .nav__aside {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-2) var(--s-6);
-    padding: var(--s-4) var(--s-5);
-    border-top: 1px solid var(--rule);
-  }
+  /* Consumers' four plain links, in the cell under the stack. */
   .nav__aside-link {
     font-size: var(--fs-sm);
     font-weight: 600;
