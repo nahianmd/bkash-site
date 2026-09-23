@@ -147,7 +147,7 @@ const STAT_ICONS: Record<string, string> = {
             src={collage}
             alt="The bKash mark, made from photographs of customers across Bangladesh"
             widths={[400, 640, collage.width]}
-            sizes="(max-width: 767px) 80vw, 45vw"
+            sizes="(max-width: 767px) 112vw, 45vw"
             formats={['avif', 'webp']}
             fallbackFormat="webp"
             layout="none"
@@ -851,14 +851,21 @@ const STAT_ICONS: Record<string, string> = {
     .road {
       padding-bottom: 0;
     }
-    /* The mark under the copy, and not so large it becomes the section. */
+    /* The mark under the copy, flying in from off the screen (Nahian,
+       2026-09-23): larger than the frame and pulled past its left edge,
+       so the wing and tail — behind it, it faces right — are cut off and
+       the bird reads as going on beyond the screen. About 30% of the
+       drawing is hidden; the head lands near three-quarters across. The
+       PNG's ground is transparent, so the bleed shows no box. Overflow
+       to the left cannot be scrolled to, so the page does not widen. */
     .revolution {
       grid-template-columns: 1fr;
       gap: var(--s-7);
     }
     .revolution :global(.revolution__mark) {
-      max-width: 22rem;
-      margin-inline: auto;
+      width: 112vw;
+      max-width: none;
+      margin-inline-start: calc(-1 * var(--gutter) - 34vw);
     }
     .split {
       grid-template-columns: 1fr;
