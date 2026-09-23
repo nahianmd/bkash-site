@@ -34,7 +34,12 @@ export function initPeople() {
         pick(c.classList.contains('is-on') ? null : c);
       }
     });
-    c.addEventListener('focusin', () => pick(c));
+    /* Keyboard focus only. A tap also focuses the card (tabindex), and
+       picking it here would have the click that follows toggle it
+       straight back off — the phone's expand would never show. */
+    c.addEventListener('focusin', () => {
+      if (c.matches(':focus-visible')) pick(c);
+    });
   });
   section.addEventListener('focusout', (e) => {
     const to = e.relatedTarget as Node | null;

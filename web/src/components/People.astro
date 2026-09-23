@@ -10,7 +10,8 @@
    the prototype's did (Nahian, 2026-09-20): the pointed-at card takes
    three shares of the row, its neighbours drop to just over a half
    share and shed everything but a small name; the row always sums to
-   the same width. On a phone the three are stacked. */
+   the same width. On a phone the three are stacked edge to edge and
+   the same expand runs vertically on tap (Nahian, 2026-09-23). */
 import { Picture } from 'astro:assets';
 
 const portraits = import.meta.glob<{ default: ImageMetadata }>('../assets/img/people/*.jpg', {
@@ -122,7 +123,7 @@ const posCss = PEOPLE.map(
      used to sit inside the wrap, so on a 1920 screen it stopped 288px
      short of each edge on --page alone, before the gutter. It is a
      sibling of the wrap now, so the width is simply the section's.
-     The phone keeps its gutter — see the 767 block. */
+     The phone is full-bleed too — see the 767 block. */
   .people__cards {
     display: flex;
     gap: var(--s-5);
@@ -142,14 +143,14 @@ const posCss = PEOPLE.map(
       opacity var(--recede-t) var(--ease-io),
       filter var(--recede-t) var(--ease-io);
   }
-  /* The pointed-at card takes three shares; the neighbours just over a
+  /* The picked card takes three shares; the neighbours just over a
      half. Written at the same depth as the collapse so the open rule
-     wins on order, not specificity. */
-  .people__cards:has(.people__card:hover) .people__card,
+     wins on order, not specificity. Tap and keyboard set .is-picked /
+     .is-on from people.ts; mouse hover mirrors all of this in the
+     (hover: hover) block below. */
   .people.is-picked .people__card {
     flex: 0.55 1 0%;
   }
-  .people__cards:has(.people__card:hover) .people__card:hover,
   .people.is-picked .people__card.is-on {
     flex: 3 1 0%;
   }
@@ -168,7 +169,6 @@ const posCss = PEOPLE.map(
   .people :global(.people__pic img) {
     transition: transform var(--t-veil) var(--ease);
   }
-  .people__card:hover :global(.people__pic img),
   .people__card.is-on :global(.people__pic img) {
     transform: scale(1.04);
   }
@@ -217,7 +217,6 @@ const posCss = PEOPLE.map(
       max-height var(--t-slow) var(--ease),
       opacity var(--t-base) var(--ease-io);
   }
-  .people__card:hover .people__cta-wrap,
   .people__card.is-on .people__cta-wrap {
     max-height: 5rem;
     opacity: 1;
@@ -227,72 +226,105 @@ const posCss = PEOPLE.map(
     color: var(--on-night);
   }
   /* Collapsed neighbours shed everything but a smaller, dimmer name. */
-  .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__tag,
   .people.is-picked .people__card:not(.is-on) .people__tag {
     opacity: 0;
     max-height: 0;
     margin-bottom: 0;
   }
-  .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__name,
   .people.is-picked .people__card:not(.is-on) .people__name {
     font-size: var(--fs-body);
     opacity: 0.65;
   }
-  .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__role,
   .people.is-picked .people__card:not(.is-on) .people__role {
     opacity: 0;
     max-height: 0;
   }
 
-  /* Focus (Rule 4): the pointed-at card is full, the other two recede by
-     the token set as well as shrinking. Hover is CSS; tap and keyboard
-     set .is-on / .is-picked from people.ts. */
-  .people__cards:has(.people__card:hover) .people__card:not(:hover),
+  /* Focus (Rule 4): the picked card is full, the other two recede by
+     the token set as well as shrinking. */
   .people.is-picked .people__card:not(.is-on) {
     opacity: var(--recede-opacity);
     filter: saturate(var(--recede-saturate)) brightness(var(--recede-brightness));
   }
 
-  /* 390: the three stacked, full width, one 4:5 crop, every caption
-     whole, the CTA always there — the expand row cannot exist here. */
+  /* Hover is the same state, driven by the pointer — and only where a
+     real pointer hovers. A phone leaves :hover stuck on the last card
+     tapped, which would hold it open after a second tap closed it.
+     Last in the sheet, so a hovered card wins over a picked one. */
+  @media (hover: hover) {
+    .people__cards:has(.people__card:hover) .people__card {
+      flex: 0.55 1 0%;
+    }
+    .people__cards:has(.people__card:hover) .people__card:hover {
+      flex: 3 1 0%;
+    }
+    .people__card:hover :global(.people__pic img) {
+      transform: scale(1.04);
+    }
+    .people__card:hover .people__cta-wrap {
+      max-height: 5rem;
+      opacity: 1;
+    }
+    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__tag {
+      opacity: 0;
+      max-height: 0;
+      margin-bottom: 0;
+    }
+    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__name {
+      font-size: var(--fs-body);
+      opacity: 0.65;
+    }
+    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__role {
+      opacity: 0;
+      max-height: 0;
+    }
+    .people__cards:has(.people__card:hover) .people__card:not(:hover) {
+      opacity: var(--recede-opacity);
+      filter: saturate(var(--recede-saturate)) brightness(var(--recede-brightness));
+    }
+  }
+
+  /* 390: the three stacked edge to edge — no gutter, no gap, no radius
+     (Nahian, 2026-09-23). The expand is the desktop row turned on its
+     side: the column has a fixed height and the cards are flex shares
+     of it, so a tap trades height between the three and nothing below
+     the section moves. At rest each card is a square of the width,
+     capped so the open card stays inside one screen. */
   @media (max-width: 767px) {
     .people {
       padding-block: var(--section-pad-phone);
+      container-type: inline-size;
     }
-    /* The cards left the wrap for the desktop full-bleed, so the phone
-         has to state the gutter it used to inherit. 390 is unchanged. */
     .people__cards {
       flex-direction: column;
-      height: auto;
-      gap: var(--s-5);
-      padding-inline: var(--gutter);
+      gap: 0;
+      height: calc(3 * min(100cqi, var(--vh) * 0.55));
     }
-    .people__card,
-    .people__cards:has(.people__card:hover) .people__card,
-    .people.is-picked .people__card,
-    .people__cards:has(.people__card:hover) .people__card:hover,
+    .people__card {
+      border-radius: 0;
+    }
+    .people.is-picked .people__card {
+      flex: 0.65 1 0%;
+    }
     .people.is-picked .people__card.is-on {
-      flex: none;
-      aspect-ratio: 4 / 5;
+      flex: 1.7 1 0%;
+    }
+    /* A narrow desktop window: the same shares under a mouse. */
+    @media (hover: hover) {
+      .people__cards:has(.people__card:hover) .people__card {
+        flex: 0.65 1 0%;
+      }
+      .people__cards:has(.people__card:hover) .people__card:hover {
+        flex: 1.7 1 0%;
+      }
+    }
+    .people__card:focus-visible {
+      outline-offset: -2px;
     }
     .people__cap {
       left: var(--s-5);
       right: var(--s-5);
       bottom: var(--s-5);
-    }
-    .people__cta-wrap,
-    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__tag,
-    .people.is-picked .people__card:not(.is-on) .people__tag,
-    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__role,
-    .people.is-picked .people__card:not(.is-on) .people__role {
-      max-height: 5rem;
-      opacity: 1;
-      margin-bottom: var(--s-3);
-    }
-    .people__cards:has(.people__card:hover) .people__card:not(:hover) .people__name,
-    .people.is-picked .people__card:not(.is-on) .people__name {
-      font-size: var(--fs-h3);
-      opacity: 1;
     }
   }
 </style>
