@@ -159,11 +159,12 @@ export const WALL = {
     phoneWidthFrac: 0.92,
     /* clear air between the resting handset and the copy on a phone */
     phoneCopyGap: 'var(--s-8)',
-    /* The resting lean (Nahian, 2026-09-24): the screen is one flat
-       panel, its top tipped back this many degrees about its BOTTOM edge
-       — the bottom stays square to you, the top recedes. Eased in with
-       the slide; the life plays on top of it. */
-    leanDeg: 14,
+    /* The resting pose (Nahian, 2026-09-24): slanted, but only just. A
+       small lean back about the BOTTOM edge and a turn that shows the
+       slab's left edge — the turn, not the lean, is what reads as 3D.
+       Eased in with the slide; the life plays on top of it. */
+    leanDeg: 4,
+    turnDeg: 12,
     /* The rim (Nahian, 2026-09-24, from "bKash Mobile.png"): a light
        bezel between the screen and the pink line, as a fraction of the
        screen's width — 16px on the reference's 600. The same on every
@@ -538,7 +539,7 @@ export function initServices() {
     return (
       `translate3d(${L.dx.toFixed(2)}px, ${L.dy.toFixed(2)}px, 0) scale(${L.s.toFixed(4)}) ` +
       `translate3d(0, ${(h * (1 - Math.cos(t))).toFixed(2)}px, ${(-h * Math.sin(t)).toFixed(2)}px) ` +
-      `rotateX(${t.toFixed(5)}rad) rotateY(${L.ry.toFixed(5)}rad)`
+      `rotateX(${t.toFixed(5)}rad) rotateY(${(WALL.rest.turnDeg * DEG * l + L.ry).toFixed(5)}rad)`
     );
   }
   function renderPhone(p: number, now: number) {

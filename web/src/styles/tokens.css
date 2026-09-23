@@ -55,14 +55,10 @@
   --paper-2: #faf7f8;
   --night: #0b0b0b;
   --night-2: #171214;
-  /* the screen (services): its light rim — highlight, shade, the inner
-     edge's gleam and the depth at its outer edge — and its shadow on
-     the paper ground */
-  --device-rim-hi: #fbfafa;
-  --device-rim-lo: #e4e0e2;
-  --device-rim-edge: rgb(255 255 255 / 90%);
-  --device-rim-shade: rgb(25 19 22 / 14%);
-  --device-shadow: rgb(25 19 22 / 15%);
+  /* the screen (services): the slab's side as it turns, and its shadow
+     on the paper ground */
+  --device-edge: #efecee;
+  --device-shadow: rgb(25 19 22 / 20%);
 
   /* ---- text on a dark ground ----
      Audit X5. Dark sections hand-wrote bare white-with-alpha in a

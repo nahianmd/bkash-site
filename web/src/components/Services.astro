@@ -88,6 +88,10 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
          falling behind its top. Proportions and corners from device.ts. -->
     <div class="device" data-device aria-hidden="true">
       <div class="device__shadow"></div>
+      <div class="device__edge device__edge--3"></div>
+      <div class="device__edge device__edge--2"></div>
+      <div class="device__edge device__edge--1"></div>
+      <div class="device__face">
       <div class="device__screen" data-device-screen>
         <Picture
           src={screen}
@@ -98,6 +102,7 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
           layout="none"
           loading="lazy"
         />
+      </div>
       </div>
     </div>
     <!-- The ground turns white as the phone lifts out of the wall. -->
@@ -236,11 +241,10 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
      display's proportions (device.ts); only the transform changes per
      frame. preserve-3d, not overflow:hidden, on the device itself, so
      the shadow can sit behind it in depth. */
-  /* The frame, after "bKash Mobile.png" (Nahian, 2026-09-24): a light
-     rim a few px wide around the screen — white at its inner edge, a
-     soft grey toward its outer — and the 1px pink line round the rim's
+  /* The frame, after "bKash Mobile.png" (Nahian, 2026-09-24): a white
+     rim a few px wide around the screen and the 1px pink line round its
      outside. services.ts writes --rim and --screen-r; the rim's corners
-     are the screen's plus the rim, so the two curves stay parallel. */
+     are the screen's plus the rim, so the curves stay parallel. */
   .device {
     position: absolute;
     left: 0;
@@ -248,16 +252,21 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     width: 100px;
     height: 211px;
     border-radius: calc(var(--screen-r, var(--r-md)) + var(--rim, 8px));
-    background: linear-gradient(160deg, var(--device-rim-hi), var(--device-rim-lo));
-    box-shadow:
-      0 0 0 1px var(--pink),
-      inset 0 0 0 1px var(--device-rim-edge),
-      inset 0 0 calc(var(--rim, 8px) * 0.8) var(--device-rim-shade);
     transform-origin: 50% 50%;
     transform-style: preserve-3d;
     will-change: transform, opacity;
     opacity: 0;
     z-index: 5;
+  }
+  /* The front of the slab: the white rim and its pink line, on a layer
+     of its own — drawn on the 3D container itself, the line was lost
+     once the edge layers sat behind it. The screen sits inside. */
+  .device__face {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--paper);
+    box-shadow: 0 0 0 1px var(--pink);
   }
   .device__screen {
     position: absolute;
@@ -266,18 +275,37 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     overflow: hidden;
     background: var(--paper);
   }
-  /* The shadow, seen from the side: a soft light-grey shape set back
-     behind the screen and drawn up past its top, so as the screen leans
-     back it falls away behind the slanted half onto the white. The blur
-     is static — the element only ever moves with its parent's transform,
-     so it is never re-blurred per frame. */
+  /* Thickness: three copies of the outline stepped back in depth. Face
+     on they hide behind the front; turned, they show as a thin light
+     edge down the left side — a slab, not a sheet, and no particular
+     handset. */
+  .device__edge {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--device-edge);
+    box-shadow: 0 0 0 1px var(--pink-line);
+  }
+  .device__edge--1 {
+    transform: translateZ(-2px);
+  }
+  .device__edge--2 {
+    transform: translateZ(-4px);
+  }
+  .device__edge--3 {
+    transform: translateZ(-6px);
+  }
+  /* A mild shadow on the left, as if lit from the upper right: soft,
+     set back behind the slab so the turn carries it out past the left
+     edge. The blur is static — the element only moves with its
+     parent's transform, so it is never re-blurred per frame. */
   .device__shadow {
     position: absolute;
-    inset: -2% -1% 40% 2%;
-    border-radius: var(--screen-r, var(--r-md));
+    inset: 3% 6% 1% 2%;
+    border-radius: inherit;
     background: var(--device-shadow);
-    filter: blur(24px);
-    transform: translate3d(6%, -3%, -40px);
+    filter: blur(22px);
+    transform: translate3d(-7%, 2%, -30px);
   }
   .device__screen :global(picture),
   .device__screen :global(img) {
