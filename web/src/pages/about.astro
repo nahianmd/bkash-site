@@ -944,7 +944,8 @@ const STAT_ICONS: Record<string, string> = {
        sides and the section's top padding, so it is the section's own
        ground rather than a picture placed on it; its lower half fades
        into --night, where his dark suit already nearly is; and the quote
-       starts inside the fade, so the words come up out of the photo.
+       starts right where the fade ends — not inside it, which covered
+       his suit (Nahian, 2026-09-23).
 
        Square, not 6:7: a smaller enlargement of the 1200x669 landscape,
        so it stays sharper, and more of the wall around him. Anchored
@@ -968,12 +969,15 @@ const STAT_ICONS: Record<string, string> = {
       transform-origin: 100% 0;
       margin-inline: calc(-1 * var(--gutter));
       margin-top: calc(-1 * var(--section-pad-phone));
-      margin-bottom: calc(-1 * var(--s-9));
+      /* cancels the grid gap: the quote's first line sits at the foot of
+         the square, where the fade reaches nothing */
+      margin-bottom: calc(-1 * var(--s-6));
       border-radius: 0;
-      /* Stops divided by the 1.16 zoom, so the fade still runs from 45%
-         of the square to its foot on screen. */
-      -webkit-mask-image: linear-gradient(to bottom, #000 38.8%, transparent 86.2%);
-      mask-image: linear-gradient(to bottom, #000 38.8%, transparent 86.2%);
+      /* Solid to 60% of the square on screen, so the suit reads before it
+         melts, then gone at its foot. Stops divided by the 1.16 zoom,
+         which scales the mask with the photo. */
+      -webkit-mask-image: linear-gradient(to bottom, #000 51.7%, transparent 86.2%);
+      mask-image: linear-gradient(to bottom, #000 51.7%, transparent 86.2%);
     }
     /* Three across, two rows (Nahian, 2026-09-20). A grid, not the
              desktop flex row: every mark gets the same cell and is centred in
