@@ -55,9 +55,12 @@
   --paper-2: #faf7f8;
   --night: #0b0b0b;
   --night-2: #171214;
-  /* the screen (services): the slab's side as it turns, and its shadow
-     on the paper ground */
-  --device-edge: #efecee;
+  /* the screen (services): its rim — a very light grey, just off the
+     paper (Nahian, 2026-09-24) — the slab's side as it turns, a shade
+     deeper so the two read as separate surfaces, and its shadow on the
+     paper ground */
+  --device-rim: #f4f2f3;
+  --device-edge: #e8e4e6;
   --device-shadow: rgb(25 19 22 / 20%);
 
   /* ---- text on a dark ground ----
