@@ -7,7 +7,7 @@
    reflowed from the other. The phone stands up out of the photographed
    hand as an object, slides beside the copy and stays alive. The
    sixteen services are ServicesDetail.astro, reached by the button. */
-import { Picture, getImage } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import { COLUMNS, type WallTile } from '../lib/services';
 
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/services/*.jpg', {
@@ -16,10 +16,6 @@ const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/servi
 const photo = (name: string) => photos[`../assets/img/services/${name}.jpg`].default;
 import screen from '../assets/img/services/screen.jpg';
 import phonePhoto from '../assets/img/services/phone.jpg';
-import phoneModel from '../assets/models/phone.glb?url';
-/* The screenshot as the WebGL display's texture: the same file the CSS
-   device shows, at its own size. */
-const screenTex = await getImage({ src: screen, width: 720, format: 'jpeg' });
 
 /* Crops are data, and the gate forbids inline styles — so the
    object-position rules are generated here, one class per photograph
@@ -84,23 +80,14 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       </div>
     ))}
 
-    <!-- The phone as an object: a WebGL canvas over the pin, one handset
-         mesh, posed by services.ts over the photographed screen; it fades
-         in over the photograph, stands up and comes forward to Rest B while
-         the wall tips back. Loaded as the section approaches. -->
-    <canvas
-      class="device3d"
-      data-device-3d
-      data-model={phoneModel}
-      data-screen={screenTex.src}
-      aria-hidden="true"
-    ></canvas>
-    <!-- The CSS device: the same handset's proportions (body, display,
-         corners, island — services.ts writes them from device.ts), sized
-         to Rest B. It takes over from the object for the zoom into the
-         grid, and does the whole emergence itself where WebGL is not
-         available. -->
+    <!-- The screen, frameless (Nahian, 2026-09-24): the home screen with
+         a thin pink line round its rounded corners — no handset. posed by
+         services.ts over the photographed screen; it fades in over the
+         photograph, stands up out of the hand while the wall tips back,
+         then leans back as it slides beside the copy, a soft shadow
+         falling behind its top. Proportions and corners from device.ts. -->
     <div class="device" data-device aria-hidden="true">
+      <div class="device__shadow"></div>
       <div class="device__screen" data-device-screen>
         <Picture
           src={screen}
@@ -112,7 +99,6 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
           loading="lazy"
         />
       </div>
-      <div class="device__island"></div>
     </div>
     <!-- The ground turns white as the phone lifts out of the wall. -->
     <div class="ground" data-ground></div>
@@ -242,39 +228,46 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     text-wrap: balance;
   }
 
-  /* ---- the device ------------------------------------------------ */
-  .device3d {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 5;
-  }
+  /* ---- the device: the screen alone ------------------------------
+     No handset (Nahian, 2026-09-24): the home screen, its corners
+     rounded, a thin pink line around it — the width of the selected
+     service's ring below (ServicesDetail.astro), 1px. Size, position and
+     radius are written by services.ts once per resize from the
+     display's proportions (device.ts); only the transform changes per
+     frame. preserve-3d, not overflow:hidden, on the device itself, so
+     the shadow can sit behind it in depth. */
   .device {
     position: absolute;
-    /* Size, position, radius and the display's inset are written by
-             services.ts once per resize from the handset's proportions; only
-             the transform changes per frame. */
     left: 0;
     top: 0;
     width: 100px;
     height: 211px;
-    border-radius: var(--r-lg);
-    overflow: hidden;
-    background: var(--device-body);
     transform-origin: 50% 50%;
+    transform-style: preserve-3d;
     will-change: transform, opacity;
     opacity: 0;
     z-index: 5;
   }
   .device__screen {
     position: absolute;
-    inset: var(--screen-inset-y, 4px) var(--screen-inset-x, 4px);
+    inset: 0;
     border-radius: var(--screen-r, var(--r-md));
     overflow: hidden;
     background: var(--paper);
+    box-shadow: 0 0 0 1px var(--pink);
+  }
+  /* The shadow, seen from the side: a soft light-grey shape set back
+     behind the screen and drawn up past its top, so as the screen leans
+     back it falls away behind the slanted half onto the white. The blur
+     is static — the element only ever moves with its parent's transform,
+     so it is never re-blurred per frame. */
+  .device__shadow {
+    position: absolute;
+    inset: -2% -1% 40% 2%;
+    border-radius: var(--screen-r, var(--r-md));
+    background: var(--device-shadow);
+    filter: blur(24px);
+    transform: translate3d(6%, -3%, -40px);
   }
   .device__screen :global(picture),
   .device__screen :global(img) {
@@ -284,16 +277,6 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     height: 100%;
     object-fit: cover;
     object-position: 50% 0;
-  }
-  .device__island {
-    position: absolute;
-    top: var(--island-top, 4%);
-    left: 50%;
-    width: var(--island-w, 28%);
-    height: var(--island-h, 2.5%);
-    transform: translateX(-50%);
-    border-radius: var(--r-full);
-    background: var(--device-island);
   }
 
   /* ---- the ground and the grid ------------------------------------ */
@@ -405,10 +388,8 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     overflow: hidden;
   }
   :global(.no-js) .device,
-  :global(.no-js) .device3d,
   :global(.no-js) .ground,
   .svc--static .device,
-  .svc--static .device3d,
   .svc--static .ground {
     display: none;
   }

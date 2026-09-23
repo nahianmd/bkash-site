@@ -6,13 +6,13 @@
    ============================================================ */
 
 /* ---- the handset --------------------------------------------------
-   `assets/models/phone.glb` — "iPhone 16 - Free" by Wes (Sketchfab
-   Standard licence), meshopt-compressed from 2.46MB to 305KB. These
-   are read from the model's vertices (tools: world-space bounds per
-   node; the corner radius from the outermost vertex along the
-   diagonal of a rounded rectangle), in the model's units — one unit
-   is about a centimetre. The front of the phone faces +z; the display
-   is the node `Object_18`, a flat plane at z = 0.3901. */
+   Proportions measured from an iPhone 16 model ("iPhone 16 - Free" by
+   Wes, Sketchfab) — its vertices' world-space bounds per node, the
+   corner radius from the outermost vertex along a rounded rectangle's
+   diagonal — in its units, about a centimetre each. The model and the
+   WebGL handset are gone (2026-09-24): the site now draws the display
+   alone, framelessly, and these numbers give it its aspect, its corner
+   radius, and the scale the body used to set. */
 export const MODEL = {
   display: { w: 6.5266, h: 14.085, z: 0.3901, r: 0.9172, node: 'Object_18' },
   body: { w: 7.1832, h: 14.7387, r: 1.2403 },

@@ -2,17 +2,22 @@
    bKash — a thousand more stories → the phone → sixteen services
    specs/sections/services.md · specs/services/plan.md
 
-   One pin: the wall, the phone's arrival, the emergence (the phone as
-   an object standing up out of the photographed hand), the slide to
-   its resting place beside the copy, and then a phone that is alive —
-   an idle sway and a tilt under the pointer. The sixteen services are
-   their own section (services-detail.ts), reached by the button.
+   One pin: the wall, the phone's arrival, the emergence (the screen,
+   frameless with a thin pink line, standing up out of the photographed
+   hand), the slide to its resting place beside the copy — leaning back
+   about its bottom edge — and then a screen that is alive: an idle
+   sway and a tilt under the pointer. The sixteen services are their
+   own section (services-detail.ts), reached by the button.
    ============================================================ */
 
 import { gsap, ScrollTrigger, reducedMotion, isPhone } from './scroll';
 import { cubicInOut } from './scene-rig';
 import { MODEL, POSE_ZERO, solvePlacement, type Camera, type Pose } from './device';
-import type { Live, Phone3D } from './phone3d';
+
+/** What the screen does after the emergence: where it slides to, how big
+    it is there, and the small rotations that keep it alive — CSS
+    conventions (px, y down, rotate signs as the pose's). */
+type Live = { dx: number; dy: number; s: number; rx: number; ry: number };
 
 /* ---- the sixteen, in the app's order ---------------------------
    Names are the app's; NGO is the app's word for the Microfinance
@@ -154,6 +159,11 @@ export const WALL = {
     phoneWidthFrac: 0.92,
     /* clear air between the resting handset and the copy on a phone */
     phoneCopyGap: 'var(--s-8)',
+    /* The resting lean (Nahian, 2026-09-24): the screen is one flat
+       panel, its top tipped back this many degrees about its BOTTOM edge
+       — the bottom stays square to you, the top recedes. Eased in with
+       the slide; the life plays on top of it. */
+    leanDeg: 14,
   },
   /* Over the first part of the emergence the device fades in over the
      photographed screen it is posed on; the wall (hand included) fades
@@ -313,14 +323,9 @@ export function initServices() {
   section.style.setProperty('--svc-screens', String(1 + WALL.travelScreens));
 
   const device = section.querySelector<HTMLElement>('[data-device]');
-  const canvas = section.querySelector<HTMLCanvasElement>('[data-device-3d]');
   const ground = section.querySelector<HTMLElement>('[data-ground]');
   const marker = section.querySelector<HTMLElement>('[data-svc-marker]');
   const copy = section.querySelector<HTMLElement>('[data-copy]');
-  /* The phone as an object: loaded as the section approaches; null until
-     then, and null for good if WebGL or the model fails — the CSS device
-     does the emergence and the slide instead, without the life. */
-  let phone3d: Phone3D | null = null;
 
   let vw = 1;
   let vh = 1;
@@ -331,8 +336,9 @@ export function initServices() {
      over the photographed screen at arrival, and how well it fits. */
   let pose: Pose = POSE_ZERO;
   let poseRms = 0;
-  /* Rest B: the body, and the display inside it — both from the model's
-     proportions, so the WebGL handset coincides with the CSS device. */
+  /* Rest B: the body, and the display inside it, from the model's
+     proportions. The body now only sets the scale; the screen alone is
+     drawn (Nahian, 2026-09-24). */
   let restW = 1;
   let restH = 1;
   let screenW = 1;
@@ -403,18 +409,14 @@ export function initServices() {
       restW = (restH * B.w) / B.h;
       screenW = (restW * Dp.w) / B.w;
       screenH = (restH * Dp.h) / B.h;
-      device.style.width = `${restW.toFixed(1)}px`;
-      device.style.height = `${restH.toFixed(1)}px`;
-      device.style.left = `${((vw - restW) / 2).toFixed(1)}px`;
-      device.style.top = `${((vh - restH) / 2).toFixed(1)}px`;
-      device.style.borderRadius = `${((restW * B.r) / B.w).toFixed(1)}px`;
-      const set = (k: string, px: number) => device.style.setProperty(k, `${px.toFixed(1)}px`);
-      set('--screen-inset-x', (restW - screenW) / 2);
-      set('--screen-inset-y', (restH - screenH) / 2);
-      set('--screen-r', (screenW * Dp.r) / Dp.w);
-      set('--island-w', (screenW * MODEL.island.w) / Dp.w);
-      set('--island-h', (screenH * MODEL.island.h) / Dp.h);
-      set('--island-top', (restH - screenH) / 2 + (screenH * MODEL.island.top) / Dp.h);
+      /* The device IS the screen now: sized to the display, centred, its
+         corners the display's. Its centre is still the display's, which
+         is what the placement below is solved about. */
+      device.style.width = `${screenW.toFixed(1)}px`;
+      device.style.height = `${screenH.toFixed(1)}px`;
+      device.style.left = `${((vw - screenW) / 2).toFixed(1)}px`;
+      device.style.top = `${((vh - screenH) / 2).toFixed(1)}px`;
+      device.style.setProperty('--screen-r', `${((screenW * Dp.r) / Dp.w).toFixed(1)}px`);
       /* The pin's camera, read, not assumed. The placement is solved for
          the DISPLAY — the photographed corners are the screen's — about the
          device's centre, which is the display's; the tilt is the photo's. */
@@ -425,7 +427,6 @@ export function initServices() {
       const solved = solvePlacement(quad, screenW, screenH, cam, PHONE_QUAD.tilt);
       pose = solved.pose;
       poseRms = solved.rms;
-      phone3d?.setCamera(vw, vh, cam, screenW);
 
       /* The slide, by formula. Desktop: the frame splits at the middle,
          copy left, phone right; the phone goes to its column's centre and
@@ -446,7 +447,7 @@ export function initServices() {
         const copyBottom = resolvePx('var(--search-space)', 140);
         const bottom = vh - copyBottom - copyH - gap;
         const avail = Math.max(0, bottom - top);
-        const s = Math.min(1, avail / restH, (vw - 2 * gutter) / restW);
+        const s = Math.min(1, avail / screenH, (vw - 2 * gutter) / screenW);
         slide = { dx: 0, dy: (top + bottom) / 2 - vh / 2, s };
       } else {
         /* The phone belongs to the right: the centre of the right column,
@@ -458,7 +459,7 @@ export function initServices() {
         const colL = vw / 2 + gap / 2;
         const colR = vw - gutter;
         const gather = resolvePx('var(--svc-gather)', 0);
-        const s = Math.min(1, (colR - colL) / restW, (vh - navH - gutter) / restH);
+        const s = Math.min(1, (colR - colL) / screenW, (vh - navH - gutter) / screenH);
         slide = { dx: (colL + colR) / 2 - gather - vw / 2, dy: navH / 2, s };
       }
     }
@@ -504,7 +505,7 @@ export function initServices() {
     nudgeTarget.y = 0;
   });
 
-  /* ---- the emergence and the slide: the object, or the CSS device ---- */
+  /* ---- the emergence and the slide: the screen ---- */
   function poseAt(u: number): string {
     const q = pose;
     return (
@@ -512,25 +513,28 @@ export function initServices() {
       `rotateZ(${(q.rz * u).toFixed(5)}rad) rotateY(${(q.ry * u).toFixed(5)}rad) rotateX(${(q.rx * u).toFixed(5)}rad)`
     );
   }
+  /* After the emergence: the slide, the lean and the life, one transform.
+     The lean turns the panel about its BOTTOM edge — CSS turns about the
+     centre, so the centre is carried back by what the turn moved the
+     bottom edge: up (1 − cos t)·h/2 and in sin t·h/2. */
+  function restAt(p: number, now: number): string {
+    const L = liveAt(p, now);
+    const l = cubicInOut(ramp(p, WALL.restEnd, WALL.slideEnd));
+    const t = WALL.rest.leanDeg * DEG * l + L.rx;
+    const h = screenH / 2;
+    return (
+      `translate3d(${L.dx.toFixed(2)}px, ${L.dy.toFixed(2)}px, 0) scale(${L.s.toFixed(4)}) ` +
+      `translate3d(0, ${(h * (1 - Math.cos(t))).toFixed(2)}px, ${(-h * Math.sin(t)).toFixed(2)}px) ` +
+      `rotateX(${t.toFixed(5)}rad) rotateY(${L.ry.toFixed(5)}rad)`
+    );
+  }
   function renderPhone(p: number, now: number) {
     const raw = (p - WALL.arriveHoldEnd) / (WALL.emergeEnd - WALL.arriveHoldEnd);
     const e = cubicInOut(Math.min(Math.max(raw, 0), 1));
     const live = p > WALL.arriveHoldEnd;
-    const fade = live ? ramp(e, 0, WALL.deviceFadeIn).toFixed(3) : '0';
-    const use3d = phone3d !== null;
-    if (canvas) canvas.style.opacity = use3d ? fade : '0';
-    if (use3d && phone3d) {
-      phone3d.setPose(pose, 1 - e, liveAt(p, now));
-      if (live) phone3d.render();
-    }
     if (device) {
-      device.style.opacity = use3d ? '0' : fade;
-      if (p <= WALL.restEnd) device.style.transform = poseAt(1 - e);
-      else {
-        const l = cubicInOut(ramp(p, WALL.restEnd, WALL.slideEnd));
-        const s = 1 + (slide.s - 1) * l;
-        device.style.transform = `translate3d(${(slide.dx * l).toFixed(2)}px, ${(slide.dy * l).toFixed(2)}px, 0) scale(${s.toFixed(4)})`;
-      }
+      device.style.opacity = live ? ramp(e, 0, WALL.deviceFadeIn).toFixed(3) : '0';
+      device.style.transform = p <= WALL.emergeEnd ? poseAt(1 - e) : restAt(p, now);
     }
     /* The wall — the hand with it — tips back as ONE plane, hinged at its
        bottom edge, and recedes as the phone lifts out; the ground turns
@@ -590,46 +594,15 @@ export function initServices() {
     return;
   }
 
-  /* The phone as an object, loaded as the section comes within a screen:
-     three.js and the 305KB model, once, off the hero's path. */
-  let loading3d: Promise<void> | null = null;
-  function load3d(): Promise<void> {
-    if (loading3d) return loading3d;
-    const c = canvas;
-    if (!c || !c.dataset.model || !c.dataset.screen) return (loading3d = Promise.resolve());
-    loading3d = import('./phone3d')
-      .then((m) => m.createPhone3D(c, c.dataset.model!, c.dataset.screen!))
-      .then((ph) => {
-        phone3d = ph;
-        ph.setCamera(vw, vh, cam, screenW);
-        render();
-      })
-      .catch((err) => {
-        if (import.meta.env.DEV) console.warn('[services] phone3d unavailable', err);
-      });
-    return loading3d;
-  }
-  if (canvas) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((en) => en.isIntersecting)) return;
-        io.disconnect();
-        load3d();
-      },
-      { rootMargin: '100% 0px' },
-    );
-    io.observe(section);
-  }
-
   const tl = gsap
     .timeline({ paused: true })
     .to(proxy, { p: 1, duration: 1, ease: 'none', onUpdate: render });
 
-  /* The life: one render per tick while the section is pinned, the phone
+  /* The life: one render per tick while the section is pinned, the screen
      is out, and the tab is visible. The nudge follows its target here. */
   let ticking = false;
   const tick = () => {
-    if (proxy.p < WALL.emergeEnd || !phone3d) return;
+    if (proxy.p < WALL.emergeEnd) return;
     nudge.x += (nudgeTarget.x - nudge.x) * WALL.alive.follow;
     nudge.y += (nudgeTarget.y - nudge.y) * WALL.alive.follow;
     renderPhone(proxy.p, performance.now());
@@ -676,7 +649,6 @@ export function initServices() {
         cam,
         slide,
         rest: { restW, restH, screenW, screenH },
-        phone3d: phone3d !== null,
         ticking,
         cols: cols.map((c) => ({ rate: c.rate, h: c.el.scrollHeight })),
       }),
@@ -707,9 +679,6 @@ export function initServices() {
         }
         return pts;
       },
-      /* the WebGL camera's projection of the display's corners */
-      corners3d: () => phone3d?.projectDisplayCorners() ?? [],
-      load3d,
       nudge: (x: number, y: number) => {
         nudgeTarget.x = x;
         nudgeTarget.y = y;
