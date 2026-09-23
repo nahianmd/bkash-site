@@ -164,7 +164,8 @@ function initDrawer(): void {
    header closes after a longer one, so crossing from the bar into
    the panel never drops it. Escape, a click outside, and focus
    leaving the header all close. The bar goes solid while a panel is
-   open (Nav.astro, .is-open). Nothing here reads layout. */
+   open (Nav.astro, .is-open). Layout is read once per open, to place
+   the card under its button — never per frame. */
 function initMenus(nav: HTMLElement): void {
   const buttons = [...nav.querySelectorAll<HTMLButtonElement>('[data-menu-button]')];
   const panels = new Map(
@@ -185,6 +186,20 @@ function initMenus(nav: HTMLElement): void {
     timer = null;
   };
 
+  /* The card sits under its own button: its text column lines up with
+     the button's label, and it is pulled back inside the gutters when
+     that would run it off the right edge. */
+  function place(panel: HTMLElement, btn: HTMLElement) {
+    const navBox = nav.getBoundingClientRect();
+    const btnBox = btn.getBoundingClientRect();
+    const cs = getComputedStyle(panel);
+    const inset = parseFloat(cs.paddingLeft) + parseFloat(cs.borderLeftWidth);
+    const gutter = parseFloat(getComputedStyle(nav).paddingLeft);
+    const max = navBox.width - gutter - panel.offsetWidth;
+    const x = Math.max(gutter, Math.min(btnBox.left - navBox.left - inset, max));
+    panel.style.setProperty('--panel-x', `${Math.round(x)}px`);
+  }
+
   function show(id: string) {
     clearTimer();
     if (openId === id) return;
@@ -193,9 +208,10 @@ function initMenus(nav: HTMLElement): void {
     const btn = buttons.find((b) => b.dataset.menuButton === id);
     if (!panel || !btn) return;
     panel.hidden = false;
-    /* one forced layout, so the transition runs from the hidden state
-       — once per open, never per frame */
-    void panel.offsetHeight;
+    /* the placing read is also the one forced layout that lets the
+       transition run from the hidden state — once per open, never per
+       frame */
+    place(panel, btn);
     panel.classList.add('is-in');
     btn.setAttribute('aria-expanded', 'true');
     nav.classList.add('is-open');
@@ -259,6 +275,11 @@ function initMenus(nav: HTMLElement): void {
   nav.addEventListener('focusout', (e) => {
     const to = e.relatedTarget as Node | null;
     if (openId && to && !nav.contains(to)) closeAll();
+  });
+  window.addEventListener('resize', () => {
+    const panel = openId ? panels.get(openId) : null;
+    const btn = buttons.find((b) => b.dataset.menuButton === openId);
+    if (panel && btn) place(panel, btn);
   });
   /* A choice made: the panel closes behind the navigation. */
   for (const a of nav.querySelectorAll('[data-menu-panel] a'))

@@ -113,9 +113,9 @@ const MENUS = NAV_MENUS;
     <span class="nav__burger-bar" aria-hidden="true"></span>
   </button>
 
-  {/* The panels: one per menu, below the bar, collapsed until opened.
-      Consumers is the wide one — the services in their groups, the
-      four links set apart. */}
+  {/* The panels: one per menu, a card under its own button, collapsed
+      until opened (nav.ts places it). Consumers is the big one — the
+      services in their groups, the four links set apart beneath. */}
   {MENUS.map((m) => (
     <div
       class:list={['nav__panel', `nav__panel--${m.id}`]}
@@ -123,7 +123,7 @@ const MENUS = NAV_MENUS;
       data-menu-panel={m.id}
       hidden
     >
-      <div class="wrap nav__panel-in">
+      <div class="nav__panel-in">
         <div class="nav__groups">
           {m.groups.map((g) => (
             <div class="nav__group">
@@ -428,27 +428,32 @@ const MENUS = NAV_MENUS;
   }
 
   /* ---- the panels ----
-     A paper sheet under the bar. Collapsed: hidden. Opening: a short
-     fade and a few px of rise, from the tokens. */
+     A card under its own button, as wide as its content and no wider
+     (Nahian, 2026-09-23) — it used to be a paper sheet the full width
+     of the screen, mostly white. nav.ts writes --panel-x on open so the
+     card's text lines up under the button's label, kept inside the
+     gutters. Collapsed: hidden. Opening: a short fade and a few px of
+     rise, from the tokens. */
   /* `.nav .nav__panel`, not `.nav__panel`: the bar's own `.nav > *`
      rule sets its children relative, and would otherwise win. */
   .nav .nav__panel {
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
+    top: calc(100% + var(--s-2));
+    left: var(--panel-x, var(--gutter));
+    width: max-content;
+    max-width: calc(100% - 2 * var(--gutter));
+    padding: var(--s-5) var(--s-6);
+    border: 1px solid var(--pink-line);
+    border-radius: var(--r-lg);
     background: var(--paper);
     color: var(--ink);
-    box-shadow:
-      0 1px 0 var(--pink-line) inset,
-      var(--e-3);
-    padding-block: var(--s-7);
+    box-shadow: var(--e-3);
     opacity: 0;
     transform: translateY(-6px);
     transition:
       opacity var(--t-base) var(--ease-io),
       transform var(--t-base) var(--ease);
-    max-height: calc(var(--vh) - var(--nav-h));
+    max-height: calc(var(--vh) - var(--nav-h) - var(--s-6));
     overflow: auto;
   }
   /* Same strength as the rule above, or the collapsed opacity wins. */
@@ -458,40 +463,28 @@ const MENUS = NAV_MENUS;
   }
   .nav__panel-in {
     display: grid;
-    gap: var(--s-8);
-  }
-  .nav__panel--consumers .nav__panel-in {
-    grid-template-columns: 1fr auto;
+    gap: var(--s-5);
   }
   .nav__groups {
     display: grid;
-    gap: var(--s-6) var(--s-7);
+    gap: var(--s-5) var(--s-6);
   }
   .nav__panel--consumers .nav__groups {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(5, auto);
   }
-  .nav__panel--business .nav__groups,
   .nav__panel--company .nav__groups {
-    grid-template-columns: repeat(2, minmax(0, 20rem));
+    grid-template-columns: repeat(2, auto);
   }
-  .nav__panel--business .nav__list,
-  .nav__panel--company .nav__list {
-    columns: 2;
-    column-gap: var(--s-7);
-  }
+  /* Titles: sentence case, set apart by weight and the brand colour
+     rather than capitals (Nahian, 2026-09-23). */
   .nav__group-label {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-sm);
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    margin-bottom: var(--s-3);
-  }
-  .nav__group-link {
-    color: var(--ink);
+    color: var(--pink);
+    margin-bottom: var(--s-2);
   }
   .nav__group-link:hover {
-    color: var(--pink);
+    color: var(--pink-deep);
   }
   .nav__list {
     display: grid;
@@ -504,15 +497,16 @@ const MENUS = NAV_MENUS;
   .nav__list a:hover {
     color: var(--pink);
   }
+  /* Consumers' four plain links: a row along the card's foot. */
   .nav__aside {
-    display: grid;
-    align-content: start;
-    gap: var(--s-3);
-    padding-inline-start: var(--s-7);
-    border-inline-start: 1px solid var(--pink-line);
-    min-width: 14rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-6);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--pink-line);
   }
   .nav__aside-link {
+    font-size: var(--fs-sm);
     font-weight: 600;
     color: var(--ink);
   }
