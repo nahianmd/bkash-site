@@ -303,7 +303,7 @@ const STAT_ICONS: Record<string, string> = {
               <Image
                 src={voiceImg(v.file)}
                 alt={v.name}
-                width={260}
+                width={voiceImg(v.file).width}
                 layout="none"
                 class="voices__face"
                 loading="lazy"
@@ -779,25 +779,26 @@ const STAT_ICONS: Record<string, string> = {
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: clamp(1rem, 2vw, 1.75rem);
   }
+  /* The page's own language (Nahian, 2026-09-23): the round, ringed
+     faces in bordered cards were the only circles and the last boxes on
+     the page. Now open, like the stats and the triad, and each voice
+     leads with a photograph the way the board's do — a full-width
+     rectangle at the board's radius. 6:5 is the photographs' own
+     shape (520x435), so nothing is cropped away. */
   .voices__card {
     margin: 0;
-    padding: clamp(1.5rem, 2.6vw, 2.25rem);
-    border-radius: var(--r-lg);
-    background: var(--paper);
-    border: 1px solid var(--pink-line);
     display: flex;
     flex-direction: column;
   }
   .voices :global(.voices__face) {
-    width: 6.5rem;
-    height: 6.5rem;
-    border-radius: var(--r-full);
+    width: 100%;
+    height: auto;
+    aspect-ratio: 6 / 5;
     object-fit: cover;
-    object-position: 50% 22%;
+    object-position: 50% 30%;
+    border-radius: var(--r-md);
+    background: var(--paper-2);
     margin-bottom: var(--s-5);
-    box-shadow:
-      0 0 0 3px var(--paper),
-      0 0 0 4px var(--pink-line);
   }
   .voices__card figcaption {
     display: contents;
