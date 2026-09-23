@@ -261,10 +261,16 @@ const STAT_ICONS: Record<string, string> = {
         </div>
         <div class="wall__viewport">
           <div class="wall__track" data-wall-track>
+            {/* The client's 60×10 ft wall (Journey Wall____60x10__ft.ai,
+                2026-09-23), rendered from the .ai and cropped to the wall.
+                Sized by height, so `sizes` is the width that height gives
+                at 6:1: ~1900px on a phone (0.38 --vh), ~3650px on desktop
+                (38rem cap). */}
             <Image
               src={journey}
               alt="The bKash journey from 2012 to 2026"
-              width={5200}
+              widths={[3800, 7600]}
+              sizes="(max-width: 767px) 1900px, 3650px"
               layout="none"
               class="wall__img"
               loading="lazy"
@@ -684,16 +690,17 @@ const STAT_ICONS: Record<string, string> = {
     display: flex;
     align-items: center;
   }
+  /* Edge to edge (Nahian, 2026-09-23): no side margin and no radius, so
+     the wall starts flush with the left of the screen and the pan ends
+     flush with the right — about.ts pans by the track's own width. */
   .wall__track {
     display: flex;
     will-change: transform;
-    padding-inline: 4vw;
   }
   .wall :global(.wall__img) {
     height: min(calc(var(--vh) * 0.64), 38rem);
     width: auto;
     max-width: none;
-    border-radius: var(--r-md);
   }
   .wall__bar {
     width: min(28rem, 62vw);
