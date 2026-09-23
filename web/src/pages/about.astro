@@ -527,17 +527,16 @@ const STAT_ICONS: Record<string, string> = {
   }
 
   /* ---- platform triad ---- */
+  /* No boxes (Nahian, 2026-09-23): open text under a hairline, the
+     same treatment and rhythm as the stats above. */
   .triad {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: clamp(1rem, 2vw, 1.75rem);
+    gap: clamp(1.5rem, 3vw, 3rem);
   }
   .triad__card {
-    padding: clamp(1.75rem, 3vw, 2.5rem);
-    border-radius: var(--r-lg);
-    background: var(--paper);
-    box-shadow: var(--e-2);
-    border-top: 3px solid var(--pink);
+    border-top: 1px solid var(--pink);
+    padding-top: var(--s-5);
   }
   .triad__card h3 {
     margin-bottom: var(--s-3);
