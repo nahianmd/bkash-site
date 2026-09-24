@@ -37,14 +37,14 @@ export const STATS = [
     count: 200,
     suffix: '+',
     icon: 'products',
-    label: 'Products & Services',
+    label: 'Products & services',
     note: 'One account, an entire financial ecosystem',
   },
 ];
 
 export const TRIAD = [
-  { title: 'Store Value', line: 'Keep what you earn. Keep control.' },
-  { title: 'Pay & Be Paid', line: 'Send, receive, and pay. Anytime. Anywhere.' },
+  { title: 'Store value', line: 'Keep what you earn. Keep control.' },
+  { title: 'Pay & be paid', line: 'Send, receive, and pay. Anytime. Anywhere.' },
   { title: 'Empower', line: 'More access. More choice. More possibilities.' },
 ];
 

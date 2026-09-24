@@ -29,7 +29,7 @@ const walls: { key: 'desktop' | 'phone'; tiles: MosaicTile[] }[] = [
   { key: 'phone', tiles: mosaicTiles(MOSAIC.phone) },
 ];
 /* The heading, word by word; the last is the one the intro zooms into. */
-const HEADING = ['Writing', 'Millions', 'of', 'Stories', 'in', 'Motion'];
+const HEADING = ['Writing', 'millions', 'of', 'stories', 'in', 'motion'];
 const place = (key: string, t: MosaicTile) => `at-${key}-${t.order}`;
 const posRules = new Map<string, string>();
 const placeRules: string[] = [];
@@ -142,7 +142,7 @@ const posCss =
          of the frame on a phone. PLACEHOLDER until the client's. -->
     <div class="svc__copy" data-copy>
       <p class="t-eyebrow svc__eyebrow">Sixteen services</p>
-      <h2 class="t-h2 svc__title">Everything You Need to Manage Your Money</h2>
+      <h2 class="t-h2 svc__title">Everything you need to manage your money</h2>
       <p class="t-lead svc__line">
         Send, receive, pay, save, borrow. All in one app, always within your reach.
       </p>

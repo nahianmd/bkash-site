@@ -25,32 +25,32 @@ type Live = { dx: number; dy: number; s: number; rx: number; ry: number };
 export const SERVICES = [
   {
     id: 'send-money',
-    name: 'Send Money',
+    name: 'Send money',
     line: 'Money to any bKash number in seconds, at any hour.',
   },
   {
     id: 'mobile-recharge',
-    name: 'Mobile Recharge',
+    name: 'Mobile recharge',
     line: 'Top up any operator from the balance you already keep.',
   },
   {
     id: 'cash-out',
-    name: 'Cash Out',
+    name: 'Cash out',
     line: 'Turn digital money into notes at any of 3.5 lakh agent points.',
   },
   {
     id: 'make-payment',
-    name: 'Make Payment',
+    name: 'Make payment',
     line: 'Scan a merchant’s QR and pay. No card, no terminal, no change.',
   },
   {
     id: 'add-money',
-    name: 'Add Money',
+    name: 'Add money',
     line: 'Bring funds in from a bank, a card, or a remittance from abroad.',
   },
   {
     id: 'pay-bill',
-    name: 'Pay Bill',
+    name: 'Pay bill',
     line: 'Electricity, gas, water and internet, settled without leaving home.',
   },
   {
@@ -70,7 +70,7 @@ export const SERVICES = [
   },
   {
     id: 'bkash-to-bank',
-    name: 'bKash to Bank',
+    name: 'bKash to bank',
     line: 'Move money into a bank account without queueing at one.',
   },
   {
@@ -85,12 +85,12 @@ export const SERVICES = [
   },
   {
     id: 'toll-pay',
-    name: 'Toll Pay',
+    name: 'Toll pay',
     line: 'Cross the bridge without stopping to find change.',
   },
   {
     id: 'request-money',
-    name: 'Request Money',
+    name: 'Request money',
     line: 'Ask to be paid back, and skip the awkward reminder.',
   },
   {
