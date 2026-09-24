@@ -95,10 +95,13 @@ import BirdOverlay from './BirdOverlay.astro';
      and leaves as Amena's caption arrives in the same place (Nahian,
      2026-09-20). Rahim's stall is behind it at the wide shot; the
      ground is the scrim. */
+  /* Low in the frame (Nahian, 2026-09-24): lifted this high, the block
+     and its ground sat over the shop's banner in the plate. The phone
+     block below overrides this with its own top anchor. */
   .hero__open {
     position: absolute;
     left: var(--gutter);
-    bottom: calc(var(--gutter) + var(--s-6));
+    bottom: var(--s-5);
     width: max-content;
     max-width: min(52vw, 44rem);
   }
