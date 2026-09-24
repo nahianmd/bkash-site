@@ -292,6 +292,24 @@ const posCss =
     height: 100%;
     object-fit: cover;
   }
+  /* A pink line along each edge (Nahian, 2026-09-24, after a reference):
+     full pink through the middle of the edge, fading to nothing toward
+     the corners. Four gradient layers on one overlay, drawn on the
+     photograph's own edge, so it flies in with it and costs nothing
+     per frame. 2px: 1px breaks up on a phone. */
+  .tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    --edge: var(--collage-edge);
+    --run: transparent 0%, var(--pink) 35%, var(--pink) 65%, transparent 100%;
+    background:
+      linear-gradient(to right, var(--run)) top / 100% var(--edge) no-repeat,
+      linear-gradient(to right, var(--run)) bottom / 100% var(--edge) no-repeat,
+      linear-gradient(to bottom, var(--run)) left / var(--edge) 100% no-repeat,
+      linear-gradient(to bottom, var(--run)) right / var(--edge) 100% no-repeat;
+  }
 
   /* The phone photograph at its natural size (Nahian, 2026-09-24): the
      WHOLE photograph at its own 3:4, never cropped, and just big enough

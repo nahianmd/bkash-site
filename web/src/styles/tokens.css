@@ -60,6 +60,8 @@
      deeper so the two read as separate surfaces, and its shadow on the
      paper ground */
   --device-rim: #f4f2f3;
+  /* the pink line along each collage photograph's edges (services) */
+  --collage-edge: 2px;
   --device-edge: #e8e4e6;
   --device-shadow: rgb(25 19 22 / 20%);
 
