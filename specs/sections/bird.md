@@ -266,6 +266,20 @@ with `bg 0.188` — both dials together, because `fill` alone enlarges the figur
 against an unchanged street and reads as him stepping forward rather than as a
 tighter shot. ~17% in; the background's upscale goes 1.59x to 1.86x.
 
+**Tuned again the same day** — "customer little bit zoomed out, and agent
+little bit zoomed in" — one 1.12x step each way:
+
+| who    | seat   | fill        | bg            | background upscale |
+| ------ | ------ | ----------- | ------------- | ------------------ |
+| Amena  | middle | 0.70 → 0.62 | 0.220 → 0.246 | 1.59x → **1.42x**  |
+| Rahim  | flat   | 0.82 → 0.92 | 0.188 → 0.168 | 1.86x → **2.09x**  |
+| Faysal | wing   | 0.70        | 0.220         | 1.65x              |
+
+Zooming out is free on resolution and zooming in is not: a looser crop is more
+source pixels for the same window, a tighter one is fewer. **Rahim is now near
+the limit** — past roughly 2.3x the street stops reading as depth of field and
+starts reading as a bad image, so he has about one more step in him.
+
 That tuning is keyed to the **person**, so it followed Rahim into the flat
 facet on the second swap. The flat facet is short (263 against the middle's
 463), so 0.82 there is a smaller figure than 0.82 in the middle was — his

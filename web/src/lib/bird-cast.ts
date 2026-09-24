@@ -81,20 +81,34 @@ export const CAST = [
    fraction of the facet's height. A centroid-centred figure sits low in
    a triangle that narrows downward. */
 export const CAST_TUNING: Record<string, { fill: number; bg: number; lift: number }> = {
-  amena: { fill: 0.7, bg: 0.22, lift: 0 },
+  /* Out a step, 2026-09-24 — "customer little bit zoomed out". Same rule
+     as the agent's, run backwards: fill down by 1.12, bg up by 1.12. Her
+     background gets EASIER as she zooms out, 1.59x -> 1.42x, because a
+     looser crop is more source pixels for the same window. */
+  amena: { fill: 0.62, bg: 0.246, lift: 0 },
   /* "a little bit zoomed in" (Nahian, 2026-09-24) for the agent. Keyed to
      the PERSON, not the slot, so it followed Rahim out of the middle
      facet and into the flat one when he and Amena traded. The flat facet
      is short — 263 against the middle's 463 — so 0.82 there is a smaller
      figure than 0.82 in the middle was. If the tighter framing was meant
      for the middle SLOT rather than for Rahim, move these two numbers to
-     whoever sits there. BOTH dials move, and together: `fill` alone would
+     whoever sits there. Taken in a second step the same day — "agent
+     little bit zoomed in" — to 0.92 / 0.168.
+
+     THAT IS ABOUT AS FAR AS HE GOES. His background is now upscaled
+     2.09x, and past roughly 2.3x the street stops reading as depth of
+     field and starts reading as a bad image. To push the agent further,
+     either raise `fill` alone and accept that he reads as stepping
+     forward rather than as a tighter shot, or give him a facet with more
+     room than the flat one's 263 units of height.
+
+     BOTH dials move, and together: `fill` alone would
      enlarge the figure against an unchanged street, which reads as him
      stepping forward rather than as a tighter shot. Moving `bg` with it
      by the same ratio is what makes it a zoom. ~17% in; the background's
      upscale goes 1.59x -> 1.86x, still soft enough to read as depth of
      field rather than as a poor image. */
-  rahim: { fill: 0.82, bg: 0.188, lift: 0 },
+  rahim: { fill: 0.92, bg: 0.168, lift: 0 },
   faysal: { fill: 0.7, bg: 0.22, lift: 0 },
 };
 
