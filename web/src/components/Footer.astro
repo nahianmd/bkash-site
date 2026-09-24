@@ -106,6 +106,27 @@ const ICONS: Record<string, string> = {
       ))}
     </div>
 
+    {/* The phone's rendering of the same columns (Nahian, 2026-09-24):
+        side by side, three lists of 5, 8 and 8 left one column ragged and
+        Company stranded on a row of its own. Here each is a row that
+        opens — native <details>, as the drawer's accordion. The columns
+        above are display:none at this width, so nothing is read twice. */}
+    <div class="foot__acc">
+      {FOOTER_COLUMNS.map((col) => (
+        <details class="foot__acc-item">
+          <summary class="t-eyebrow foot__acc-sum">
+            {col.label}
+            <span class="foot__chev" aria-hidden="true"></span>
+          </summary>
+          <div class="foot__acc-body">
+            {col.items.map((it) => (
+              <a href={it.href}>{it.label}</a>
+            ))}
+          </div>
+        </details>
+      ))}
+    </div>
+
     <div class="foot__base t-sm">
       <span>&copy; {YEAR} bKash Limited. All rights reserved.</span>
       <a href="#">Privacy Notice</a>
@@ -231,17 +252,71 @@ const ICONS: Record<string, string> = {
     color: var(--on-night);
   }
 
-  /* Two columns at phone width, stated rather than inferred; the brand
-     block takes the full width above them. */
+  /* ---- the phone's accordion ---- */
+  .foot__acc {
+    display: none;
+  }
+  .foot__acc-item {
+    border-top: 1px solid var(--on-night-line);
+  }
+  .foot__acc-item:last-child {
+    border-bottom: 1px solid var(--on-night-line);
+  }
+  /* A 48px row: the whole bar is the tap target. */
+  .foot__acc-sum {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3rem;
+    color: var(--on-night);
+    cursor: pointer;
+    list-style: none;
+  }
+  .foot__acc-sum::-webkit-details-marker {
+    display: none;
+  }
+  /* The drawer's chevron: a rotated corner, turned when open. */
+  .foot__chev {
+    width: 0.5em;
+    height: 0.5em;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-0.15em) rotate(45deg);
+    transition: transform var(--t-fast) var(--ease-io);
+  }
+  .foot__acc-item[open] .foot__chev {
+    transform: translateY(0.1em) rotate(225deg);
+  }
+  .foot__acc-body {
+    display: grid;
+    padding-bottom: var(--s-4);
+  }
+  .foot__acc-body a {
+    color: var(--on-night-2);
+    padding-block: var(--s-2);
+    font-size: var(--fs-sm);
+  }
+  .foot__acc-body a:hover {
+    color: var(--on-night);
+  }
+
+  /* The phone: the brand block alone in the grid, the three link
+     columns swapped for the accordion beneath it. */
   @media (max-width: 767px) {
     .foot__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--s-6) clamp(1.5rem, 3vw, 3rem);
+      grid-template-columns: minmax(0, 1fr);
+      margin-bottom: var(--s-6);
     }
-
-    .foot__brand {
-      grid-column: 1 / -1;
-      margin-bottom: var(--s-4);
+    .foot__col {
+      display: none;
+    }
+    /* No gap and no closing line of its own: the base's top rule closes
+       the last row, so two hairlines never stack. */
+    .foot__acc {
+      display: block;
+    }
+    .foot__acc-item:last-child {
+      border-bottom: 0;
     }
   }
 
@@ -261,5 +336,12 @@ const ICONS: Record<string, string> = {
 
   .foot__base a:hover {
     color: var(--on-night);
+  }
+
+  /* The notice on its own line, the two links together beneath it. */
+  @media (max-width: 767px) {
+    .foot__base span {
+      flex-basis: 100%;
+    }
   }
 </style>
