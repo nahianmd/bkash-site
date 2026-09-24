@@ -163,8 +163,11 @@ export const WALL = {
        small lean back about the BOTTOM edge and a turn that shows the
        slab's left edge — the turn, not the lean, is what reads as 3D.
        Eased in with the slide; the life plays on top of it. */
-    leanDeg: 4,
+    leanDeg: 6,
     turnDeg: 12,
+    /* a slight roll, counter-clockwise: the top-left tips out to the
+       left while the bottom-left stays square to you (Nahian, 2026-09-24) */
+    rollDeg: -3,
     /* The rim (Nahian, 2026-09-24, from "bKash Mobile.png"): a light
        bezel between the screen and the pink line, as a fraction of the
        screen's width — 16px on the reference's 600. The same on every
@@ -539,6 +542,7 @@ export function initServices() {
     return (
       `translate3d(${L.dx.toFixed(2)}px, ${L.dy.toFixed(2)}px, 0) scale(${L.s.toFixed(4)}) ` +
       `translate3d(0, ${(h * (1 - Math.cos(t))).toFixed(2)}px, ${(-h * Math.sin(t)).toFixed(2)}px) ` +
+      `rotateZ(${(WALL.rest.rollDeg * DEG * l).toFixed(5)}rad) ` +
       `rotateX(${t.toFixed(5)}rad) rotateY(${(WALL.rest.turnDeg * DEG * l + L.ry).toFixed(5)}rad)`
     );
   }

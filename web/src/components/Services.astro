@@ -80,29 +80,29 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
       </div>
     ))}
 
-    <!-- The screen, frameless (Nahian, 2026-09-24): the home screen with
-         a thin pink line round its rounded corners — no handset. posed by
-         services.ts over the photographed screen; it fades in over the
-         photograph, stands up out of the hand while the wall tips back,
-         then leans back as it slides beside the copy, a soft shadow
-         falling behind its top. Proportions and corners from device.ts. -->
+    <!-- The screen as a slim slab, no handset (Nahian, 2026-09-24): the
+         home screen in a light grey rim with a thin pink line, a few
+         stepped layers behind for its edge. Posed by services.ts over the
+         photographed screen; it fades in over the photograph, stands up
+         out of the hand while the wall tips back, then turns and leans
+         slightly as it slides beside the copy. Proportions and corners
+         from device.ts. -->
     <div class="device" data-device aria-hidden="true">
-      <div class="device__shadow"></div>
       <div class="device__edge device__edge--3"></div>
       <div class="device__edge device__edge--2"></div>
       <div class="device__edge device__edge--1"></div>
       <div class="device__face">
-      <div class="device__screen" data-device-screen>
-        <Picture
-          src={screen}
-          alt=""
-          widths={[360, 720]}
-          sizes="30vw"
-          formats={['avif', 'webp']}
-          layout="none"
-          loading="lazy"
-        />
-      </div>
+        <div class="device__screen" data-device-screen>
+          <Picture
+            src={screen}
+            alt=""
+            widths={[360, 720]}
+            sizes="30vw"
+            formats={['avif', 'webp']}
+            layout="none"
+            loading="lazy"
+          />
+        </div>
       </div>
     </div>
     <!-- The ground turns white as the phone lifts out of the wall. -->
@@ -268,12 +268,18 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     background: var(--device-rim);
     box-shadow: 0 0 0 1px var(--pink);
   }
+  /* The shadow comes from the screen, not the outer line (Nahian,
+     2026-09-24): the screen sits a hair proud of the rim and casts a
+     mild shadow onto it, down and to the left, as if lit from the upper
+     right. Static — it moves only with the parent's transform. */
   .device__screen {
     position: absolute;
     inset: var(--rim, 8px);
     border-radius: var(--screen-r, var(--r-md));
     overflow: hidden;
     background: var(--paper);
+    box-shadow: calc(var(--rim, 8px) * -0.45) calc(var(--rim, 8px) * 0.3)
+      calc(var(--rim, 8px) * 0.9) var(--device-shadow);
   }
   /* Thickness: three copies of the outline stepped back in depth. Face
      on they hide behind the front; turned, they show as a thin light
@@ -294,18 +300,6 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
   }
   .device__edge--3 {
     transform: translateZ(-6px);
-  }
-  /* A mild shadow on the left, as if lit from the upper right: soft,
-     set back behind the slab so the turn carries it out past the left
-     edge. The blur is static — the element only moves with its
-     parent's transform, so it is never re-blurred per frame. */
-  .device__shadow {
-    position: absolute;
-    inset: 3% 6% 1% 2%;
-    border-radius: inherit;
-    background: var(--device-shadow);
-    filter: blur(22px);
-    transform: translate3d(-7%, 2%, -30px);
   }
   .device__screen :global(picture),
   .device__screen :global(img) {
