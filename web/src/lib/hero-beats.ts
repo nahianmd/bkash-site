@@ -4,7 +4,7 @@
    cutouts from the same numbers the camera uses).
 
    Camera targets and cutout boxes are fractions of the PLATE. The
-   plate (1678×937, replated 2026-09-22 on the client's note; was
+   plate (1672×941, replated 2026-09-24 on the client's note; was
    2748×1536) has the three figures removed; the
    cutouts are the only people, always visible, sitting where the
    figures were painted. Placed by Nahian with the placement panel
@@ -24,13 +24,15 @@ export type Beat = { id: string; cam: Cam; cut?: Cut };
 /* Only the ASPECT of this is load-bearing — every consumer cover-fits
    it into a box (scene-rig's `box`, Bird's mark, the placement panel's
    `hOf`), so the pixel counts cancel. Kept truthful anyway. The replate
-   is 1.7908 against the old 1.7891: a 0.1% difference, so every `cam`
-   and `cut` fraction below carries over.
+   is 1.7768 against 1.7908 the day before and 1.7891 originally — a
+   0.78% shift this time, where the first replate was 0.10%. Small, but
+   an order of magnitude less small, so the fractions below were
+   re-placed against it rather than carried over.
 
    Unlike HeroScene's width ladder this cannot be read from the image:
    the module stays import-free so the components can use it at build
    time. Typed by hand, and a pixel of drift in it is not load-bearing. */
-export const PLATE = { w: 1678, h: 937 };
+export const PLATE = { w: 1672, h: 941 };
 
 /* CENTRING A SUBJECT. `poseFor` places cam.x/cam.y at the viewport's
    centre, so a subject is centred exactly when its cam IS the centre of
@@ -39,10 +41,14 @@ export const PLATE = { w: 1678, h: 937 };
      cam.x = cut.x + cut.w / 2
      cam.y = cut.y + cut.w * (imgH / imgW) * (PLATE.w / PLATE.h) / 2
 
-   Amena was already built this way — (0.4100, 0.5000) against a true
-   centre of (0.4086, 0.5000). Rahim and Faysal were not: Rahim sat
-   0.0988 of the plate's height below centre. Both centred 2026-09-22 on
-   Nahian's ask, and zoomed in with it.
+   Amena was already built this way. Rahim and Faysal were not — Rahim
+   sat 0.0988 of the plate's height below centre — and both were centred
+   2026-09-22 on Nahian's ask, and zoomed in with it.
+
+   Re-derived 2026-09-24 after all three cut boxes were re-placed against
+   the new plate and Faysal's new artwork. The cams pasted with those
+   boxes were the OLD derived ones and had gone stale exactly as this
+   comment warns: Amena had drifted +0.0221 in x, Rahim +0.0102.
 
    The zoom is not independent of the centring. The cover clamp in
    `poseFor` keeps cam.y inside [vh/2H_s, 1 - vh/2H_s], and at s = 3
@@ -57,17 +63,17 @@ export const BEATS: Beat[] = [
   { id: 'open', cam: { x: 0.5, y: 0.5, s: 1 } },
   {
     id: 'amena',
-    cam: { x: 0.41, y: 0.5, s: 4 },
-    cut: { x: 0.3951, y: 0.4737, w: 0.027, soft: 0 },
+    cam: { x: 0.3879, y: 0.5007, s: 4 },
+    cut: { x: 0.3739, y: 0.4737, w: 0.028, soft: 0 },
   },
   {
     id: 'rahim',
-    cam: { x: 0.3438, y: 0.8388, s: 3.75 },
-    cut: { x: 0.3163, y: 0.7728, w: 0.055, soft: 0 },
+    cam: { x: 0.3336, y: 0.8348, s: 3.75 },
+    cut: { x: 0.3061, y: 0.7693, w: 0.055, soft: 0 },
   },
   {
     id: 'faysal',
-    cam: { x: 0.5669, y: 0.8126, s: 4 },
-    cut: { x: 0.5509, y: 0.75, w: 0.032, soft: 0 },
+    cam: { x: 0.5704, y: 0.8073, s: 4 },
+    cut: { x: 0.5359, y: 0.7347, w: 0.069, soft: 0 },
   },
 ];

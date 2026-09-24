@@ -7,7 +7,7 @@
    exact by construction: same component, same assets, same pixels.
 
    The plate has NO people of its own (2026-09-19: the three figures
-   removed; replate 2026-09-22, 1678×937). The cutouts are the only people, always
+   removed; replated 2026-09-24, 1672×941). The cutouts are the only people, always
    visible, placed as fractions of the plate — nothing to ghost, and
    never an opacity ramp on anyone. Focus is the recede rule on the
    street and the other two.
@@ -44,10 +44,10 @@ const cutCss = people
    The ladder tops out at the plate's OWN width, read from the import
    rather than typed: it is the source, Astro does not enlarge, so asking
    for more only emits duplicates — and the plate has been replaced twice
-   in three days (2748 -> 1679 -> 1678 wide). A typed number desyncs on
-   the next swap; this cannot.
+   in a week (2748 -> 1679 -> 1678 -> 1672 wide). A typed number desyncs
+   on the next swap; this cannot.
 
-   The plate at 4x zoom on 1920 would want ~7730 and has 1678 — the
+   The plate at 4x zoom on 1920 would want ~7700 and has 1672 — the
    tightest beat is a 4.6x stretch (it was 2.8x on the 2748 plate).
    A cutout's largest size is its box fraction x the plate's display
    width x its beat's zoom.
@@ -105,8 +105,8 @@ const cutCss = people
     position: absolute;
     inset: 0;
     /* Origin 0 0 keeps the camera maths solvable: after
-               translate(tx, ty) scale(s) the box is exactly
-               (tx, ty, W*s, H*s), so the cover clamp is arithmetic. */
+                   translate(tx, ty) scale(s) the box is exactly
+                   (tx, ty, W*s, H*s), so the cover clamp is arithmetic. */
     transform-origin: 0 0;
     will-change: transform;
   }
