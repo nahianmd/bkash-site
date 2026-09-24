@@ -517,6 +517,34 @@ const STAT_ICONS: Record<string, string> = {
   .ab-hero__cta {
     margin-top: var(--s-6);
   }
+  /* Phone: the photograph first, uncovered, then the copy on the black
+     below it (Nahian, 2026-09-24). Over the photo, the five-line
+     headline and its lead hid the girl on the boat entirely. A square
+     panel under the nav, cropped onto her (she sits ~39% across the
+     frame), its lower part fading into --night — the CEO portrait's
+     dissolve — and the copy starting inside the fade. */
+  @media (max-width: 767px) {
+    .ab-hero {
+      display: block;
+      min-height: 0;
+    }
+    .ab-hero :global(.ab-hero__img) {
+      position: relative;
+      display: block;
+      height: auto;
+      aspect-ratio: 1;
+      -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+    }
+    .ab-hero :global(.ab-hero__img img) {
+      object-position: 18% 50%;
+    }
+    .ab-hero__body {
+      padding-top: 0;
+      margin-top: calc(-1 * var(--s-8));
+      padding-bottom: var(--s-8);
+    }
+  }
 
   /* ---- stats ---- */
   .stats {
