@@ -150,6 +150,10 @@ export const WALL = {
     zoomOut: [0.178, 0.216],
     dim: 0.4,
     stageFont: { vw: 0.07, max: 72 },
+    /* On a phone (Nahian, 2026-09-24): bigger while arriving, and at
+       rest the line fills the frame's width inside this margin (px). */
+    stageFontPhone: { vw: 0.13, max: 72 },
+    restMarginPhone: 16,
     zoomWidth: 0.6,
   },
   /* The landing (Nahian, 2026-09-24): each tile flies in from the front
@@ -514,9 +518,12 @@ export function initServices() {
       x: introBox.offsetLeft + introBox.offsetWidth / 2,
       y: introBox.offsetTop + introBox.offsetHeight / 2,
     };
-    /* scales relative to the laid-out size: the zoom is 1 */
-    intro.sRest = 1 / k;
-    intro.sStage = Math.min(I.stageFont.max, vw * I.stageFont.vw) / (fsRest * k);
+    /* scales relative to the laid-out size: the zoom is 1. On a phone
+       the heading fills the width rather than taking the CSS size. */
+    const phone = isPhone();
+    intro.sRest = phone ? (vw - 2 * I.restMarginPhone) / Math.max(1, intro.w) : 1 / k;
+    const sf = phone ? I.stageFontPhone : I.stageFont;
+    intro.sStage = Math.min(sf.max, vw * sf.vw) / (fsRest * k);
     intro.last = words.map(() => '');
     introDone = '';
   }
@@ -807,7 +814,10 @@ export function initServices() {
     const i0 = Math.floor(x);
     const i1 = Math.min(n - 1, i0 + 1);
     const cr = intro.centres[i0] + (intro.centres[i1] - intro.centres[i0]) * (x - i0);
-    const fStage = (intro.centres[0] + cr) / 2 + ((cr - (intro.centres[0] + cr) / 2) * 0.65);
+    /* on a phone the words are too big to hold the line's start: the
+       pan follows the newest word all the way */
+    const follow = isPhone() ? 1 : 0.65;
+    const fStage = (intro.centres[0] + cr) / 2 + (cr - (intro.centres[0] + cr) / 2) * follow;
     const fKey = intro.centres[n - 1];
     const fRest = intro.w / 2;
     const lg = (a: number, b: number, t: number) => Math.exp(Math.log(a) + (Math.log(b) - Math.log(a)) * t);
