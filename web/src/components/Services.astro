@@ -2,13 +2,14 @@
 /* Section 4: A thousand more stories → the phone.
    specs/sections/services.md · specs/services/plan.md
 
-   Two walls are rendered — four columns and two — and CSS shows one
-   per breakpoint, so each is composed for its width rather than
-   reflowed from the other. The phone stands up out of the photographed
-   hand as an object, slides beside the copy and stays alive. The
-   sixteen services are ServicesDetail.astro, reached by the button. */
+   The photographs fly in from the front, one by one as you scroll, into
+   a straight mosaic that fills the pinned frame edge to edge, slightly
+   overlapping (Nahian, 2026-09-24; the Pinterest columns are gone). The
+   phone photograph lands last, in the centre, and the screen stands up
+   out of it, slides beside the copy and stays alive. The sixteen
+   services are ServicesDetail.astro, reached by the button. */
 import { Picture } from 'astro:assets';
-import { COLUMNS, type WallTile } from '../lib/services';
+import { MOSAIC, mosaicTiles, type MosaicTile } from '../lib/services';
 
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/services/*.jpg', {
   eager: true,
@@ -17,63 +18,64 @@ const photo = (name: string) => photos[`../assets/img/services/${name}.jpg`].def
 import screen from '../assets/img/services/screen.jpg';
 import phonePhoto from '../assets/img/services/phone.jpg';
 
-/* Crops are data, and the gate forbids inline styles — so the
-   object-position rules are generated here, one class per photograph
-   and crop, and emitted as a stylesheet. */
-const posRules = new Map<string, string>();
-for (const cols of [COLUMNS.desktop, COLUMNS.phone])
-  for (const col of cols)
-    for (const t of col)
-      if (t.kind === 'photo') posRules.set(`pos-${t.photo}-${t.crop}`, t.pos);
-const posCss = [...posRules]
-  .map(([cls, pos]) => `.${cls} img{object-position:${pos}}`)
-  .join('');
-
-const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
-  { key: 'desktop', cols: COLUMNS.desktop },
-  { key: 'phone', cols: COLUMNS.phone },
+/* Two mosaics — ten by four, and four by six for the phone — and CSS
+   shows one per breakpoint, so each is composed for its width. The gate
+   forbids inline styles, so each tile's place in its grid and each
+   photograph's crop are generated here as classes and emitted as a
+   stylesheet. */
+const walls: { key: 'desktop' | 'phone'; tiles: MosaicTile[] }[] = [
+  { key: 'desktop', tiles: mosaicTiles(MOSAIC.desktop) },
+  { key: 'phone', tiles: mosaicTiles(MOSAIC.phone) },
 ];
+const place = (key: string, t: MosaicTile) => `at-${key}-${t.order}`;
+const posRules = new Map<string, string>();
+const placeRules: string[] = [];
+for (const { key, tiles } of walls)
+  for (const t of tiles) {
+    placeRules.push(`.${place(key, t)}{grid-area:${t.r}/${t.c}/span ${t.h}/span ${t.w}}`);
+    if (t.kind === 'photo') posRules.set(`pos-${t.photo}`, t.pos);
+  }
+const posCss =
+  placeRules.join('') +
+  [...posRules].map(([cls, pos]) => `.${cls} img{object-position:${pos}}`).join('');
 ---
 
 <section class="svc" data-services aria-label="Millions of stories, and the bKash app">
   <div class="svc__pin" data-services-pin>
-    {walls.map(({ key, cols }) => (
+    {/* The tiles in landing order, so a later tile paints over an earlier
+        one where they overlap: the title, the photographs, the phone. */}
+    {walls.map(({ key, tiles }) => (
       <div class={`wall wall--${key}`} data-wall={key}>
-        {cols.map((tiles, ci) => (
-          <div class="wall__col" data-wall-col={ci}>
-            {tiles.map((t) =>
-              t.kind === 'photo' ? (
-                <figure
-                  class={`tile tile--${t.crop} pos-${t.photo}-${t.crop}`}
-                  data-tile="photo"
-                >
-                  <Picture
-                    src={photo(t.photo)}
-                    alt=""
-                    widths={[400, 640, 960]}
-                    sizes={key === 'desktop' ? '25vw' : '50vw'}
-                    formats={['avif', 'webp']}
-                    layout="none"
-                    loading="lazy"
-                  />
-                </figure>
-              ) : t.kind === 'title' ? (
-                <div class="tile tile--title" data-tile="title">
-                  <h2 class="t-h2 tile__title">Writing Millions of Stories in Motion</h2>
-                </div>
-              ) : (
-                <div class="tile tile--phone" data-tile="phone">
-                  <Picture
-                    src={phonePhoto}
-                    alt="A hand holding a phone with the bKash home screen open"
-                    widths={[480, 960, 1440]}
-                    sizes={key === 'desktop' ? '25vw' : '50vw'}
-                    formats={['avif', 'webp']}
-                    layout="none"
-                    loading="lazy"
-                  />
-                </div>
-              ),
+        {tiles.map((t) => (
+          <div class:list={['cell', place(key, t), { 'cell--phone': t.kind === 'phone' }]}>
+            {t.kind === 'photo' ? (
+              <figure class={`tile pos-${t.photo}`} data-tile="photo" data-order={t.order}>
+                <Picture
+                  src={photo(t.photo)}
+                  alt=""
+                  widths={[320, 480, 720]}
+                  sizes={key === 'desktop' ? '14vw' : '30vw'}
+                  formats={['avif', 'webp']}
+                  layout="none"
+                  loading="lazy"
+                />
+              </figure>
+            ) : t.kind === 'title' ? (
+              <div class="tile tile--title" data-tile="title" data-order={t.order}>
+                <h2 class="t-h2 tile__title">Writing Millions of Stories in Motion</h2>
+              </div>
+            ) : (
+              <div class="tile tile--phone" data-tile="phone" data-order={t.order}>
+                <Picture
+                  src={phonePhoto}
+                  alt="A hand holding a phone with the bKash home screen open"
+                  widths={[480, 960]}
+                  sizes={key === 'desktop' ? '25vw' : '55vw'}
+                  formats={['avif', 'webp']}
+                  layout="none"
+                  loading="lazy"
+                />
+              </div>
             )}
           </div>
         ))}
@@ -150,25 +152,29 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     perspective-origin: 50% 42%;
   }
 
-  /* ---- the wall: full viewport width, not the container ---- */
+  /* ---- the wall: a mosaic filling the frame, edge to edge ----------
+     From under the nav to the foot of the frame, no side margin
+     (Nahian, 2026-09-24). Straight cells, no gap; each tile is 6%
+     larger than its cell on every side, so neighbours overlap a little
+     and a later tile sits on an earlier one. The grid's shape is
+     MOSAIC's (lib/services.ts); each tile's place is a generated class. */
   .wall {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    top: var(--nav-h);
+    bottom: 0;
     display: grid;
-    gap: var(--s-4);
-    /* Clear paper between the People section's dark foot and the first
-       row of tiles (Nahian, 2026-09-23). services.ts reads the phone
-       tile's offset through this, so its arrival at centre is unmoved. */
-    padding: var(--s-8) var(--s-4) 0;
-    align-items: start;
     transform-origin: 50% 100%;
     will-change: transform, opacity;
   }
   .wall--desktop {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(0, 1fr));
   }
   .wall--phone {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(6, minmax(0, 1fr));
     display: none;
   }
   @media (max-width: 767px) {
@@ -178,35 +184,24 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     .wall--phone {
       display: grid;
     }
-    .wall {
-      padding-top: var(--s-7);
-    }
   }
 
-  .wall__col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--s-4);
-    will-change: transform;
-  }
-
-  .tile {
+  .cell {
     position: relative;
-    width: 100%;
+  }
+  /* A thin paper keyline, so where two photographs overlap the edge
+     still reads, and the faintest shadow. Nothing more: minimal. */
+  .tile {
+    position: absolute;
+    inset: -6%;
     margin: 0;
-    border-radius: var(--r-lg);
+    border-radius: var(--r-md);
     overflow: hidden;
     background: var(--paper-2);
-  }
-  .tile--tall {
-    aspect-ratio: 4 / 5;
-  }
-  .tile--square {
-    aspect-ratio: 1;
-  }
-  .tile--wide {
-    aspect-ratio: 3 / 2;
+    box-shadow:
+      0 0 0 2px var(--paper),
+      var(--e-1);
+    will-change: transform, opacity;
   }
   .tile :global(picture),
   .tile :global(img) {
@@ -217,20 +212,50 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     object-fit: cover;
   }
 
-  /* The one typographic tile. Night on the paper. */
+  /* The one typographic tile, first down. Night on the paper. It sits
+     ABOVE its neighbours, not under the later ones — a headline is never
+     overlapped — while a tile in flight (services.ts) passes over it.
+     Its left padding adds back the 6% the tile runs past the screen's
+     edge, so the words keep their gutter. */
   .tile--title {
-    aspect-ratio: 1;
+    z-index: 1;
     background: var(--night-2);
     color: var(--paper);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: var(--s-5);
+    padding-left: calc(var(--s-5) + 6%);
   }
   /* One headline, no eyebrow: the deck gives the tile a single line
      (Website_N_1.pdf, p.4). */
   .tile__title {
     text-wrap: balance;
+  }
+  @media (max-width: 767px) {
+    .tile--title {
+      padding: var(--s-3);
+      padding-left: calc(var(--s-4) + 6%);
+    }
+    .tile__title {
+      font-size: var(--fs-h3);
+      line-height: 1.12;
+    }
+  }
+
+  /* The phone photograph: the WHOLE photograph at its own 3:4, never
+     cropped, because PHONE_QUAD's fractions are the photograph's. Sized
+     from its 2×2 block's height (a size container): 8% taller than the
+     block, and centred on it. */
+  .cell--phone {
+    container-type: size;
+  }
+  .tile--phone {
+    inset: auto;
+    top: -4cqh;
+    height: 108cqh;
+    width: calc(108cqh * 0.75);
+    left: calc(50% - 40.5cqh);
   }
 
   /* ---- the device: the screen alone ------------------------------
@@ -329,13 +354,6 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     pointer-events: none;
   }
 
-  /* The phone tile: the photograph of a hand holding the phone, at the
-     photograph's own aspect and uncropped, so PHONE_QUAD's fractions are
-     the tile's. Indistinguishable from the other tiles at rest. */
-  .tile--phone {
-    aspect-ratio: 3 / 4;
-  }
-
   /* ---- the copy beside the phone ---------------------------------- */
   .svc__copy {
     position: absolute;
@@ -421,10 +439,14 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     overflow: visible;
     perspective: none;
   }
+  /* The mosaic in flow, every tile landed (no transforms are ever
+     written without JS; reduced motion renders the landed state). */
   :global(.no-js) .wall,
   .svc--static .wall {
     position: relative;
-    height: var(--vh);
+    top: auto;
+    margin-top: var(--nav-h);
+    height: calc(var(--vh) - var(--nav-h));
     overflow: hidden;
   }
   :global(.no-js) .device,

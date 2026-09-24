@@ -132,18 +132,15 @@ export const SCREEN = {
 };
 
 /* ---- the wall ---------------------------------------------------- */
-export type Crop = 'tall' | 'square' | 'wide';
-export type WallTile =
-  | { kind: 'photo'; photo: string; crop: Crop; pos: string }
-  | { kind: 'title' }
-  | { kind: 'phone' };
-
 export const WALL = {
-  /* Relative column rates — the recorded exception to the plane tokens
-     (design-language, services.md). The fastest column carries the
-     phone; the wall's travel is DERIVED so that column's phone tile
-     arrives at centre exactly when the wall phase ends. */
-  rates: { desktop: [0.85, 1.0, 1.15, 0.85], phone: [0.85, 1.15] },
+  /* The landing (Nahian, 2026-09-24): each tile flies in from the front
+     — from `from`× its size, out along the line from the frame's centre
+     through its cell, so it comes from the viewer's side — and settles,
+     fading in over the first `fade` of its flight. Each flight takes
+     `flight` of the section's progress; the flights are spread so the
+     first photograph starts at `first` and the phone photograph lands
+     exactly at wallEnd. The title is down before the pin begins. */
+  fly: { from: 2.2, fade: 0.35, flight: 0.06, first: 0.01 },
   /* Phases of the section's progress. */
   wallEnd: 0.489,
   arriveHoldEnd: 0.611,
@@ -217,97 +214,125 @@ export const PHONE_QUAD = {
   tilt: { rx: 0.1982, ry: -0.2868, rz: 0.0105 },
 };
 
-/* Per-photograph crops: the subject decides where the frame sits. */
-const P = (photo: string, crop: Crop, pos: string): WallTile => ({
-  kind: 'photo',
-  photo,
-  crop,
-  pos,
-});
+/* ---- the mosaic (Nahian, 2026-09-24) ------------------------------
+   The Pinterest columns are gone. The photographs now land, one by one
+   as you scroll, into a straight mosaic that fills the pinned frame
+   edge to edge: each tile a little larger than its cell, so neighbours
+   overlap and a later tile sits on an earlier one. The title lands
+   first, the photographs in the old wall's order (its columns read top
+   to bottom, left to right), and the phone photograph last, into the
+   centre, where the phone then rises out of it.
 
-/* Columns top→bottom. Thirty-two photographs — the client's twenty-two
-   (2026-09-19) and the ten from before — each used once on desktop, plus
-   two repeats at other crops so the outer column is as tall as the rest
-   (it must not run out before the phone arrives); the phone's two
-   columns carry the eighteen that read best small. Crops
-   follow the subject: tall for a standing figure, square for a face or
-   a pair, wide for a scene. The phone tile rides the fastest column,
-   with tiles after it so the column never runs out beneath it. */
-export const COLUMNS: { desktop: WallTile[][]; phone: WallTile[][] } = {
-  desktop: [
-    [
-      P('riders', 'wide', '50% 50%'),
-      P('fruit-seller', 'tall', '50% 40%'),
-      P('station', 'wide', '60% 50%'),
-      P('boy', 'square', '50% 40%'),
-      P('village-shop', 'wide', '70% 50%'),
-      P('grocer', 'tall', '50% 40%'),
-      P('school', 'wide', '50% 55%'),
-      P('anisul', 'square', '50% 35%'),
-      P('boatman', 'wide', '50% 50%'),
+   Grid lines are 1-based. Desktop, 10×4: the title a 2×2 block at the
+   top-left, the phone 2×2 at the centre, the 32 photographs in the 32
+   cells left — the old wall's two repeats only padded a column, and in
+   one frame a repeat would show. Phone, 4×6: the title a 2×1 strip,
+   the phone 2×2, eighteen photographs — the old seventeen and station. */
+export type Block = { c: number; r: number; w: number; h: number };
+export type Mosaic = {
+  cols: number;
+  rows: number;
+  title: Block;
+  phone: Block;
+  photos: { photo: string; pos: string }[];
+};
+export type MosaicTile = Block & { order: number } & (
+    | { kind: 'title' }
+    | { kind: 'phone' }
+    | { kind: 'photo'; photo: string; pos: string }
+  );
+
+const ph = (photo: string, pos: string) => ({ photo, pos });
+
+export const MOSAIC: { desktop: Mosaic; phone: Mosaic } = {
+  desktop: {
+    cols: 10,
+    rows: 4,
+    title: { c: 1, r: 1, w: 2, h: 2 },
+    phone: { c: 5, r: 2, w: 2, h: 2 },
+    photos: [
+      ph('riders', '50% 50%'),
+      ph('fruit-seller', '50% 40%'),
+      ph('station', '60% 50%'),
+      ph('boy', '50% 40%'),
+      ph('village-shop', '70% 50%'),
+      ph('grocer', '50% 40%'),
+      ph('school', '50% 55%'),
+      ph('anisul', '50% 35%'),
+      ph('boatman', '50% 50%'),
+      ph('flower-seller', '50% 45%'),
+      ph('minar', '65% 50%'),
+      ph('fabric', '50% 50%'),
+      ph('mangroves', '50% 40%'),
+      ph('girls-books', '50% 50%'),
+      ph('window-man', '50% 45%'),
+      ph('ferry', '45% 40%'),
+      ph('munni', '50% 30%'),
+      ph('boat', '50% 50%'),
+      ph('schoolgirl', '50% 40%'),
+      ph('umbrella', '55% 50%'),
+      ph('family-agent', '50% 40%'),
+      ph('fisherman', '50% 45%'),
+      ph('jacket', '50% 40%'),
+      ph('agent', '40% 50%'),
+      ph('shajib', '55% 50%'),
+      ph('friends', '50% 50%'),
+      ph('window-mother', '70% 50%'),
+      ph('agent-shop', '50% 50%'),
+      ph('train', '60% 40%'),
+      ph('merchant', '60% 50%'),
+      ph('sendmoney', '35% 50%'),
+      ph('banner', '50% 50%'),
     ],
-    [
-      { kind: 'title' },
-      P('flower-seller', 'tall', '50% 45%'),
-      P('minar', 'wide', '65% 50%'),
-      P('fabric', 'square', '50% 50%'),
-      P('mangroves', 'tall', '50% 40%'),
-      P('girls-books', 'wide', '50% 50%'),
-      P('window-man', 'square', '50% 45%'),
-      P('ferry', 'wide', '45% 40%'),
-      P('munni', 'tall', '50% 30%'),
+  },
+  phone: {
+    cols: 4,
+    rows: 6,
+    title: { c: 1, r: 1, w: 2, h: 1 },
+    phone: { c: 2, r: 3, w: 2, h: 2 },
+    photos: [
+      ph('riders', '50% 50%'),
+      ph('fruit-seller', '50% 40%'),
+      ph('boy', '50% 40%'),
+      ph('minar', '65% 50%'),
+      ph('grocer', '50% 40%'),
+      ph('fabric', '50% 50%'),
+      ph('girls-books', '50% 50%'),
+      ph('mangroves', '50% 40%'),
+      ph('school', '50% 55%'),
+      ph('flower-seller', '50% 45%'),
+      ph('window-man', '50% 45%'),
+      ph('boat', '50% 50%'),
+      ph('schoolgirl', '50% 40%'),
+      ph('family-agent', '50% 40%'),
+      ph('jacket', '50% 40%'),
+      ph('fisherman', '50% 45%'),
+      ph('umbrella', '55% 50%'),
+      ph('station', '60% 50%'),
     ],
-    [
-      P('boat', 'wide', '50% 50%'),
-      P('schoolgirl', 'tall', '50% 40%'),
-      P('umbrella', 'wide', '55% 50%'),
-      P('family-agent', 'square', '50% 40%'),
-      P('fisherman', 'wide', '50% 45%'),
-      P('jacket', 'tall', '50% 40%'),
-      { kind: 'phone' },
-      P('agent', 'wide', '40% 50%'),
-      P('shajib', 'square', '55% 50%'),
-    ],
-    [
-      P('friends', 'wide', '50% 50%'),
-      P('window-mother', 'square', '70% 50%'),
-      P('agent-shop', 'wide', '50% 50%'),
-      P('train', 'tall', '60% 40%'),
-      P('merchant', 'square', '60% 50%'),
-      P('sendmoney', 'wide', '35% 50%'),
-      P('banner', 'tall', '50% 50%'),
-      P('boat', 'square', '50% 50%'),
-      P('fisherman', 'tall', '50% 45%'),
-    ],
-  ],
-  phone: [
-    [
-      P('riders', 'wide', '50% 50%'),
-      { kind: 'title' },
-      P('fruit-seller', 'tall', '50% 40%'),
-      P('boy', 'square', '50% 40%'),
-      P('minar', 'wide', '65% 50%'),
-      P('grocer', 'tall', '50% 40%'),
-      P('fabric', 'square', '50% 50%'),
-      P('girls-books', 'wide', '50% 50%'),
-      P('mangroves', 'tall', '50% 40%'),
-      P('school', 'wide', '50% 55%'),
-    ],
-    [
-      P('flower-seller', 'tall', '50% 45%'),
-      P('window-man', 'square', '50% 45%'),
-      P('boat', 'wide', '50% 50%'),
-      P('schoolgirl', 'tall', '50% 40%'),
-      P('family-agent', 'square', '50% 40%'),
-      P('jacket', 'tall', '50% 40%'),
-      { kind: 'phone' },
-      P('fisherman', 'wide', '50% 45%'),
-      P('umbrella', 'wide', '55% 50%'),
-    ],
-  ],
+  },
 };
 
-type Col = { el: HTMLElement; rate: number };
+const inBlock = (b: Block, c: number, r: number) =>
+  c >= b.c && c < b.c + b.w && r >= b.r && r < b.r + b.h;
+
+/** The mosaic as tiles, in landing order: the title, the photographs
+    into the free cells row by row, the phone last. Throws if the photos
+    and the free cells disagree, so a bad edit fails the build. */
+export function mosaicTiles(m: Mosaic): MosaicTile[] {
+  const cells: Block[] = [];
+  for (let r = 1; r <= m.rows; r++)
+    for (let c = 1; c <= m.cols; c++)
+      if (!inBlock(m.title, c, r) && !inBlock(m.phone, c, r)) cells.push({ c, r, w: 1, h: 1 });
+  if (cells.length !== m.photos.length)
+    throw new Error(`mosaic: ${cells.length} free cells for ${m.photos.length} photographs`);
+  return [
+    { kind: 'title', ...m.title, order: 0 },
+    ...cells.map((cell, i) => ({ kind: 'photo' as const, ...cell, ...m.photos[i], order: i + 1 })),
+    { kind: 'phone', ...m.phone, order: cells.length + 1 },
+  ];
+}
+
 
 /** Resolve a CSS length expression (tokens, calc, clamp) to px. */
 function resolvePx(expr: string, fallback: number): number {
@@ -339,8 +364,11 @@ export function initServices() {
 
   let vw = 1;
   let vh = 1;
-  let cols: Col[] = [];
-  let fastRate = 1;
+  /* The mosaic's tiles, in landing order, each with its landed centre
+     in the pin (read once per resize) and the last style written, so a
+     tile that is not moving costs nothing per frame. */
+  type Tile = { el: HTMLElement; cx: number; cy: number; last: string };
+  let tiles: Tile[] = [];
   let wallEl: HTMLElement | null = null;
   /* The emergence, solved once per resize: the pose that lays the device
      over the photographed screen at arrival, and how well it fits. */
@@ -358,9 +386,6 @@ export function initServices() {
   /* The slide: where the phone rests beside the copy, and its size there,
      relative to Rest B. Solved from the copy's own measured height. */
   let slide = { dx: 0, dy: 0, s: 1 };
-  /* The fastest column's total translate at arrival — DERIVED from where
-     the phone tile sits, so it lands at centre exactly at wallEnd. */
-  let D = 0;
 
   /* The wall that is on screen at this width; the other is display:none. */
   function activeWall(): HTMLElement | null {
@@ -374,34 +399,36 @@ export function initServices() {
     vh = pin.clientHeight;
     const wall = activeWall();
     if (!wall) return;
-    const rates = isPhone() ? WALL.rates.phone : WALL.rates.desktop;
-    cols = [...wall.querySelectorAll<HTMLElement>('[data-wall-col]')].map((el, i) => ({
-      el,
-      rate: rates[i] ?? 1,
-    }));
-    fastRate = Math.max(...cols.map((c) => c.rate));
+    wallEl = wall;
+    /* Where each tile sits once landed, in the pin: offsets, which a
+       transform does not move, so this is right mid-flight too. A tile's
+       offsetParent is its cell, a cell's the wall, the wall's the pin.
+       One layout read per resize. */
+    const inPin = (el: HTMLElement) => {
+      const cell = el.offsetParent as HTMLElement;
+      return {
+        left: wall.offsetLeft + cell.offsetLeft + el.offsetLeft,
+        top: wall.offsetTop + cell.offsetTop + el.offsetTop,
+        w: el.offsetWidth,
+        h: el.offsetHeight,
+      };
+    };
+    tiles = [...wall.querySelectorAll<HTMLElement>('[data-tile]')]
+      .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order))
+      .map((el) => {
+        const r = inPin(el);
+        return { el, cx: r.left + r.w / 2, cy: r.top + r.h / 2, last: '' };
+      });
     const tile = wall.querySelector<HTMLElement>('[data-tile="phone"]');
     if (!tile) return;
-    wallEl = wall;
-    /* The columns carry will-change: transform, which makes each one an
-       offsetParent — so the tile's offsets are column-relative and the
-       column's are wall-relative. Both are added. The wall's top-left is
-       the pin's. One layout read per resize. */
-    const col = tile.parentElement as HTMLElement;
-    const tileW = tile.offsetWidth;
-    const tileH = tile.offsetHeight;
-    const tileTop = col.offsetTop + tile.offsetTop;
-    const tileLeft = col.offsetLeft + tile.offsetLeft;
-    /* The photographed screen's corners in the pin, at arrival: the tile
-       is the photograph at its own aspect, so its fractions are the
-       tile's. Its centre, not the tile's, is what lands at the viewport
-       centre. */
+    /* The photographed screen's corners in the pin once the phone
+       photograph has landed: the tile is the photograph at its own
+       aspect, so its fractions are the tile's. */
+    const t = inPin(tile);
     const Q = PHONE_QUAD;
-    const qcy = (Q.tl[1] + Q.tr[1] + Q.br[1] + Q.bl[1]) / 4;
-    D = tileTop + qcy * tileH - vh / 2;
     const quad = [Q.tl, Q.tr, Q.br, Q.bl].flatMap(([fx, fy]) => [
-      tileLeft + fx * tileW,
-      tileTop + fy * tileH - D,
+      t.left + fx * t.w,
+      t.top + fy * t.h,
     ]);
 
     const gutter = resolvePx('var(--gutter)', 32);
@@ -575,12 +602,50 @@ export function initServices() {
     }
   }
 
-  /* ---- the wall: three rates, one transform each ------------------ */
+  /* ---- the wall: the tiles land, one by one, from the front ---------
+     Tile k (k ≥ 1; the title, k = 0, is always down) flies over
+     [start, start + flight]: at t it is scaled s = 1 + (from − 1)(1 − e)
+     about its own centre, and carried out along the ray from the frame's
+     centre through its cell by (s − 1) — so it projects from in front of
+     the wall, not from the side. e is an ease-out; opacity comes up over
+     the first `fade` of the flight. One transform and one opacity per
+     moving tile per frame, and nothing for a tile that is not moving. */
   function renderWall(p: number) {
-    const w = Math.min(Math.max(p / WALL.wallEnd, 0), 1);
-    for (const c of cols) {
-      const y = -(c.rate / fastRate) * D * w;
-      c.el.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+    const F = WALL.fly;
+    const n = tiles.length;
+    if (n < 2) return;
+    const span = (WALL.wallEnd - F.flight - F.first) / Math.max(1, n - 2);
+    for (let k = 1; k < n; k++) {
+      const tl = tiles[k];
+      const t = ramp(p, F.first + (k - 1) * span, F.first + (k - 1) * span + F.flight);
+      let key: string;
+      if (t >= 1) key = '';
+      else if (t <= 0) key = 'hidden';
+      else {
+        const e = 1 - Math.pow(1 - t, 3);
+        const s = 1 + (F.from - 1) * (1 - e);
+        const dx = (tl.cx - vw / 2) * (s - 1);
+        const dy = (tl.cy - vh / 2) * (s - 1);
+        key = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${s.toFixed(4)})|${Math.min(1, t / F.fade).toFixed(3)}`;
+      }
+      if (key === tl.last) continue;
+      tl.last = key;
+      const st = tl.el.style;
+      if (key === '') {
+        st.transform = '';
+        st.opacity = '';
+        st.zIndex = '';
+      } else if (key === 'hidden') {
+        st.transform = '';
+        st.opacity = '0';
+        st.zIndex = '';
+      } else {
+        const [tf, op] = key.split('|');
+        st.transform = tf;
+        st.opacity = op;
+        /* in flight it is in front of everything, the title included */
+        st.zIndex = '2';
+      }
     }
   }
 
@@ -660,15 +725,13 @@ export function initServices() {
       geometry: () => ({
         vw,
         vh,
-        D,
-        fastRate,
         pose,
         poseRms,
         cam,
         slide,
         rest: { restW, restH, screenW, screenH },
         ticking,
-        cols: cols.map((c) => ({ rate: c.rate, h: c.el.scrollHeight })),
+        tiles: tiles.length,
       }),
       settle() {
         tl.progress(st.progress);
