@@ -20,88 +20,88 @@ import { MODEL, POSE_ZERO, solvePlacement, type Camera, type Pose } from './devi
 type Live = { dx: number; dy: number; s: number; rx: number; ry: number };
 
 /* ---- the sixteen, in the app's order ---------------------------
-   Names are the app's; NGO is the app's word for the Microfinance
-   icon. Lines are PLACEHOLDER, written here, not bKash's. */
+   Names and lines are the client's (Nahian, 2026-09-24), in sentence
+   case. Ids are the icon files': `ngo` is the Microfinance icon. */
 export const SERVICES = [
   {
     id: 'send-money',
     name: 'Send money',
-    line: 'Money to any bKash number in seconds, at any hour.',
+    line: 'Move money in seconds, wherever you choose',
   },
   {
     id: 'mobile-recharge',
     name: 'Mobile recharge',
-    line: 'Top up any operator from the balance you already keep.',
+    line: 'Never let a low balance slow you down',
   },
   {
     id: 'cash-out',
     name: 'Cash out',
-    line: 'Turn digital money into notes at any of 3.5 lakh agent points.',
+    line: 'Get to your money, whenever needed',
   },
   {
     id: 'make-payment',
-    name: 'Make payment',
-    line: 'Scan a merchant’s QR and pay. No card, no terminal, no change.',
+    name: 'Payment',
+    line: 'Pay effortlessly, leave cash behind',
   },
   {
     id: 'add-money',
     name: 'Add money',
-    line: 'Bring funds in from a bank, a card, or a remittance from abroad.',
+    line: 'Top up and stay ready',
   },
   {
     id: 'pay-bill',
     name: 'Pay bill',
-    line: 'Electricity, gas, water and internet, settled without leaving home.',
+    line: 'Bills paid without hassle, one less thing to worry about',
   },
   {
     id: 'savings',
     name: 'Savings',
-    line: 'Put a little aside each week and watch it build. No minimum.',
+    line: 'Grow your savings, at your own pace',
   },
   {
     id: 'loan',
     name: 'Loan',
-    line: 'Small instant credit, decided on your record here. No paperwork.',
+    line: 'Get the funds to move forward',
   },
   {
     id: 'insurance',
     name: 'Insurance',
-    line: 'Cover for health, accident and travel, from a few taka a month.',
+    line: 'Protect what you are building',
   },
   {
     id: 'bkash-to-bank',
     name: 'bKash to bank',
-    line: 'Move money into a bank account without queueing at one.',
+    line: 'Move beyond one platform, with ease',
   },
   {
     id: 'education',
-    name: 'Education',
-    line: 'School and university fees paid on time, no day lost travelling.',
+    name: 'Education fee',
+    line: 'Keep education on track, without the extra steps',
   },
   {
     id: 'ngo',
-    name: 'NGO',
-    line: 'Give to registered organisations, with the receipt in your history.',
+    name: 'Microfinance',
+    line: 'Finance built to support small businesses',
   },
   {
     id: 'toll-pay',
-    name: 'Toll pay',
-    line: 'Cross the bridge without stopping to find change.',
+    name: 'Toll',
+    line: 'Pass through, without the wait',
   },
   {
     id: 'request-money',
     name: 'Request money',
-    line: 'Ask to be paid back, and skip the awkward reminder.',
+    line: 'Get paid without the awkward back-and-forth',
   },
   {
     id: 'remittance',
     name: 'Remittance',
-    line: 'Money from abroad, landing here in minutes rather than days.',
+    line: 'Move money home, no distance is too far',
   },
   {
     id: 'donation',
     name: 'Donation',
-    line: 'Reach people at the other end of the country, instantly.',
+    line: 'Give to the causes that matter to you',
   },
 ] as const;
 
