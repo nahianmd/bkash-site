@@ -201,6 +201,13 @@ export const WALL = {
    SOLVED per viewport (device.ts), then interpolated to identity —
    the phone stands up and comes forward out of the hand. */
 export const PHONE_PHOTO = { w: 2250, h: 3000 };
+/* The phone photograph fills its collage block like every other tile
+   (Nahian, 2026-09-24: no white around it), so it is cover-cropped;
+   this is its object-position, as fractions. The screen spans 20–74%
+   of the photograph's height and the widest block keeps 16–81% at this
+   anchor, so the whole screen always shows. Services.astro writes it as
+   CSS and measure() solves the quad through the same crop. */
+export const PHONE_POS = { x: 0.5, y: 0.45 };
 export const PHONE_QUAD = {
   tl: [0.3831, 0.2038],
   tr: [0.7092, 0.2022],
@@ -215,28 +222,34 @@ export const PHONE_QUAD = {
 };
 
 /* ---- the mosaic (Nahian, 2026-09-24) ------------------------------
-   The Pinterest columns are gone. The photographs now land, one by one
-   as you scroll, into a straight mosaic that fills the pinned frame
-   edge to edge: each tile a little larger than its cell, so neighbours
-   overlap and a later tile sits on an earlier one. The title lands
-   first, the photographs in the old wall's order (its columns read top
-   to bottom, left to right), and the phone photograph last, into the
-   centre, where the phone then rises out of it.
+   The Pinterest columns are gone. The photographs land one by one as
+   you scroll into a collage that fills the pinned frame edge to edge —
+   a mood board, not a grid (the reference was one): pieces of different
+   sizes, straight, square-cornered, no border, each running a little
+   past its block so it overlaps its neighbours by an uneven amount.
+   They land in a random order all over the frame, never row by row; the
+   title first, and the phone photograph last, into the centre, where
+   the phone then rises out of it.
 
-   Grid lines are 1-based. Desktop, 10×4: the title a 2×2 block at the
-   top-left, the phone 2×2 at the centre, the 32 photographs in the 32
-   cells left — the old wall's two repeats only padded a column, and in
-   one frame a repeat would show. Phone, 4×6: the title a 2×1 strip,
-   the phone 2×2, eighteen photographs — the old seventeen and station. */
+   The randomness is seeded, so the collage is the same on every visit
+   and every build. Grid lines are 1-based. Desktop 12×8: the title a
+   3×2 block at the top-left, the phone 4×4 at the centre, the 32
+   photographs packed into the rest in blocks of 1×1, 2×1, 1×2 and 2×2.
+   Phone 6×10: the title 4×2, the phone 4×4, eighteen photographs. */
 export type Block = { c: number; r: number; w: number; h: number };
 export type Mosaic = {
   cols: number;
   rows: number;
   title: Block;
   phone: Block;
+  /** the seed for the packing, the landing order and the overlaps */
+  seed: number;
   photos: { photo: string; pos: string }[];
 };
-export type MosaicTile = Block & { order: number } & (
+/** How far a tile runs past its block on each side, in % of the block:
+    top, right, bottom, left. */
+export type Overlap = [number, number, number, number];
+export type MosaicTile = Block & { order: number; over: Overlap } & (
     | { kind: 'title' }
     | { kind: 'phone' }
     | { kind: 'photo'; photo: string; pos: string }
@@ -246,10 +259,11 @@ const ph = (photo: string, pos: string) => ({ photo, pos });
 
 export const MOSAIC: { desktop: Mosaic; phone: Mosaic } = {
   desktop: {
-    cols: 10,
-    rows: 4,
-    title: { c: 1, r: 1, w: 2, h: 2 },
-    phone: { c: 5, r: 2, w: 2, h: 2 },
+    cols: 12,
+    rows: 8,
+    title: { c: 1, r: 1, w: 3, h: 2 },
+    phone: { c: 5, r: 3, w: 4, h: 4 },
+    seed: 20260924,
     photos: [
       ph('riders', '50% 50%'),
       ph('fruit-seller', '50% 40%'),
@@ -286,10 +300,11 @@ export const MOSAIC: { desktop: Mosaic; phone: Mosaic } = {
     ],
   },
   phone: {
-    cols: 4,
-    rows: 6,
-    title: { c: 1, r: 1, w: 2, h: 1 },
-    phone: { c: 2, r: 3, w: 2, h: 2 },
+    cols: 6,
+    rows: 10,
+    title: { c: 1, r: 1, w: 4, h: 2 },
+    phone: { c: 2, r: 4, w: 4, h: 4 },
+    seed: 20260924,
     photos: [
       ph('riders', '50% 50%'),
       ph('fruit-seller', '50% 40%'),
@@ -313,26 +328,97 @@ export const MOSAIC: { desktop: Mosaic; phone: Mosaic } = {
   },
 };
 
-const inBlock = (b: Block, c: number, r: number) =>
-  c >= b.c && c < b.c + b.w && r >= b.r && r < b.r + b.h;
-
-/** The mosaic as tiles, in landing order: the title, the photographs
-    into the free cells row by row, the phone last. Throws if the photos
-    and the free cells disagree, so a bad edit fails the build. */
-export function mosaicTiles(m: Mosaic): MosaicTile[] {
-  const cells: Block[] = [];
-  for (let r = 1; r <= m.rows; r++)
-    for (let c = 1; c <= m.cols; c++)
-      if (!inBlock(m.title, c, r) && !inBlock(m.phone, c, r)) cells.push({ c, r, w: 1, h: 1 });
-  if (cells.length !== m.photos.length)
-    throw new Error(`mosaic: ${cells.length} free cells for ${m.photos.length} photographs`);
-  return [
-    { kind: 'title', ...m.title, order: 0 },
-    ...cells.map((cell, i) => ({ kind: 'photo' as const, ...cell, ...m.photos[i], order: i + 1 })),
-    { kind: 'phone', ...m.phone, order: cells.length + 1 },
-  ];
+/** mulberry32: a small seeded PRNG, so the collage is reproducible. */
+function rng(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 }
 
+const SIZES: [number, number][] = [
+  [2, 2],
+  [2, 1],
+  [1, 2],
+  [1, 1],
+];
+
+/** Pack exactly `n` blocks into the free cells, filling every one: at
+    each first-empty cell (row by row) take a random size that fits and
+    keeps the count reachable — never fewer cells left than photos, never
+    more than four per photo. Null if the dice paint it into a corner. */
+function pack(m: Mosaic, n: number, rand: () => number): Block[] | null {
+  const taken: boolean[][] = Array.from({ length: m.rows + 1 }, () =>
+    new Array(m.cols + 1).fill(false),
+  );
+  for (const b of [m.title, m.phone])
+    for (let r = b.r; r < b.r + b.h; r++) for (let c = b.c; c < b.c + b.w; c++) taken[r][c] = true;
+  let free = 0;
+  for (let r = 1; r <= m.rows; r++) for (let c = 1; c <= m.cols; c++) if (!taken[r][c]) free++;
+  const fits = (c: number, r: number, w: number, h: number) => {
+    if (c + w - 1 > m.cols || r + h - 1 > m.rows) return false;
+    for (let y = r; y < r + h; y++) for (let x = c; x < c + w; x++) if (taken[y][x]) return false;
+    return true;
+  };
+  const out: Block[] = [];
+  for (let r = 1; r <= m.rows; r++)
+    for (let c = 1; c <= m.cols; c++) {
+      if (taken[r][c]) continue;
+      const left = n - out.length;
+      if (left <= 0) return null;
+      const ok = SIZES.filter(([w, h]) => {
+        const s = w * h;
+        return fits(c, r, w, h) && free - s >= left - 1 && free - s <= 4 * (left - 1);
+      });
+      if (ok.length === 0) return null;
+      const [w, h] = ok[Math.floor(rand() * ok.length)];
+      for (let y = r; y < r + h; y++) for (let x = c; x < c + w; x++) taken[y][x] = true;
+      free -= w * h;
+      out.push({ c, r, w, h });
+    }
+  return out.length === n ? out : null;
+}
+
+/** The collage as tiles, in landing order: the title, the photographs
+    in a random order, the phone last. The photographs take the packed
+    blocks in the old wall's order (row by row), so neighbours stay
+    neighbours; only when they land is shuffled. Throws if no packing is
+    found, so a bad edit fails the build. */
+export function mosaicTiles(m: Mosaic): MosaicTile[] {
+  const n = m.photos.length;
+  let blocks: Block[] | null = null;
+  let rand = rng(m.seed);
+  for (let s = 0; s < 500 && !blocks; s++) {
+    rand = rng(m.seed + s);
+    blocks = pack(m, n, rand);
+  }
+  if (!blocks) throw new Error(`mosaic: no packing of ${n} photographs found`);
+  /* uneven overlap, 4–9% of the block on each side */
+  const over = (): Overlap => [0, 0, 0, 0].map(() => 4 + Math.round(rand() * 5)) as Overlap;
+  /* landing order: a Fisher–Yates shuffle of the photographs */
+  const land = blocks.map((_, i) => i);
+  for (let i = land.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [land[i], land[j]] = [land[j], land[i]];
+  }
+  const photos: MosaicTile[] = blocks.map((b, i) => ({
+    kind: 'photo',
+    ...b,
+    ...m.photos[i],
+    order: land.indexOf(i) + 1,
+    over: over(),
+  }));
+  photos.sort((a, b) => a.order - b.order);
+  return [
+    { kind: 'title', ...m.title, order: 0, over: [4, 4, 4, 4] },
+    ...photos,
+    { kind: 'phone', ...m.phone, order: n + 1, over: [4, 4, 4, 4] },
+  ];
+}
 
 /** Resolve a CSS length expression (tokens, calc, clamp) to px. */
 function resolvePx(expr: string, fallback: number): number {
@@ -422,14 +508,17 @@ export function initServices() {
     const tile = wall.querySelector<HTMLElement>('[data-tile="phone"]');
     if (!tile) return;
     /* The photographed screen's corners in the pin once the phone
-       photograph has landed: the tile is the photograph at its own
-       aspect, so its fractions are the tile's. */
+       photograph has landed. The tile cover-crops the photograph, so
+       its fractions are the IMAGE's: scaled to cover the tile, then
+       offset by the object-position, as the browser draws it. */
     const t = inPin(tile);
+    const k = Math.max(t.w / PHONE_PHOTO.w, t.h / PHONE_PHOTO.h);
+    const iw = PHONE_PHOTO.w * k;
+    const ih = PHONE_PHOTO.h * k;
+    const ix = t.left + (t.w - iw) * PHONE_POS.x;
+    const iy = t.top + (t.h - ih) * PHONE_POS.y;
     const Q = PHONE_QUAD;
-    const quad = [Q.tl, Q.tr, Q.br, Q.bl].flatMap(([fx, fy]) => [
-      t.left + fx * t.w,
-      t.top + fy * t.h,
-    ]);
+    const quad = [Q.tl, Q.tr, Q.br, Q.bl].flatMap(([fx, fy]) => [ix + fx * iw, iy + fy * ih]);
 
     const gutter = resolvePx('var(--gutter)', 32);
     const navH = resolvePx('var(--nav-h)', 72);

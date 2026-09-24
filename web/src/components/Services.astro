@@ -2,14 +2,15 @@
 /* Section 4: A thousand more stories → the phone.
    specs/sections/services.md · specs/services/plan.md
 
-   The photographs fly in from the front, one by one as you scroll, into
-   a straight mosaic that fills the pinned frame edge to edge, slightly
-   overlapping (Nahian, 2026-09-24; the Pinterest columns are gone). The
+   The photographs fly in from the front, one by one in a random order
+   as you scroll, into a collage that fills the pinned frame edge to
+   edge, straight and square-cornered, overlapping unevenly (Nahian,
+   2026-09-24; the Pinterest columns are gone). The
    phone photograph lands last, in the centre, and the screen stands up
    out of it, slides beside the copy and stays alive. The sixteen
    services are ServicesDetail.astro, reached by the button. */
 import { Picture } from 'astro:assets';
-import { MOSAIC, mosaicTiles, type MosaicTile } from '../lib/services';
+import { MOSAIC, PHONE_POS, mosaicTiles, type MosaicTile } from '../lib/services';
 
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/img/services/*.jpg', {
   eager: true,
@@ -18,7 +19,7 @@ const photo = (name: string) => photos[`../assets/img/services/${name}.jpg`].def
 import screen from '../assets/img/services/screen.jpg';
 import phonePhoto from '../assets/img/services/phone.jpg';
 
-/* Two mosaics — ten by four, and four by six for the phone — and CSS
+/* Two collages — twelve by eight, and six by ten for the phone — and CSS
    shows one per breakpoint, so each is composed for its width. The gate
    forbids inline styles, so each tile's place in its grid and each
    photograph's crop are generated here as classes and emitted as a
@@ -33,8 +34,15 @@ const placeRules: string[] = [];
 for (const { key, tiles } of walls)
   for (const t of tiles) {
     placeRules.push(`.${place(key, t)}{grid-area:${t.r}/${t.c}/span ${t.h}/span ${t.w}}`);
+    /* each tile's own uneven run past its block */
+    placeRules.push(
+      `.wall>.${place(key, t)}>.tile{inset:${t.over.map((v) => `-${v}%`).join(' ')}}`,
+    );
     if (t.kind === 'photo') posRules.set(`pos-${t.photo}`, t.pos);
   }
+/* The phone photograph's crop anchor, from the one constant the
+   emergence is solved through (lib/services.ts, PHONE_POS). */
+posRules.set('tile--phone', `${PHONE_POS.x * 100}% ${PHONE_POS.y * 100}%`);
 const posCss =
   placeRules.join('') +
   [...posRules].map(([cls, pos]) => `.${cls} img{object-position:${pos}}`).join('');
@@ -43,18 +51,19 @@ const posCss =
 <section class="svc" data-services aria-label="Millions of stories, and the bKash app">
   <div class="svc__pin" data-services-pin>
     {/* The tiles in landing order, so a later tile paints over an earlier
-        one where they overlap: the title, the photographs, the phone. */}
+        one where they overlap: the title, the photographs in their
+        shuffled order, the phone. */}
     {walls.map(({ key, tiles }) => (
       <div class={`wall wall--${key}`} data-wall={key}>
         {tiles.map((t) => (
-          <div class:list={['cell', place(key, t), { 'cell--phone': t.kind === 'phone' }]}>
+          <div class:list={['cell', place(key, t)]}>
             {t.kind === 'photo' ? (
               <figure class={`tile pos-${t.photo}`} data-tile="photo" data-order={t.order}>
                 <Picture
                   src={photo(t.photo)}
                   alt=""
                   widths={[320, 480, 720]}
-                  sizes={key === 'desktop' ? '14vw' : '30vw'}
+                  sizes={key === 'desktop' ? '18vw' : '36vw'}
                   formats={['avif', 'webp']}
                   layout="none"
                   loading="lazy"
@@ -152,12 +161,13 @@ const posCss =
     perspective-origin: 50% 42%;
   }
 
-  /* ---- the wall: a mosaic filling the frame, edge to edge ----------
+  /* ---- the wall: a collage filling the frame, edge to edge ---------
      From under the nav to the foot of the frame, no side margin
-     (Nahian, 2026-09-24). Straight cells, no gap; each tile is 6%
-     larger than its cell on every side, so neighbours overlap a little
-     and a later tile sits on an earlier one. The grid's shape is
-     MOSAIC's (lib/services.ts); each tile's place is a generated class. */
+     (Nahian, 2026-09-24). Blocks of different sizes, no gap; each tile
+     runs 4–9% past its block on each side, so neighbours overlap
+     unevenly and a later tile sits on an earlier one. The grid's shape
+     is MOSAIC's (lib/services.ts); each tile's place and overlap are
+     generated classes. */
   .wall {
     position: absolute;
     left: 0;
@@ -169,12 +179,12 @@ const posCss =
     will-change: transform, opacity;
   }
   .wall--desktop {
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-    grid-template-rows: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(8, minmax(0, 1fr));
   }
   .wall--phone {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-template-rows: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: repeat(10, minmax(0, 1fr));
     display: none;
   }
   @media (max-width: 767px) {
@@ -189,18 +199,14 @@ const posCss =
   .cell {
     position: relative;
   }
-  /* A thin paper keyline, so where two photographs overlap the edge
-     still reads, and the faintest shadow. Nothing more: minimal. */
+  /* The photograph's own edge: square corners, no border, no shadow
+     (Nahian, 2026-09-24). The overlap is the only thing that joins them. */
   .tile {
     position: absolute;
     inset: -6%;
     margin: 0;
-    border-radius: var(--r-md);
     overflow: hidden;
     background: var(--paper-2);
-    box-shadow:
-      0 0 0 2px var(--paper),
-      var(--e-1);
     will-change: transform, opacity;
   }
   .tile :global(picture),
@@ -243,20 +249,6 @@ const posCss =
     }
   }
 
-  /* The phone photograph: the WHOLE photograph at its own 3:4, never
-     cropped, because PHONE_QUAD's fractions are the photograph's. Sized
-     from its 2×2 block's height (a size container): 8% taller than the
-     block, and centred on it. */
-  .cell--phone {
-    container-type: size;
-  }
-  .tile--phone {
-    inset: auto;
-    top: -4cqh;
-    height: 108cqh;
-    width: calc(108cqh * 0.75);
-    left: calc(50% - 40.5cqh);
-  }
 
   /* ---- the device: the screen alone ------------------------------
      No handset (Nahian, 2026-09-24): the home screen, its corners
