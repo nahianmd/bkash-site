@@ -1019,8 +1019,17 @@ const STAT_ICONS: Record<string, string> = {
     .wall {
       height: calc(var(--vh) * 2.6);
     }
+    /* Heading, wall and bar as one group, centred, with the same air
+       above the wall as below it (Nahian, 2026-09-24). The middle row
+       used to stretch to the frame and centre the artwork inside it,
+       which left ~155px of black above and below a 321px image; the
+       artwork is also a little larger, half the frame's height. */
+    .wall__pin {
+      grid-template-rows: auto auto auto;
+      gap: var(--s-6);
+    }
     .wall :global(.wall__img) {
-      height: calc(var(--vh) * 0.38);
+      height: calc(var(--vh) * 0.5);
     }
   }
 </style>
