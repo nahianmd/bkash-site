@@ -127,16 +127,17 @@ const posCss = PEOPLE.map(
      short of each edge on --page alone, before the gutter. It is a
      sibling of the wrap now, so the width is simply the section's.
      The phone is full-bleed too — see the 767 block. */
+  /* No gap and no radius (Nahian, 2026-09-24): the three meet edge to
+     edge and run square to the section's boundaries, as on a phone. */
   .people__cards {
     display: flex;
-    gap: var(--s-5);
+    gap: 0;
     height: min(calc(var(--vh) * 0.62), 40rem);
   }
   .people__card {
     position: relative;
     flex: 1 1 0%;
     min-width: 0;
-    border-radius: var(--r-lg);
     overflow: hidden;
     background: var(--night);
     cursor: pointer;
@@ -156,9 +157,11 @@ const posCss = PEOPLE.map(
   .people.is-picked .people__card.is-on {
     flex: 3 1 0%;
   }
+  /* inside the card: with no gap, an outside ring would sit on the
+     neighbour or off the screen's edge */
   .people__card:focus-visible {
     outline: 2px solid var(--pink);
-    outline-offset: 3px;
+    outline-offset: -2px;
   }
   .people :global(.people__pic),
   .people :global(.people__pic img) {
