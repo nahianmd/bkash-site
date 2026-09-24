@@ -133,21 +133,42 @@ export const SCREEN = {
 
 /* ---- the wall ---------------------------------------------------- */
 export const WALL = {
+  /* The intro (Nahian, 2026-09-24, after a reference video): on black,
+     the heading's words arrive one by one, each easing in from the right
+     as it fades up, the line panning so the newest word is near the
+     middle; "Motion" comes last, in pink, and the white words dim. Then
+     the view zooms into "Motion" and back out, and the whole line
+     settles as the section's heading, above the collage. Fractions of
+     the section's progress. The stage size is the words' size while
+     they arrive, as a fraction of the frame's width (px capped); the
+     zoom takes "Motion" to `zoomWidth` of the frame. */
+  intro: {
+    word0: 0.006,
+    wordStep: 0.019,
+    wordDur: 0.024,
+    zoomIn: [0.13, 0.168],
+    zoomOut: [0.178, 0.216],
+    dim: 0.4,
+    stageFont: { vw: 0.07, max: 72 },
+    zoomWidth: 0.6,
+  },
   /* The landing (Nahian, 2026-09-24): each tile flies in from the front
      — from `from`× its size, out along the line from the frame's centre
      through its cell, so it comes from the viewer's side — and settles,
      fading in over the first `fade` of its flight. Each flight takes
      `flight` of the section's progress; the flights are spread so the
-     first photograph starts at `first` and the phone photograph lands
-     exactly at wallEnd. The title is down before the pin begins. */
-  fly: { from: 2.2, fade: 0.35, flight: 0.06, first: 0.01 },
-  /* Phases of the section's progress. */
-  wallEnd: 0.489,
-  arriveHoldEnd: 0.611,
-  emergeEnd: 0.794,
-  restEnd: 0.856,
-  slideEnd: 0.956,
-  travelScreens: 4.5,
+     first photograph starts at `first`, once the heading has settled,
+     and the phone photograph lands exactly at wallEnd. */
+  fly: { from: 2.2, fade: 0.35, flight: 0.05, first: 0.226 },
+  /* Phases of the section's progress: the intro, the collage, then the
+     phone as before — the old phases, rescaled so each keeps its screens
+     of travel with the intro's 1.6 in front. */
+  wallEnd: 0.6,
+  arriveHoldEnd: 0.695,
+  emergeEnd: 0.836,
+  restEnd: 0.884,
+  slideEnd: 0.962,
+  travelScreens: 6.1,
   scrub: 0.6,
   /* Rest B: the device's height as a fraction of --vh (desktop), or its
      width as a fraction of the viewport (phone). */
@@ -232,15 +253,16 @@ export const PHONE_QUAD = {
    the phone then rises out of it.
 
    The randomness is seeded, so the collage is the same on every visit
-   and every build. Grid lines are 1-based. Desktop 12×8: the title a
-   3×2 block at the top-left, the phone 4×4 at the centre, the 32
-   photographs packed into the rest in blocks of 1×1, 2×1, 1×2 and 2×2.
-   Phone 6×10: the title 4×2, the phone 4×4, eighteen photographs. */
+   and every build. Grid lines are 1-based. The title is no longer a
+   tile — it is the section's heading, above the collage (the intro).
+   Desktop 11×6: the phone photograph a 1×2 block at the centre, at its
+   natural size (Nahian, 2026-09-24: the 4×4 was too big), the 32
+   photographs packed round it in blocks of 1×1, 2×1, 1×2 and 2×2.
+   Phone 6×8: the phone 2×2 at the centre, eighteen photographs. */
 export type Block = { c: number; r: number; w: number; h: number };
 export type Mosaic = {
   cols: number;
   rows: number;
-  title: Block;
   phone: Block;
   /** the seed for the packing, the landing order and the overlaps */
   seed: number;
@@ -250,7 +272,6 @@ export type Mosaic = {
     top, right, bottom, left. */
 export type Overlap = [number, number, number, number];
 export type MosaicTile = Block & { order: number; over: Overlap } & (
-    | { kind: 'title' }
     | { kind: 'phone' }
     | { kind: 'photo'; photo: string; pos: string }
   );
@@ -259,10 +280,9 @@ const ph = (photo: string, pos: string) => ({ photo, pos });
 
 export const MOSAIC: { desktop: Mosaic; phone: Mosaic } = {
   desktop: {
-    cols: 12,
-    rows: 8,
-    title: { c: 1, r: 1, w: 3, h: 2 },
-    phone: { c: 5, r: 3, w: 4, h: 4 },
+    cols: 11,
+    rows: 6,
+    phone: { c: 6, r: 3, w: 1, h: 2 },
     seed: 20260924,
     photos: [
       ph('riders', '50% 50%'),
@@ -301,9 +321,8 @@ export const MOSAIC: { desktop: Mosaic; phone: Mosaic } = {
   },
   phone: {
     cols: 6,
-    rows: 10,
-    title: { c: 1, r: 1, w: 4, h: 2 },
-    phone: { c: 2, r: 4, w: 4, h: 4 },
+    rows: 8,
+    phone: { c: 3, r: 4, w: 2, h: 2 },
     seed: 20260924,
     photos: [
       ph('riders', '50% 50%'),
@@ -355,7 +374,7 @@ function pack(m: Mosaic, n: number, rand: () => number): Block[] | null {
   const taken: boolean[][] = Array.from({ length: m.rows + 1 }, () =>
     new Array(m.cols + 1).fill(false),
   );
-  for (const b of [m.title, m.phone])
+  for (const b of [m.phone])
     for (let r = b.r; r < b.r + b.h; r++) for (let c = b.c; c < b.c + b.w; c++) taken[r][c] = true;
   let free = 0;
   for (let r = 1; r <= m.rows; r++) for (let c = 1; c <= m.cols; c++) if (!taken[r][c]) free++;
@@ -383,8 +402,8 @@ function pack(m: Mosaic, n: number, rand: () => number): Block[] | null {
   return out.length === n ? out : null;
 }
 
-/** The collage as tiles, in landing order: the title, the photographs
-    in a random order, the phone last. The photographs take the packed
+/** The collage as tiles, in landing order: the photographs in a random
+    order, the phone last. The photographs take the packed
     blocks in the old wall's order (row by row), so neighbours stay
     neighbours; only when they land is shuffled. Throws if no packing is
     found, so a bad edit fails the build. */
@@ -409,14 +428,13 @@ export function mosaicTiles(m: Mosaic): MosaicTile[] {
     kind: 'photo',
     ...b,
     ...m.photos[i],
-    order: land.indexOf(i) + 1,
+    order: land.indexOf(i),
     over: over(),
   }));
   photos.sort((a, b) => a.order - b.order);
   return [
-    { kind: 'title', ...m.title, order: 0, over: [4, 4, 4, 4] },
     ...photos,
-    { kind: 'phone', ...m.phone, order: n + 1, over: [4, 4, 4, 4] },
+    { kind: 'phone', ...m.phone, order: n, over: [0, 0, 0, 0] },
   ];
 }
 
@@ -447,6 +465,44 @@ export function initServices() {
   const ground = section.querySelector<HTMLElement>('[data-ground]');
   const marker = section.querySelector<HTMLElement>('[data-svc-marker]');
   const copy = section.querySelector<HTMLElement>('[data-copy]');
+  const introBox = section.querySelector<HTMLElement>('[data-intro]');
+  const introLine = section.querySelector<HTMLElement>('[data-intro-line]');
+  const words = [...section.querySelectorAll<HTMLElement>('[data-word]')];
+
+  /* ---- the intro: measured once per resize ------------------------
+     The line rests as the heading (its layout position, L, in the pin).
+     Every other state is the same line under ONE transform, found from
+     a focus point in the line (f), a scale (s) and where on screen the
+     focus should sit (P): translate = P − L − s·f, origin top-left. */
+  const intro = {
+    L: { x: 0, y: 0 },
+    w: 0,
+    h: 0,
+    centres: [] as number[],
+    stage: { x: 0, y: 0 },
+    sStage: 1,
+    sZoom: 1,
+    last: [] as string[],
+  };
+  function measureIntro() {
+    if (!introBox || !introLine || words.length === 0) return;
+    intro.L = {
+      x: introBox.offsetLeft + introLine.offsetLeft,
+      y: introBox.offsetTop + introLine.offsetTop,
+    };
+    intro.w = introLine.offsetWidth;
+    intro.h = introLine.offsetHeight;
+    intro.centres = words.map((w) => w.offsetLeft + w.offsetWidth / 2);
+    const navH = resolvePx('var(--nav-h)', 72);
+    intro.stage = { x: vw / 2, y: (navH + vh) / 2 };
+    const fs = parseFloat(getComputedStyle(introLine).fontSize) || 40;
+    const I = WALL.intro;
+    intro.sStage = Math.min(I.stageFont.max, vw * I.stageFont.vw) / fs;
+    const key = words[words.length - 1];
+    intro.sZoom = (I.zoomWidth * vw) / Math.max(1, key.offsetWidth);
+    intro.last = words.map(() => '');
+    introDone = '';
+  }
 
   let vw = 1;
   let vh = 1;
@@ -483,6 +539,7 @@ export function initServices() {
   function measure() {
     vw = pin.clientWidth;
     vh = pin.clientHeight;
+    measureIntro();
     const wall = activeWall();
     if (!wall) return;
     wallEl = wall;
@@ -691,8 +748,83 @@ export function initServices() {
     }
   }
 
+  /* ---- the intro: word by word, into "Motion", out to the heading ---
+     Three states of the one line: the STAGE (the words arriving, big,
+     centred in the frame, panning with the newest word), the ZOOM (into
+     "Motion", the last word), and the HEADING (at rest, no transform).
+     Scale is interpolated in log space, so the zoom reads as a steady
+     push, as the hero's camera does. The white words dim as "Motion"
+     arrives and brighten again on the way out. */
+  let introDone = '';
+  function renderIntro(p: number) {
+    if (!introLine || words.length === 0) return;
+    const I = WALL.intro;
+    const n = words.length;
+    const zout = cubicInOut(ramp(p, I.zoomOut[0], I.zoomOut[1]));
+    /* settled: the heading, as laid out — write it once */
+    if (zout >= 1) {
+      if (introDone === 'rest') return;
+      introDone = 'rest';
+      introLine.style.transform = '';
+      words.forEach((w, k) => {
+        w.style.opacity = '';
+        w.style.transform = '';
+        intro.last[k] = '';
+      });
+      return;
+    }
+    introDone = '';
+    const rev = words.map((_, k) => {
+      const t = ramp(p, I.word0 + k * I.wordStep, I.word0 + k * I.wordStep + I.wordDur);
+      return 1 - Math.pow(1 - t, 3);
+    });
+    /* the pan: towards the newest word, with a little of the line's
+       middle so the start of the line does not leave too soon */
+    const r = rev.reduce((a, b) => a + b, 0);
+    const x = Math.min(Math.max(r - 1, 0), n - 1);
+    const i0 = Math.floor(x);
+    const i1 = Math.min(n - 1, i0 + 1);
+    const cr = intro.centres[i0] + (intro.centres[i1] - intro.centres[i0]) * (x - i0);
+    const fStage = (intro.centres[0] + cr) / 2 + ((cr - (intro.centres[0] + cr) / 2) * 0.65);
+    const fKey = intro.centres[n - 1];
+    const fRest = intro.w / 2;
+    const lg = (a: number, b: number, t: number) => Math.exp(Math.log(a) + (Math.log(b) - Math.log(a)) * t);
+    const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+    let s: number;
+    let fx: number;
+    let Px: number;
+    let Py: number;
+    if (zout > 0) {
+      s = lg(intro.sZoom, 1, zout);
+      fx = mix(fKey, fRest, zout);
+      Px = mix(intro.stage.x, intro.L.x + fRest, zout);
+      Py = mix(intro.stage.y, intro.L.y + intro.h / 2, zout);
+    } else {
+      const zin = cubicInOut(ramp(p, I.zoomIn[0], I.zoomIn[1]));
+      s = lg(intro.sStage, intro.sZoom, zin);
+      fx = mix(fStage, fKey, zin);
+      Px = intro.stage.x;
+      Py = intro.stage.y;
+    }
+    const tx = Px - intro.L.x - s * fx;
+    const ty = Py - intro.L.y - s * (intro.h / 2);
+    introLine.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
+    /* the words: in from the right as they fade up; the white ones dim
+       while "Motion" holds the stage */
+    const dimBy = rev[n - 1] * (1 - zout);
+    const nudge = intro.h * 0.4;
+    words.forEach((w, k) => {
+      const op = rev[k] * (k < n - 1 ? 1 - (1 - I.dim) * dimBy : 1);
+      const key = `${op.toFixed(3)}|${((1 - rev[k]) * nudge).toFixed(1)}`;
+      if (key === intro.last[k]) return;
+      intro.last[k] = key;
+      w.style.opacity = op.toFixed(3);
+      w.style.transform = rev[k] >= 1 ? '' : `translate3d(${((1 - rev[k]) * nudge).toFixed(1)}px, 0, 0)`;
+    });
+  }
+
   /* ---- the wall: the tiles land, one by one, from the front ---------
-     Tile k (k ≥ 1; the title, k = 0, is always down) flies over
+     Tile k, in landing order, flies over
      [start, start + flight]: at t it is scaled s = 1 + (from − 1)(1 − e)
      about its own centre, and carried out along the ray from the frame's
      centre through its cell by (s − 1) — so it projects from in front of
@@ -703,10 +835,10 @@ export function initServices() {
     const F = WALL.fly;
     const n = tiles.length;
     if (n < 2) return;
-    const span = (WALL.wallEnd - F.flight - F.first) / Math.max(1, n - 2);
-    for (let k = 1; k < n; k++) {
+    const span = (WALL.wallEnd - F.flight - F.first) / (n - 1);
+    for (let k = 0; k < n; k++) {
       const tl = tiles[k];
-      const t = ramp(p, F.first + (k - 1) * span, F.first + (k - 1) * span + F.flight);
+      const t = ramp(p, F.first + k * span, F.first + k * span + F.flight);
       let key: string;
       if (t >= 1) key = '';
       else if (t <= 0) key = 'hidden';
@@ -732,7 +864,7 @@ export function initServices() {
         const [tf, op] = key.split('|');
         st.transform = tf;
         st.opacity = op;
-        /* in flight it is in front of everything, the title included */
+        /* in flight it is in front of every landed tile */
         st.zIndex = '2';
       }
     }
@@ -740,6 +872,7 @@ export function initServices() {
 
   const proxy = { p: 0 };
   const render = () => {
+    renderIntro(proxy.p);
     renderWall(proxy.p);
     renderPhone(proxy.p, performance.now());
   };

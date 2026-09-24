@@ -19,7 +19,7 @@ const photo = (name: string) => photos[`../assets/img/services/${name}.jpg`].def
 import screen from '../assets/img/services/screen.jpg';
 import phonePhoto from '../assets/img/services/phone.jpg';
 
-/* Two collages — twelve by eight, and six by ten for the phone — and CSS
+/* Two collages — eleven by six, and six by eight for the phone — and CSS
    shows one per breakpoint, so each is composed for its width. The gate
    forbids inline styles, so each tile's place in its grid and each
    photograph's crop are generated here as classes and emitted as a
@@ -28,16 +28,20 @@ const walls: { key: 'desktop' | 'phone'; tiles: MosaicTile[] }[] = [
   { key: 'desktop', tiles: mosaicTiles(MOSAIC.desktop) },
   { key: 'phone', tiles: mosaicTiles(MOSAIC.phone) },
 ];
+/* The heading, word by word; the last is the one the intro zooms into. */
+const HEADING = ['Writing', 'Millions', 'of', 'Stories', 'in', 'Motion'];
 const place = (key: string, t: MosaicTile) => `at-${key}-${t.order}`;
 const posRules = new Map<string, string>();
 const placeRules: string[] = [];
 for (const { key, tiles } of walls)
   for (const t of tiles) {
     placeRules.push(`.${place(key, t)}{grid-area:${t.r}/${t.c}/span ${t.h}/span ${t.w}}`);
-    /* each tile's own uneven run past its block */
-    placeRules.push(
-      `.wall>.${place(key, t)}>.tile{inset:${t.over.map((v) => `-${v}%`).join(' ')}}`,
-    );
+    /* each tile's own uneven run past its block; the phone photograph
+       is sized to its whole 3:4 instead (below) */
+    if (t.kind === 'photo')
+      placeRules.push(
+        `.wall>.${place(key, t)}>.tile{inset:${t.over.map((v) => `-${v}%`).join(' ')}}`,
+      );
     if (t.kind === 'photo') posRules.set(`pos-${t.photo}`, t.pos);
   }
 /* The phone photograph's crop anchor, from the one constant the
@@ -50,13 +54,32 @@ const posCss =
 
 <section class="svc" data-services aria-label="Millions of stories, and the bKash app">
   <div class="svc__pin" data-services-pin>
+    {/* The heading, which is also the intro: its words arrive one by one
+        on the black, the view zooms into "Motion" and back out, and the
+        line settles here (services.ts). One span per word. */}
+    <div class="intro" data-intro>
+      <h2 class="intro__line" data-intro-line>
+        {HEADING.map((w, i) => (
+          <>
+            {i > 0 && ' '}
+            <span
+              class:list={['intro__word', { 'intro__word--key': i === HEADING.length - 1 }]}
+              data-word
+            >
+              {w}
+            </span>
+          </>
+        ))}
+      </h2>
+    </div>
+
     {/* The tiles in landing order, so a later tile paints over an earlier
-        one where they overlap: the title, the photographs in their
-        shuffled order, the phone. */}
+        one where they overlap: the photographs in their shuffled order,
+        then the phone. */}
     {walls.map(({ key, tiles }) => (
       <div class={`wall wall--${key}`} data-wall={key}>
         {tiles.map((t) => (
-          <div class:list={['cell', place(key, t)]}>
+          <div class:list={['cell', place(key, t), { 'cell--phone': t.kind === 'phone' }]}>
             {t.kind === 'photo' ? (
               <figure class={`tile pos-${t.photo}`} data-tile="photo" data-order={t.order}>
                 <Picture
@@ -69,10 +92,6 @@ const posCss =
                   loading="lazy"
                 />
               </figure>
-            ) : t.kind === 'title' ? (
-              <div class="tile tile--title" data-tile="title" data-order={t.order}>
-                <h2 class="t-h2 tile__title">Writing Millions of Stories in Motion</h2>
-              </div>
             ) : (
               <div class="tile tile--phone" data-tile="phone" data-order={t.order}>
                 <Picture
@@ -145,20 +164,74 @@ const posCss =
     position: relative;
     /* One screen of pin plus the travel (config: travelScreens). */
     height: calc(var(--vh) * var(--svc-screens, 6.5));
-    background: var(--paper);
+    /* Black from its first pixel: arriving from the stories, the section
+       opens on a black frame for the intro (Nahian, 2026-09-24). The
+       ground below turns it white as the phone lifts out. */
+    background: var(--night);
     /* How far copy and phone are gathered toward each other at rest on
              desktop — the copy from its gutter, the phone from its column's
              centre. One token, read by the CSS below and by services.ts. */
     --svc-gather: var(--s-8);
+    /* The heading's band at the top of the frame, under the nav; the
+       collage fills the frame below it. */
+    --svc-head: clamp(5rem, 13vh, 7.5rem);
   }
 
   .svc__pin {
     position: relative;
     height: var(--vh);
     overflow: hidden;
-    background: var(--paper);
+    background: var(--night);
     perspective: 1500px;
     perspective-origin: 50% 42%;
+  }
+
+  /* ---- the heading, and the intro it plays ----------------------------
+     At rest it is the section's heading in its band: white, "Motion" in
+     pink, one line, centred. services.ts moves the whole line with one
+     transform (origin top-left) and each word with its own, for the
+     intro; with no JS, or reduced motion, it simply sits here. Above the
+     collage, below the ground that whitens the frame. */
+  .intro {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--nav-h);
+    height: var(--svc-head);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--gutter);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .intro__line {
+    position: relative;
+    margin: 0;
+    white-space: nowrap;
+    color: var(--paper);
+    font-size: var(--fs-h2);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    font-weight: 700;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+  .intro__word {
+    display: inline-block;
+    will-change: transform, opacity;
+  }
+  .intro__word--key {
+    color: var(--pink);
+  }
+  @media (max-width: 767px) {
+    .svc {
+      --svc-head: 4.5rem;
+    }
+    /* one line still, sized to the phone's width */
+    .intro__line {
+      font-size: min(var(--fs-h3), 4.6vw);
+    }
   }
 
   /* ---- the wall: a collage filling the frame, edge to edge ---------
@@ -172,19 +245,19 @@ const posCss =
     position: absolute;
     left: 0;
     right: 0;
-    top: var(--nav-h);
+    top: calc(var(--nav-h) + var(--svc-head));
     bottom: 0;
     display: grid;
     transform-origin: 50% 100%;
     will-change: transform, opacity;
   }
   .wall--desktop {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    grid-template-rows: repeat(8, minmax(0, 1fr));
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+    grid-template-rows: repeat(6, minmax(0, 1fr));
   }
   .wall--phone {
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-template-rows: repeat(10, minmax(0, 1fr));
+    grid-template-rows: repeat(8, minmax(0, 1fr));
     display: none;
   }
   @media (max-width: 767px) {
@@ -218,35 +291,20 @@ const posCss =
     object-fit: cover;
   }
 
-  /* The one typographic tile, first down. Night on the paper. It sits
-     ABOVE its neighbours, not under the later ones — a headline is never
-     overlapped — while a tile in flight (services.ts) passes over it.
-     Its left padding adds back the 6% the tile runs past the screen's
-     edge, so the words keep their gutter. */
-  .tile--title {
-    z-index: 1;
-    background: var(--night-2);
-    color: var(--paper);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: var(--s-5);
-    padding-left: calc(var(--s-5) + 6%);
+  /* The phone photograph at its natural size (Nahian, 2026-09-24): the
+     WHOLE photograph at its own 3:4, never cropped, and just big enough
+     to cover its block — 8% past it on the tighter side, centred — so no
+     white shows round it and it is no larger than it needs to be. Sized
+     from the block (a size container). */
+  .cell--phone {
+    container-type: size;
   }
-  /* One headline, no eyebrow: the deck gives the tile a single line
-     (Website_N_1.pdf, p.4). */
-  .tile__title {
-    text-wrap: balance;
-  }
-  @media (max-width: 767px) {
-    .tile--title {
-      padding: var(--s-3);
-      padding-left: calc(var(--s-4) + 6%);
-    }
-    .tile__title {
-      font-size: var(--fs-h3);
-      line-height: 1.12;
-    }
+  .tile--phone {
+    inset: auto;
+    width: max(108cqw, 81cqh);
+    height: max(144cqw, 108cqh);
+    left: calc(50% - max(54cqw, 40.5cqh));
+    top: calc(50% - max(72cqw, 54cqh));
   }
 
 
@@ -437,8 +495,8 @@ const posCss =
   .svc--static .wall {
     position: relative;
     top: auto;
-    margin-top: var(--nav-h);
-    height: calc(var(--vh) - var(--nav-h));
+    margin-top: calc(var(--nav-h) + var(--svc-head));
+    height: calc(var(--vh) - var(--nav-h) - var(--svc-head));
     overflow: hidden;
   }
   :global(.no-js) .device,
