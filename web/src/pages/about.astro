@@ -48,6 +48,17 @@ const voiceImg = (f: string) =>
    customers; a person and a banknote for agents, the "human ATMs"; a
    shopfront for merchants; an app grid with room for more for products
    and services. */
+/* The careers values, in the order bKash states them: size (on the type
+   scale) and ink alternate, so the five read as a cloud rather than a
+   list — the largest and pinkest first, the rest stepping round it. */
+const VALUES: { word: string; size: 'l' | 'm' | 's'; pink: boolean }[] = [
+  { word: 'Customer-centric', size: 'l', pink: true },
+  { word: 'Collaborative', size: 's', pink: false },
+  { word: 'Innovative', size: 'm', pink: false },
+  { word: 'Agile', size: 'l', pink: false },
+  { word: 'Ethical', size: 'm', pink: true },
+];
+
 const STAT_ICONS: Record<string, string> = {
   customers:
     '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M16.2 13.6h.3c2.5 0 4.5 2 4.5 4.6"/>',
@@ -346,9 +357,19 @@ const STAT_ICONS: Record<string, string> = {
             <p class="t-body split__values-head" data-reveal>
               Five values shape how we work:
             </p>
-            <p class="careers__values" data-reveal>
-              Customer-centric. Collaborative. Innovative. Agile. Ethical.
-            </p>
+            {/* The five values as a typographic cloud (Nahian, 2026-09-24):
+                sizes and inks varied, one after another as they arrive. */}
+            <ul class="values" aria-label="Our five values">
+              {VALUES.map((v) => (
+                <li
+                  class:list={['values__word', `values__word--${v.size}`, { 'is-pink': v.pink }]}
+                  data-reveal
+                  data-reveal-group="values"
+                >
+                  {v.word}
+                </li>
+              ))}
+            </ul>
             <p class="t-body split__body" data-reveal>
               We challenge convention, work together, put customers first, and do what is right.
             </p>
@@ -857,12 +878,38 @@ const STAT_ICONS: Record<string, string> = {
     border-radius: var(--r-lg);
     box-shadow: var(--e-3);
   }
-  .careers__values {
+  /* The values as a typographic cloud: one flowing, wrapping line of
+     words on a shared baseline, three steps of the type scale, pink or
+     ink. No boxes, no bullets, no full stops — the words carry it. */
+  .values {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-1) var(--s-5);
+    margin: var(--s-2) 0 var(--s-5);
+    padding: 0;
+    list-style: none;
+  }
+  .values__word {
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    color: var(--ink);
+  }
+  .values__word--l {
+    font-size: var(--fs-h1);
+  }
+  .values__word--m {
+    font-size: var(--fs-h2);
+    font-weight: 600;
+  }
+  .values__word--s {
     font-size: var(--fs-h3);
     font-weight: 600;
-    letter-spacing: -0.018em;
+    color: var(--ink-2);
+  }
+  .values__word.is-pink {
     color: var(--pink);
-    margin-bottom: var(--s-5);
   }
 
   /* ---- the road ahead: the illustration full-bleed beneath the copy ---- */
