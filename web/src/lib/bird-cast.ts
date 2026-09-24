@@ -31,11 +31,22 @@
 import { PLATE, BEATS, type Cut } from './hero-beats';
 import { FACET, facetBox, centroidPx } from './bird-shape';
 
-/** Which facet holds whom, and how each one is framed. */
+/* Which facet holds whom. Rotated one place 2026-09-24 on Nahian's ask:
+   "customer will be in current agent's position, agent will be in
+   current merchant's position, and the merchant will be in customer's
+   position." A clean 3-cycle, so every facet still holds exactly one.
+
+     top wing   Amena  -> Faysal
+     middle     Faysal -> Rahim
+     flat       Rahim  -> Amena
+
+   Listed in narrative order — customer, agent, merchant — which is the
+   hero's beat order too. The order is presentational only: the three
+   windows clip to disjoint triangles and never overlap. */
 export const CAST = [
-  { facet: FACET.topWing, id: 'amena', role: 'Customer' },
-  { facet: FACET.middle, id: 'faysal', role: 'Merchant' },
-  { facet: FACET.flat, id: 'rahim', role: 'Agent' },
+  { facet: FACET.flat, id: 'amena', role: 'Customer' },
+  { facet: FACET.middle, id: 'rahim', role: 'Agent' },
+  { facet: FACET.topWing, id: 'faysal', role: 'Merchant' },
 ] as const;
 
 /* The two dials, per Nahian's eye.
@@ -64,8 +75,15 @@ export const CAST = [
    a triangle that narrows downward. */
 export const CAST_TUNING: Record<string, { fill: number; bg: number; lift: number }> = {
   amena: { fill: 0.7, bg: 0.22, lift: 0 },
+  /* "a little bit zoomed in" (Nahian, 2026-09-24) for the agent, now in
+     the middle facet. BOTH dials move, and together: `fill` alone would
+     enlarge the figure against an unchanged street, which reads as him
+     stepping forward rather than as a tighter shot. Moving `bg` with it
+     by the same ratio is what makes it a zoom. ~17% in; the background's
+     upscale goes 1.59x -> 1.86x, still soft enough to read as depth of
+     field rather than as a poor image. */
+  rahim: { fill: 0.82, bg: 0.188, lift: 0 },
   faysal: { fill: 0.7, bg: 0.22, lift: 0 },
-  rahim: { fill: 0.7, bg: 0.22, lift: 0 },
 };
 
 export type Box = { x: number; y: number; w: number; h: number };

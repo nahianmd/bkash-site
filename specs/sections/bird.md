@@ -241,6 +241,23 @@ agent is the lower triangle. Recording the guess as a guess is what caught it.
 | 1      | **Faysal** (merchant, `M`) | 442 x 463         | 0.955  | (0.546, 0.363) centre     |
 | 0 or 6 | **Rahim** (agent, `A`)     | below             | below  | lower                     |
 
+**Superseded 2026-09-24 — rotated one place.** Nahian: "customer will be in
+current agent's position, agent will be in current merchant's position and a
+little bit zoomed in, and the merchant will be in customer's position." A clean
+3-cycle, so every facet still holds exactly one person:
+
+| facet    | position   | was    | now        |
+| -------- | ---------- | ------ | ---------- |
+| top wing | upper left | Amena  | **Faysal** |
+| middle   | centre     | Faysal | **Rahim**  |
+| flat     | lower      | Rahim  | **Amena**  |
+
+All three fit their new triangle at `fill 0.7`. The agent's "little bit zoomed
+in" is `fill 0.82` with `bg 0.188` — both dials together, because `fill` alone
+enlarges the figure against an unchanged street and reads as him stepping
+forward rather than as a tighter shot. ~17% in; the background's upscale goes
+1.59x to 1.86x.
+
 ### Resolved — the agent's triangle is facet 0
 
 Nahian's two answers disagreed: the text said "2,1,6", the render put the `A`
