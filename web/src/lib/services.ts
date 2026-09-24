@@ -159,11 +159,12 @@ export const WALL = {
   /* The landing (Nahian, 2026-09-24): each tile flies in from the front
      — from `from`× its size, out along the line from the frame's centre
      through its cell, so it comes from the viewer's side — and settles,
-     fading in over the first `fade` of its flight. Each flight takes
-     `flight` of the section's progress; the flights are spread so the
-     first photograph starts at `first`, once the heading has settled,
-     and the phone photograph lands exactly at wallEnd. */
-  fly: { from: 2.2, fade: 0.35, flight: 0.05, first: 0.226 },
+     fading in over the first `fade` of its flight. All together
+     (Nahian, 2026-09-24): every photograph, the phone's included, flies
+     over the same `flight` of the section's progress from `first`, once
+     the heading has settled — one wave, not one after another — landing
+     well before wallEnd, so the collage holds before the phone rises. */
+  fly: { from: 2.2, fade: 0.35, flight: 0.25, first: 0.226 },
   /* Phases of the section's progress: the intro, the collage, then the
      phone as before — the old phases, rescaled so each keeps its screens
      of travel with the intro's 1.6 in front. */
@@ -877,7 +878,7 @@ export function initServices() {
     const F = WALL.fly;
     const n = tiles.length;
     if (n < 2) return;
-    const span = (WALL.wallEnd - F.flight - F.first) / (n - 1);
+    const span = 0;
     for (let k = 0; k < n; k++) {
       const tl = tiles[k];
       const t = ramp(p, F.first + k * span, F.first + k * span + F.flight);
