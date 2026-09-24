@@ -182,15 +182,14 @@ export const WALL = {
     phoneWidthFrac: 0.92,
     /* clear air between the resting handset and the copy on a phone */
     phoneCopyGap: 'var(--s-8)',
-    /* The resting pose (Nahian, 2026-09-24): slanted, but only just. A
-       small lean back about the BOTTOM edge and a turn that shows the
-       slab's left edge — the turn, not the lean, is what reads as 3D.
+    /* The resting pose, after a product-page reference (Nahian,
+       2026-09-24): the right side turned toward you — the top edge rising
+       to the right, the bottom falling, the slab's right edge showing —
+       and the top leaning back a little about the bottom edge. No roll.
        Eased in with the slide; the life plays on top of it. */
-    leanDeg: 6,
-    turnDeg: 12,
-    /* a slight roll, counter-clockwise: the top-left tips out to the
-       left while the bottom-left stays square to you (Nahian, 2026-09-24) */
-    rollDeg: -3,
+    leanDeg: 10,
+    turnDeg: -24,
+    rollDeg: 0,
     /* The rim (Nahian, 2026-09-24, from "bKash Mobile.png"): a light
        bezel between the screen and the pink line, as a fraction of the
        screen's width — 16px on the reference's 600. The same on every
