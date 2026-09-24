@@ -471,6 +471,7 @@ export function initServices() {
   const copy = section.querySelector<HTMLElement>('[data-copy]');
   const introBox = section.querySelector<HTMLElement>('[data-intro]');
   const introLine = section.querySelector<HTMLElement>('[data-intro-line]');
+  const introRest = section.querySelector<HTMLElement>('[data-intro-rest]');
   const words = [...section.querySelectorAll<HTMLElement>('[data-word]')];
 
   /* ---- the intro: measured once per resize ------------------------
@@ -521,7 +522,10 @@ export function initServices() {
     /* scales relative to the laid-out size: the zoom is 1. On a phone
        the heading fills the width rather than taking the CSS size. */
     const phone = isPhone();
-    intro.sRest = phone ? (vw - 2 * I.restMarginPhone) / Math.max(1, intro.w) : 1 / k;
+    /* on a phone the line lands at the two-line heading's width, and
+       crossfades into it there */
+    const restW = phone && introRest ? introRest.offsetWidth : vw - 2 * I.restMarginPhone;
+    intro.sRest = phone ? restW / Math.max(1, intro.w) : 1 / k;
     const sf = phone ? I.stageFontPhone : I.stageFont;
     intro.sStage = Math.min(sf.max, vw * sf.vw) / (fsRest * k);
     intro.last = words.map(() => '');
@@ -785,6 +789,14 @@ export function initServices() {
     const I = WALL.intro;
     const n = words.length;
     const zout = cubicInOut(ramp(p, I.zoomOut[0], I.zoomOut[1]));
+    /* the phone's crossfade: the line out, the two-line heading in,
+       over the last part of the zoom-out */
+    if (isPhone() && introRest) {
+      /* one after the other, never both: the moving line fades out,
+         then the two-line heading fades in where it lands */
+      introLine.style.opacity = (1 - ramp(zout, 0.55, 0.8)).toFixed(3);
+      introRest.style.opacity = ramp(zout, 0.8, 1).toFixed(3);
+    }
     const place = (s: number, fx: number, Px: number, Py: number) => {
       const tx = Px - intro.L.x - s * fx;
       const ty = Py - intro.L.y - s * (intro.h / 2);

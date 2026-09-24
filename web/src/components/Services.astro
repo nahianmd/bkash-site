@@ -71,6 +71,14 @@ const posCss =
           </>
         ))}
       </h2>
+      {/* The phone's resting heading, on two lines (Nahian, 2026-09-24):
+          the animated line crossfades into it as the intro ends. The h2
+          above stays the heading for assistive tech. */}
+      <p class="intro__rest" data-intro-rest aria-hidden="true">
+        {HEADING.slice(0, -2).join(' ')}
+        <br />
+        {HEADING.at(-2)} <span class="intro__word--key">{HEADING.at(-1)}</span>
+      </p>
     </div>
 
     {/* The tiles in landing order, so a later tile paints over an earlier
@@ -174,7 +182,7 @@ const posCss =
     --svc-gather: var(--s-8);
     /* The heading's band at the top of the frame, under the nav; the
        collage fills the frame below it. */
-    --svc-head: clamp(5rem, 13vh, 7.5rem);
+    --svc-head: clamp(7rem, 19vh, 10.5rem);
   }
 
   .svc__pin {
@@ -226,13 +234,34 @@ const posCss =
   .intro__word--key {
     color: var(--pink);
   }
+  /* the phone's two-line resting heading; not used on the wide frame */
+  .intro__rest {
+    display: none;
+  }
   @media (max-width: 767px) {
     .svc {
-      --svc-head: 5rem;
+      --svc-head: 8.5rem;
     }
-    /* one line still, sized to the phone's width */
+    /* the animated line, one line, sized to the phone's width */
     .intro__line {
       font-size: min(var(--fs-h3), 4.6vw);
+    }
+    /* At rest the phone shows two lines instead, with room above and
+       below. Without JS (or with reduced motion) this is simply the
+       heading; with JS services.ts crossfades the line into it. */
+    .intro__line {
+      position: absolute;
+      opacity: 0;
+    }
+    .intro__rest {
+      display: block;
+      margin: 0;
+      text-align: center;
+      color: var(--paper);
+      font-size: min(var(--fs-h2), 7.2vw);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.022em;
     }
   }
 
