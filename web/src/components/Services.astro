@@ -183,6 +183,8 @@ const posCss =
     /* The heading's band at the top of the frame, under the nav; the
        collage fills the frame below it. */
     --svc-head: clamp(7rem, 19vh, 10.5rem);
+    /* the phone copy's distance from the frame's foot (phone only) */
+    --svc-copy-bottom: calc(var(--s-6) + env(safe-area-inset-bottom, 0px));
   }
 
   .svc__pin {
@@ -501,9 +503,11 @@ const posCss =
       left: var(--gutter);
       right: var(--gutter);
       top: auto;
-      /* clear of the fixed dock; services.ts solves the phone's
-                     band from the same token */
-      bottom: var(--search-space);
+      /* Low in the frame (Nahian, 2026-09-24). Centred and narrow, the
+         copy passes left of the dock in the corner, so it need not clear
+         its full height; services.ts solves the phone's band from the
+         same token. */
+      bottom: var(--svc-copy-bottom);
       align-content: end;
       justify-items: center;
       text-align: center;

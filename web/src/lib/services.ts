@@ -1,11 +1,11 @@
-/* ============================================================
-   bKash — a thousand more stories → the phone → sixteen services
-   specs/sections/services.md · specs/services/plan.md
+﻿/* ============================================================
+   bKash â€” a thousand more stories â†’ the phone â†’ sixteen services
+   specs/sections/services.md Â· specs/services/plan.md
 
    One pin: the wall, the phone's arrival, the emergence (the screen,
    frameless with a thin pink line, standing up out of the photographed
-   hand), the slide to its resting place beside the copy — leaning back
-   about its bottom edge — and then a screen that is alive: an idle
+   hand), the slide to its resting place beside the copy â€” leaning back
+   about its bottom edge â€” and then a screen that is alive: an idle
    sway and a tilt under the pointer. The sixteen services are their
    own section (services-detail.ts), reached by the button.
    ============================================================ */
@@ -15,7 +15,7 @@ import { cubicInOut } from './scene-rig';
 import { MODEL, POSE_ZERO, solvePlacement, type Camera, type Pose } from './device';
 
 /** What the screen does after the emergence: where it slides to, how big
-    it is there, and the small rotations that keep it alive — CSS
+    it is there, and the small rotations that keep it alive â€” CSS
     conventions (px, y down, rotate signs as the pose's). */
 type Live = { dx: number; dy: number; s: number; rx: number; ry: number };
 
@@ -157,16 +157,16 @@ export const WALL = {
     zoomWidth: 0.6,
   },
   /* The landing (Nahian, 2026-09-24): each tile flies in from the front
-     — from `from`× its size, out along the line from the frame's centre
-     through its cell, so it comes from the viewer's side — and settles,
+     â€” from `from`Ã— its size, out along the line from the frame's centre
+     through its cell, so it comes from the viewer's side â€” and settles,
      fading in over the first `fade` of its flight. All together
      (Nahian, 2026-09-24): every photograph, the phone's included, flies
      over the same `flight` of the section's progress from `first`, once
-     the heading has settled — one wave, not one after another — landing
+     the heading has settled â€” one wave, not one after another â€” landing
      well before wallEnd, so the collage holds before the phone rises. */
   fly: { from: 2.2, fade: 0.35, flight: 0.25, first: 0.226 },
   /* Phases of the section's progress: the intro, the collage, then the
-     phone as before — the old phases, rescaled so each keeps its screens
+     phone as before â€” the old phases, rescaled so each keeps its screens
      of travel with the intro's 1.6 in front. */
   wallEnd: 0.6,
   arriveHoldEnd: 0.695,
@@ -183,8 +183,8 @@ export const WALL = {
     /* clear air between the resting handset and the copy on a phone */
     phoneCopyGap: 'var(--s-8)',
     /* The resting pose, after a product-page reference (Nahian,
-       2026-09-24): the right side turned toward you — the top edge rising
-       to the right, the bottom falling, the slab's right edge showing —
+       2026-09-24): the right side turned toward you â€” the top edge rising
+       to the right, the bottom falling, the slab's right edge showing â€”
        and the top leaning back a little about the bottom edge. No roll.
        Eased in with the slide; the life plays on top of it. */
     leanDeg: 10,
@@ -192,7 +192,7 @@ export const WALL = {
     rollDeg: 0,
     /* The rim (Nahian, 2026-09-24, from "bKash Mobile.png"): a light
        bezel between the screen and the pink line, as a fraction of the
-       screen's width — 16px on the reference's 600. The same on every
+       screen's width â€” 16px on the reference's 600. The same on every
        side, so the screen's centre, which the emergence is solved
        about, does not move. */
     rimFrac: 0.027,
@@ -217,19 +217,19 @@ export const WALL = {
 };
 
 /* ---- the photographed phone -------------------------------------
-   `phone.jpg` (2250×3000): a handset held at a slight turn, the home
+   `phone.jpg` (2250Ã—3000): a handset held at a slight turn, the home
    screen up. The four corners of its SCREEN as fractions of the
-   photograph — fitted from the pixels (tools: the screen edges as
+   photograph â€” fitted from the pixels (tools: the screen edges as
    lines, intersected), not placed by eye. The tile shows the whole
    photograph at its own aspect, so these are the tile's fractions too.
    The device is posed in 3D so its corners land on these; the pose is
-   SOLVED per viewport (device.ts), then interpolated to identity —
+   SOLVED per viewport (device.ts), then interpolated to identity â€”
    the phone stands up and comes forward out of the hand. */
 export const PHONE_PHOTO = { w: 2250, h: 3000 };
 /* The phone photograph fills its collage block like every other tile
    (Nahian, 2026-09-24: no white around it), so it is cover-cropped;
-   this is its object-position, as fractions. The screen spans 20–74%
-   of the photograph's height and the widest block keeps 16–81% at this
+   this is its object-position, as fractions. The screen spans 20â€“74%
+   of the photograph's height and the widest block keeps 16â€“81% at this
    anchor, so the whole screen always shows. Services.astro writes it as
    CSS and measure() solves the quad through the same crop. */
 export const PHONE_POS = { x: 0.5, y: 0.45 };
@@ -240,15 +240,15 @@ export const PHONE_QUAD = {
   bl: [0.3362, 0.7365],
   /* The handset's tilt in the photograph, solved once in the photograph's
      own pixels (tools/photo-pose.mjs; weak perspective, 4.3px rms on a
-     1600px phone): the top leans back 11.4°, the right side is 16.4°
-     nearer — the side whose edge the photograph shows — and a 0.6° roll.
+     1600px phone): the top leans back 11.4Â°, the right side is 16.4Â°
+     nearer â€” the side whose edge the photograph shows â€” and a 0.6Â° roll.
      CSS rotation conventions, radians. */
   tilt: { rx: 0.1982, ry: -0.2868, rz: 0.0105 },
 };
 
 /* ---- the mosaic (Nahian, 2026-09-24) ------------------------------
    The Pinterest columns are gone. The photographs land one by one as
-   you scroll into a collage that fills the pinned frame edge to edge —
+   you scroll into a collage that fills the pinned frame edge to edge â€”
    a mood board, not a grid (the reference was one): pieces of different
    sizes, straight, square-cornered, no border, each running a little
    past its block so it overlaps its neighbours by an uneven amount.
@@ -258,11 +258,11 @@ export const PHONE_QUAD = {
 
    The randomness is seeded, so the collage is the same on every visit
    and every build. Grid lines are 1-based. The title is no longer a
-   tile — it is the section's heading, above the collage (the intro).
-   Desktop 11×6: the phone photograph a 1×2 block at the centre, at its
-   natural size (Nahian, 2026-09-24: the 4×4 was too big), the 32
-   photographs packed round it in blocks of 1×1, 2×1, 1×2 and 2×2.
-   Phone 6×8: the phone 2×2 at the centre, eighteen photographs. */
+   tile â€” it is the section's heading, above the collage (the intro).
+   Desktop 11Ã—6: the phone photograph a 1Ã—2 block at the centre, at its
+   natural size (Nahian, 2026-09-24: the 4Ã—4 was too big), the 32
+   photographs packed round it in blocks of 1Ã—1, 2Ã—1, 1Ã—2 and 2Ã—2.
+   Phone 6Ã—8: the phone 2Ã—2 at the centre, eighteen photographs. */
 export type Block = { c: number; r: number; w: number; h: number };
 export type Mosaic = {
   cols: number;
@@ -372,7 +372,7 @@ const SIZES: [number, number][] = [
 
 /** Pack exactly `n` blocks into the free cells, filling every one: at
     each first-empty cell (row by row) take a random size that fits and
-    keeps the count reachable — never fewer cells left than photos, never
+    keeps the count reachable â€” never fewer cells left than photos, never
     more than four per photo. Null if the dice paint it into a corner. */
 function pack(m: Mosaic, n: number, rand: () => number): Block[] | null {
   const taken: boolean[][] = Array.from({ length: m.rows + 1 }, () =>
@@ -420,9 +420,9 @@ export function mosaicTiles(m: Mosaic): MosaicTile[] {
     blocks = pack(m, n, rand);
   }
   if (!blocks) throw new Error(`mosaic: no packing of ${n} photographs found`);
-  /* uneven overlap, 4–9% of the block on each side */
+  /* uneven overlap, 4â€“9% of the block on each side */
   const over = (): Overlap => [0, 0, 0, 0].map(() => 4 + Math.round(rand() * 5)) as Overlap;
-  /* landing order: a Fisher–Yates shuffle of the photographs */
+  /* landing order: a Fisherâ€“Yates shuffle of the photographs */
   const land = blocks.map((_, i) => i);
   for (let i = land.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
@@ -477,11 +477,11 @@ export function initServices() {
   /* ---- the intro: measured once per resize ------------------------
      Every state is the line under ONE transform, found from a focus
      point in the line (f), a scale (s) and where on screen the focus
-     should sit (P): translate = P − L − s·f, origin top-left, L being
+     should sit (P): translate = P âˆ’ L âˆ’ sÂ·f, origin top-left, L being
      the line's laid-out position in the pin.
 
-     Crisp type: the line is LAID OUT at its biggest — the size at which
-     "Motion" fills the zoom — and every state is a scale DOWN from there,
+     Crisp type: the line is LAID OUT at its biggest â€” the size at which
+     "Motion" fills the zoom â€” and every state is a scale DOWN from there,
      the resting heading included. Scaling text up enlarges a bitmap and
      blurs it (Nahian, 2026-09-24: "the resolution of the copy is bad");
      scaling down stays sharp. CSS sets the heading size, for no JS. */
@@ -609,8 +609,8 @@ export function initServices() {
     const navH = resolvePx('var(--nav-h)', 72);
     const gap = resolvePx('var(--s-6)', 32);
 
-    /* Rest B by formula — the body's height on desktop, its width on a
-       phone — then the CSS device sized and centred once, its display,
+    /* Rest B by formula â€” the body's height on desktop, its width on a
+       phone â€” then the CSS device sized and centred once, its display,
        corners and island set from the handset's proportions. */
     if (device) {
       const B = MODEL.body;
@@ -635,7 +635,7 @@ export function initServices() {
       device.style.setProperty('--screen-r', `${screenR.toFixed(1)}px`);
       device.style.setProperty('--rim', `${rim.toFixed(1)}px`);
       /* The pin's camera, read, not assumed. The placement is solved for
-         the DISPLAY — the photographed corners are the screen's — about the
+         the DISPLAY â€” the photographed corners are the screen's â€” about the
          device's centre, which is the display's; the tilt is the photo's. */
       const cs = getComputedStyle(pin);
       const d = parseFloat(cs.perspective) || 1500;
@@ -653,15 +653,15 @@ export function initServices() {
       if (isPhone()) {
         /* The band the phone rests in: below the nav, above the copy,
            with WALL.rest.phoneCopyGap reserved as clear air between the
-           handset and the title — the one dial for how big it reads
+           handset and the title â€” the one dial for how big it reads
            (Nahian, 2026-09-20). The phone is centred in that band and
            scaled to fit it. */
         const copyH = copy?.offsetHeight ?? 0;
         const gap = resolvePx(WALL.rest.phoneCopyGap, 64);
         const top = navH + gutter;
-        /* the copy sits at --search-space, not the gutter, so it clears
-           the dock in the corner (Services.astro) */
-        const copyBottom = resolvePx('var(--search-space)', 140);
+        /* the copy sits at --svc-copy-bottom, low in the frame and clear
+           of the dock by being centred and narrow (Services.astro) */
+        const copyBottom = resolvePx('var(--svc-copy-bottom)', 32);
         const bottom = vh - copyBottom - copyH - gap;
         const avail = Math.max(0, bottom - top);
         const s = Math.min(1, avail / dh, (vw - 2 * gutter) / dw);
@@ -704,7 +704,7 @@ export function initServices() {
       ry: (swayY + nudge.y) * DEG * l,
     };
   }
-  /* Pointer position as a fraction of the frame — no layout read: the
+  /* Pointer position as a fraction of the frame â€” no layout read: the
      pinned frame fills the viewport. Cursor right: the right side comes
      toward you (a negative rotateY); cursor up: the top does. */
   pin.addEventListener(
@@ -731,9 +731,9 @@ export function initServices() {
     );
   }
   /* After the emergence: the slide, the lean and the life, one transform.
-     The lean turns the panel about its BOTTOM edge — CSS turns about the
+     The lean turns the panel about its BOTTOM edge â€” CSS turns about the
      centre, so the centre is carried back by what the turn moved the
-     bottom edge: up (1 − cos t)·h/2 and in sin t·h/2. */
+     bottom edge: up (1 âˆ’ cos t)Â·h/2 and in sin tÂ·h/2. */
   function restAt(p: number, now: number): string {
     const L = liveAt(p, now);
     const l = cubicInOut(ramp(p, WALL.restEnd, WALL.slideEnd));
@@ -755,7 +755,7 @@ export function initServices() {
       device.style.opacity = live ? ramp(e, 0, WALL.deviceFadeIn).toFixed(3) : '0';
       device.style.transform = p <= WALL.emergeEnd ? poseAt(1 - e) : restAt(p, now);
     }
-    /* The wall — the hand with it — tips back as ONE plane, hinged at its
+    /* The wall â€” the hand with it â€” tips back as ONE plane, hinged at its
        bottom edge, and recedes as the phone lifts out; the ground turns
        white beneath, and the nav goes solid over it. */
     if (wallEl) {
@@ -802,7 +802,7 @@ export function initServices() {
       const ty = Py - intro.L.y - s * (intro.h / 2);
       introLine.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${s.toFixed(5)})`;
     };
-    /* settled: the heading, centred in its band — write it once */
+    /* settled: the heading, centred in its band â€” write it once */
     if (zout >= 1) {
       if (introDone === 'rest') return;
       introDone = 'rest';
@@ -867,9 +867,9 @@ export function initServices() {
 
   /* ---- the wall: the tiles land, one by one, from the front ---------
      Tile k, in landing order, flies over
-     [start, start + flight]: at t it is scaled s = 1 + (from − 1)(1 − e)
+     [start, start + flight]: at t it is scaled s = 1 + (from âˆ’ 1)(1 âˆ’ e)
      about its own centre, and carried out along the ray from the frame's
-     centre through its cell by (s − 1) — so it projects from in front of
+     centre through its cell by (s âˆ’ 1) â€” so it projects from in front of
      the wall, not from the side. e is an ease-out; opacity comes up over
      the first `fade` of the flight. One transform and one opacity per
      moving tile per frame, and nothing for a tile that is not moving. */
@@ -1003,7 +1003,7 @@ export function initServices() {
         return { progress: st.progress };
       },
       /* Where the CSS device's corners actually render, via four point-sized
-         children under the live transform — to check the solve against
+         children under the live transform â€” to check the solve against
          the browser's own projection. */
       corners() {
         if (!device) return [];
