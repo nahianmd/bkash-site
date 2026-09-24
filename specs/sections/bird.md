@@ -252,11 +252,26 @@ little bit zoomed in, and the merchant will be in customer's position." A clean
 | middle   | centre     | Faysal | **Rahim**  |
 | flat     | lower      | Rahim  | **Amena**  |
 
-All three fit their new triangle at `fill 0.7`. The agent's "little bit zoomed
-in" is `fill 0.82` with `bg 0.188` — both dials together, because `fill` alone
-enlarges the figure against an unchanged street and reads as him stepping
-forward rather than as a tighter shot. ~17% in; the background's upscale goes
-1.59x to 1.86x.
+**Then the agent and customer traded back**, same day — "let's try switching
+current agent and customer" — leaving the arrangement as built:
+
+| facet    | position   | who        | role     |
+| -------- | ---------- | ---------- | -------- |
+| top wing | upper left | **Faysal** | merchant |
+| middle   | centre     | **Amena**  | customer |
+| flat     | lower      | **Rahim**  | agent    |
+
+All three fit their triangle. The agent's "little bit zoomed in" is `fill 0.82`
+with `bg 0.188` — both dials together, because `fill` alone enlarges the figure
+against an unchanged street and reads as him stepping forward rather than as a
+tighter shot. ~17% in; the background's upscale goes 1.59x to 1.86x.
+
+That tuning is keyed to the **person**, so it followed Rahim into the flat
+facet on the second swap. The flat facet is short (263 against the middle's
+463), so 0.82 there is a smaller figure than 0.82 in the middle was — his
+window is now the smallest of the three at 213x286 device px. If the tighter
+framing was meant for the middle SLOT rather than for Rahim, the two numbers
+move to whoever sits there.
 
 ### Resolved — the agent's triangle is facet 0
 

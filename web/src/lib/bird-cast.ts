@@ -40,12 +40,19 @@ import { FACET, facetBox, centroidPx } from './bird-shape';
      middle     Faysal -> Rahim
      flat       Rahim  -> Amena
 
+   Then the agent and the customer traded again, same day ("let's try
+   switching current agent and customer"), leaving:
+
+     top wing   Faysal    merchant
+     middle     Amena     customer
+     flat       Rahim     agent
+
    Listed in narrative order — customer, agent, merchant — which is the
    hero's beat order too. The order is presentational only: the three
    windows clip to disjoint triangles and never overlap. */
 export const CAST = [
-  { facet: FACET.flat, id: 'amena', role: 'Customer' },
-  { facet: FACET.middle, id: 'rahim', role: 'Agent' },
+  { facet: FACET.middle, id: 'amena', role: 'Customer' },
+  { facet: FACET.flat, id: 'rahim', role: 'Agent' },
   { facet: FACET.topWing, id: 'faysal', role: 'Merchant' },
 ] as const;
 
@@ -75,8 +82,13 @@ export const CAST = [
    a triangle that narrows downward. */
 export const CAST_TUNING: Record<string, { fill: number; bg: number; lift: number }> = {
   amena: { fill: 0.7, bg: 0.22, lift: 0 },
-  /* "a little bit zoomed in" (Nahian, 2026-09-24) for the agent, now in
-     the middle facet. BOTH dials move, and together: `fill` alone would
+  /* "a little bit zoomed in" (Nahian, 2026-09-24) for the agent. Keyed to
+     the PERSON, not the slot, so it followed Rahim out of the middle
+     facet and into the flat one when he and Amena traded. The flat facet
+     is short — 263 against the middle's 463 — so 0.82 there is a smaller
+     figure than 0.82 in the middle was. If the tighter framing was meant
+     for the middle SLOT rather than for Rahim, move these two numbers to
+     whoever sits there. BOTH dials move, and together: `fill` alone would
      enlarge the figure against an unchanged street, which reads as him
      stepping forward rather than as a tighter shot. Moving `bg` with it
      by the same ratio is what makes it a zoom. ~17% in; the background's
