@@ -397,12 +397,15 @@
   line-height: 1.4;
   letter-spacing: 0.01em;
 }
-/* Single uppercase tracking value. The original had six. */
+/* The small title over a heading. Sentence case, not capitals (Nahian,
+   2026-09-24: the CEO does not want block letters anywhere). Without
+   the capitals it needs the next step up and no wide tracking, or it
+   reads as a caption; the weight and each use's colour keep it a
+   title. */
 .t-eyebrow {
-  font-size: var(--fs-xs);
-  line-height: 1;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: var(--fs-sm);
+  line-height: 1.3;
+  letter-spacing: 0;
   font-weight: 600;
 }
 
