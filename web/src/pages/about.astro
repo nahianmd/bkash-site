@@ -565,6 +565,27 @@ const STAT_ICONS: Record<string, string> = {
     color: var(--pink);
     margin-bottom: var(--s-4);
   }
+  /* Phone: the icon moves into the empty right of each full-width tile
+     (Nahian, 2026-09-24), centred against the figure and its label, a
+     size up so it balances the display-size number beside it. */
+  @media (max-width: 767px) {
+    .stats__item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: var(--s-5);
+    }
+    .stats__item > :not(.stats__icon) {
+      grid-column: 1;
+    }
+    .stats__icon {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      align-self: center;
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 0;
+    }
+  }
   .stats__num {
     font-size: var(--fs-display);
     line-height: 1;
