@@ -16,10 +16,8 @@
    no signal whether you have reached the end of the page or the scroll
    has jammed.
 */
-import { Picture } from 'astro:assets';
 import Logo from './Logo.astro';
 import { AMAR_SOCIAL, FOOTER_COLUMNS, SOCIAL } from '../lib/nav-data';
-import amarBkash from '../assets/img/brand/amar-bkash.png';
 
 const YEAR = new Date().getFullYear();
 
@@ -47,12 +45,16 @@ const ICONS: Record<string, string> = {
 <footer class="foot">
   <div class="wrap">
     <div class="foot__grid">
-      {/* Left: the mark, and the four real accounts. */}
+      {/* Left: the one mark, then the accounts under two titles — the
+          company's own, and the #AmarbKash community's (Nahian,
+          2026-09-24; the #AmarbKash lockup that used to head the second
+          row is gone). */}
       <div class="foot__brand">
         <a class="foot__logo" href="/" aria-label="bKash home">
           <Logo class="foot__mark" />
         </a>
-        <ul class="foot__social" aria-label="bKash Limited elsewhere">
+        <p class="t-eyebrow foot__head foot__social-head">Official platforms</p>
+        <ul class="foot__social" aria-label="Official platforms">
           {SOCIAL.map((s) => (
             <li>
               <a
@@ -70,24 +72,11 @@ const ICONS: Record<string, string> = {
           ))}
         </ul>
 
-        {/* #AmarbKash, beneath the company's own mark and links. The
-            supplied lockup was dark ink on white; `tools/two-tone.mjs`
-            trimmed it, keyed the white out and recoloured the dark half
-            to the light ink this ground needs, keeping the pink. */}
-        <Picture
-          src={amarBkash}
-          alt="#আমারবিকাশ"
-          widths={[amarBkash.width]}
-          sizes="10rem"
-          formats={['avif', 'webp']}
-          fallbackFormat="webp"
-          layout="none"
-          loading="lazy"
-          pictureAttributes={{ class: 'foot__amar' }}
-        />
-
         {AMAR_SOCIAL.length > 0 && (
-          <ul class="foot__social foot__social--amar" aria-label="Amar bKash elsewhere">
+          <p class="t-eyebrow foot__head foot__social-head">Community platforms</p>
+        )}
+        {AMAR_SOCIAL.length > 0 && (
+          <ul class="foot__social" aria-label="Community platforms">
             {AMAR_SOCIAL.map((s) => (
               <li>
                 <a
@@ -215,29 +204,13 @@ const ICONS: Record<string, string> = {
     outline-offset: 2px;
   }
 
-  /* The second brand's row sits tighter under its own mark than the
-     first does, because the mark above it is small. */
-  .foot__social--amar {
-    margin-top: var(--s-3);
+  /* Each row of accounts under its title: the columns' own head style,
+     spaced off the mark or the row above, the icons close beneath. */
+  .foot__social-head {
+    margin: var(--s-6) 0 0;
   }
-
-  /* The second mark sits under the first at the same left edge. Its
-     source is only 260px of ink, so it is held to a size it can carry.
-
-     Scoped through .foot, and :global on the picture itself: <Picture>
-     renders its own elements and they do not carry this component's
-     scope attribute, so a bare `.foot__amar` rule matches nothing. */
-  .foot :global(.foot__amar) {
-    display: block;
-    width: 9.5rem;
-    max-width: 100%;
-    margin-top: var(--s-6);
-  }
-
-  .foot :global(.foot__amar img) {
-    display: block;
-    width: 100%;
-    height: auto;
+  .foot__social-head + .foot__social {
+    margin-top: var(--s-2);
   }
 
   /* ---- the link columns ---- */

@@ -50,12 +50,13 @@ export type Social = { label: string; href: string };
    The Amar bKash accounts are not in the sheet — Nahian supplied them
    on 2026-09-20, verbatim. TikTok is theirs alone; the company's row
    has none. */
+/* Wikipedia leads the official row (Nahian, 2026-09-24). */
 export const SOCIAL: Social[] = [
+  { label: 'Wikipedia', href: 'https://en.wikipedia.org/wiki/BKash' },
   { label: 'Facebook', href: 'https://www.facebook.com/bkashlimited' },
   { label: 'YouTube', href: 'https://www.youtube.com/bkashlimited' },
   { label: 'Instagram', href: 'https://www.instagram.com/bkashlimited' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/bkash' },
-  { label: 'Wikipedia', href: 'https://en.wikipedia.org/wiki/BKash' },
 ];
 
 export const AMAR_SOCIAL: Social[] = [
