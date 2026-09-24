@@ -470,22 +470,37 @@ export function initServices() {
   const words = [...section.querySelectorAll<HTMLElement>('[data-word]')];
 
   /* ---- the intro: measured once per resize ------------------------
-     The line rests as the heading (its layout position, L, in the pin).
-     Every other state is the same line under ONE transform, found from
-     a focus point in the line (f), a scale (s) and where on screen the
-     focus should sit (P): translate = P − L − s·f, origin top-left. */
+     Every state is the line under ONE transform, found from a focus
+     point in the line (f), a scale (s) and where on screen the focus
+     should sit (P): translate = P − L − s·f, origin top-left, L being
+     the line's laid-out position in the pin.
+
+     Crisp type: the line is LAID OUT at its biggest — the size at which
+     "Motion" fills the zoom — and every state is a scale DOWN from there,
+     the resting heading included. Scaling text up enlarges a bitmap and
+     blurs it (Nahian, 2026-09-24: "the resolution of the copy is bad");
+     scaling down stays sharp. CSS sets the heading size, for no JS. */
   const intro = {
     L: { x: 0, y: 0 },
     w: 0,
     h: 0,
     centres: [] as number[],
     stage: { x: 0, y: 0 },
+    rest: { x: 0, y: 0 },
     sStage: 1,
-    sZoom: 1,
+    sRest: 1,
     last: [] as string[],
   };
   function measureIntro() {
     if (!introBox || !introLine || words.length === 0) return;
+    const I = WALL.intro;
+    const key = words[words.length - 1];
+    /* at the heading's own size first: how big the zoom must be */
+    introLine.style.fontSize = '';
+    const fsRest = parseFloat(getComputedStyle(introLine).fontSize) || 40;
+    const k = (I.zoomWidth * vw) / Math.max(1, key.offsetWidth);
+    /* then lay the line out at that size, and measure it there */
+    introLine.style.fontSize = `${(fsRest * k).toFixed(2)}px`;
     intro.L = {
       x: introBox.offsetLeft + introLine.offsetLeft,
       y: introBox.offsetTop + introLine.offsetTop,
@@ -495,11 +510,13 @@ export function initServices() {
     intro.centres = words.map((w) => w.offsetLeft + w.offsetWidth / 2);
     const navH = resolvePx('var(--nav-h)', 72);
     intro.stage = { x: vw / 2, y: (navH + vh) / 2 };
-    const fs = parseFloat(getComputedStyle(introLine).fontSize) || 40;
-    const I = WALL.intro;
-    intro.sStage = Math.min(I.stageFont.max, vw * I.stageFont.vw) / fs;
-    const key = words[words.length - 1];
-    intro.sZoom = (I.zoomWidth * vw) / Math.max(1, key.offsetWidth);
+    intro.rest = {
+      x: introBox.offsetLeft + introBox.offsetWidth / 2,
+      y: introBox.offsetTop + introBox.offsetHeight / 2,
+    };
+    /* scales relative to the laid-out size: the zoom is 1 */
+    intro.sRest = 1 / k;
+    intro.sStage = Math.min(I.stageFont.max, vw * I.stageFont.vw) / (fsRest * k);
     intro.last = words.map(() => '');
     introDone = '';
   }
@@ -761,11 +778,16 @@ export function initServices() {
     const I = WALL.intro;
     const n = words.length;
     const zout = cubicInOut(ramp(p, I.zoomOut[0], I.zoomOut[1]));
-    /* settled: the heading, as laid out — write it once */
+    const place = (s: number, fx: number, Px: number, Py: number) => {
+      const tx = Px - intro.L.x - s * fx;
+      const ty = Py - intro.L.y - s * (intro.h / 2);
+      introLine.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${s.toFixed(5)})`;
+    };
+    /* settled: the heading, centred in its band — write it once */
     if (zout >= 1) {
       if (introDone === 'rest') return;
       introDone = 'rest';
-      introLine.style.transform = '';
+      place(intro.sRest, intro.w / 2, intro.rest.x, intro.rest.y);
       words.forEach((w, k) => {
         w.style.opacity = '';
         w.style.transform = '';
@@ -795,20 +817,18 @@ export function initServices() {
     let Px: number;
     let Py: number;
     if (zout > 0) {
-      s = lg(intro.sZoom, 1, zout);
+      s = lg(1, intro.sRest, zout);
       fx = mix(fKey, fRest, zout);
-      Px = mix(intro.stage.x, intro.L.x + fRest, zout);
-      Py = mix(intro.stage.y, intro.L.y + intro.h / 2, zout);
+      Px = mix(intro.stage.x, intro.rest.x, zout);
+      Py = mix(intro.stage.y, intro.rest.y, zout);
     } else {
       const zin = cubicInOut(ramp(p, I.zoomIn[0], I.zoomIn[1]));
-      s = lg(intro.sStage, intro.sZoom, zin);
+      s = lg(intro.sStage, 1, zin);
       fx = mix(fStage, fKey, zin);
       Px = intro.stage.x;
       Py = intro.stage.y;
     }
-    const tx = Px - intro.L.x - s * fx;
-    const ty = Py - intro.L.y - s * (intro.h / 2);
-    introLine.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
+    place(s, fx, Px, Py);
     /* the words: in from the right as they fade up; the white ones dim
        while "Motion" holds the stage */
     const dimBy = rev[n - 1] * (1 - zout);

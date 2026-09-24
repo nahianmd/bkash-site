@@ -215,11 +215,13 @@ const posCss =
     letter-spacing: -0.022em;
     font-weight: 700;
     transform-origin: 0 0;
-    will-change: transform;
   }
+  /* No will-change on the line or its words, on purpose: it pins the
+     text to the raster it was first drawn at, and a scaled line must be
+     redrawn at each size to stay crisp. services.ts lays the line out at
+     its largest and only ever scales it down. */
   .intro__word {
     display: inline-block;
-    will-change: transform, opacity;
   }
   .intro__word--key {
     color: var(--pink);
