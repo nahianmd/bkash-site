@@ -266,9 +266,15 @@ const walls: { key: 'desktop' | 'phone'; cols: WallTile[][] }[] = [
     inset: 0;
     border-radius: inherit;
     background: var(--device-rim);
-    /* 2px, not the service ring's 1px (Nahian, 2026-09-24): at 1px the
-       line, turned and rolled in 3D, broke up into a wavy stair-step. */
-    box-shadow: 0 0 0 2px var(--pink);
+    box-shadow: 0 0 0 1px var(--pink);
+  }
+  /* 2px on a phone (Nahian, 2026-09-24): at 1px the line, turned and
+     rolled in 3D, broke up into a wavy stair-step there. Desktop keeps
+     the service ring's 1px. */
+  @media (max-width: 767px) {
+    .device__face {
+      box-shadow: 0 0 0 2px var(--pink);
+    }
   }
   /* The shadow comes from the screen, not the outer line (Nahian,
      2026-09-24): the screen sits a hair proud of the rim and casts a
