@@ -943,13 +943,22 @@ const STAT_ICONS: Record<string, string> = {
     margin-top: var(--s-5);
     color: var(--on-night-2);
   }
+  /* The whole illustration, uncropped (Nahian, 2026-09-24): the old cap
+     at 62% of the frame's height cut the sky and the heads away on a
+     wide screen. It is full width at its own 16:9. */
   .road :global(.road__img) {
     width: 100%;
     height: auto;
-    max-height: calc(var(--vh) * 0.62);
-    object-fit: cover;
-    object-position: 50% 42%;
     display: block;
+  }
+  /* Desktop: the copy runs the full width of the page, not the 46rem
+     heading measure, so there is no empty column to its right. */
+  @media (min-width: 768px) {
+    .road__head,
+    .road__head :global(.t-lead),
+    .road__head :global(.t-body) {
+      max-width: none;
+    }
   }
 
   @media (max-width: 1100px) {
