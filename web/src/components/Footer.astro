@@ -227,11 +227,17 @@ const ICONS: Record<string, string> = {
 
   /* Each row of accounts under its title: the columns' own head style,
      spaced off the mark or the row above, the icons close beneath. */
+  /* Tighter (Nahian, 2026-09-26). The icons keep 44px tap targets, whose
+     12px of padding already reads as space, so the row is drawn up into
+     it and the gaps are set against the glyphs, not the targets. */
   .foot__social-head {
-    margin: var(--s-6) 0 0;
+    margin: var(--s-4) 0 0;
+  }
+  .foot__social + .foot__social-head {
+    margin-top: var(--s-2);
   }
   .foot__social-head + .foot__social {
-    margin-top: var(--s-2);
+    margin-top: calc(-1 * var(--s-2));
   }
 
   /* ---- the link columns ---- */
