@@ -79,15 +79,28 @@ export const CAST_TUNING: Record<string, { zoom: number; dx: number; dy: number 
      under-fills vertically, so there is no "down" past +0.025, where her
      bottom edge meets the box's and the whole 23-unit gap sits at the
      top. That apex is the cheapest place for it: what shows is a wedge
-     of roughly 12 x 12 CSS px, not a band. zoom 0.97 halves it. */
-  customer: { zoom: 0.95, dx: -0.116, dy: 0.025 },
+     of roughly 15 x 15 CSS px, not a band.
+
+     Then a step down, 2026-09-24. She has no room left underneath — her
+     bottom edge already met the box's — so moving down only grows the
+     top gap: 23 units to 32, and the wedge from about 15 x 15 to 21 x 21
+     CSS px. If that notch reads as a fault rather than as shape, zoom
+     0.97 halves it and zoom 1 removes it, at the cost of the zoom-out. */
+  customer: { zoom: 0.95, dx: -0.116, dy: 0.045 },
   /* Left 20%, which a pure pan could not do: at cover this scene is
      441.9 units wide against a facet of 442, so the width fits EXACTLY
      and there was no slack to move through. Slack costs zoom, 1 unit of
      travel per 2 of zoom-in, so 20% took 1.4 — and at 1.4 the -0.2 lands
      exactly on the slack: fully left, no gap. The price is the vertical
-     crop going 31% -> 51%. dy holds his head where it was. */
-  agent: { zoom: 1.4, dx: -0.2, dy: 0.092 },
+     crop going 31% -> 51%.
+
+     dy was briefly 0.092 and WRONG — converting it to the signed model
+     used the zoom-1.0 height rather than the zoom-1.4 one, which put the
+     window at 21.1% of the scene while his head is at about 17.1%. It
+     cut the top of his head off. 0.209 restores the original framing;
+     0.26 is that plus the step down asked for on 2026-09-24, and leaves
+     4.3% of headroom instead of 1.8%. */
+  agent: { zoom: 1.4, dx: -0.2, dy: 0.26 },
   merchant: { zoom: 1, dx: 0, dy: 0 },
 };
 
