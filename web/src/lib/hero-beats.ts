@@ -46,7 +46,9 @@ export const PLATE = { w: 1672, h: 941 };
    2026-09-22 on Nahian's ask, and zoomed in with it.
 
    Re-derived 2026-09-24 after all three cut boxes were re-placed against
-   the new plate and Faysal's new artwork. The cams pasted with those
+   the new plate and Faysal's new artwork, and again 2026-09-27 for
+   Amena's new artwork (1254x1212, aspect 1.035 against the old 0.920 —
+   she is now marginally wider than tall). Rahim and Faysal did not move. The cams pasted with those
    boxes were the OLD derived ones and had gone stale exactly as this
    comment warns: Amena had drifted +0.0221 in x, Rahim +0.0102.
 
@@ -63,8 +65,8 @@ export const BEATS: Beat[] = [
   { id: 'open', cam: { x: 0.5, y: 0.5, s: 1 } },
   {
     id: 'amena',
-    cam: { x: 0.3879, y: 0.5007, s: 4 },
-    cut: { x: 0.3739, y: 0.4737, w: 0.028, soft: 0 },
+    cam: { x: 0.3881, y: 0.4988, s: 4 },
+    cut: { x: 0.3726, y: 0.4722, w: 0.031, soft: 0 },
   },
   {
     id: 'rahim',
