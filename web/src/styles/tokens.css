@@ -60,8 +60,6 @@
      deeper so the two read as separate surfaces, and its shadow on the
      paper ground */
   --device-rim: #f4f2f3;
-  /* the soft edge shared by every board portrait (about) */
-  --board-vignette: rgb(25 19 22 / 16%);
   /* the pink line along each collage photograph's edges (services) */
   --collage-edge: 1.5px;
   --device-edge: #e8e4e6;
