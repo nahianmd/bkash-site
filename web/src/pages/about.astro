@@ -218,35 +218,76 @@ const STAT_ICONS: Record<string, string> = {
     </section>
 
     <!-- ============================== BOARD ============================== -->
-    <section class="ab-section ab-section--tint" aria-label="Board of directors">
+    <section class="ab-section" aria-label="Board of directors">
       <div class="wrap">
-        <div class="ab-head">
-          <p class="t-eyebrow ab-head__eyebrow" data-reveal>
-            Leadership
-          </p>
-          <h2 class="t-h1" data-reveal>
-            Board of directors
-          </h2>
-        </div>
+        {/* After a reference (Nahian, 2026-09-26): black-and-white square
+            portraits in a checkered grid with white cells between them,
+            the heading set inside the grid. Each name sits on a black band
+            at the photograph's foot; hover brings the colour back and
+            raises the band to the role and the biography's opening; a
+            click, tap or Enter opens that director's full profile in a
+            dialog (about.ts). Biographies are bkash.com's, verbatim. */}
         <div class="board">
-          {BOARD.map((p) => (
-            <figure class="board__card" data-reveal data-reveal-group="board">
+          <div class="board__head">
+            <p class="t-eyebrow ab-head__eyebrow">Leadership</p>
+            <h2 class="t-h1 board__title">Board of directors</h2>
+          </div>
+          {BOARD.map((p, i) => (
+            <button
+              type="button"
+              class={`board__tile board__tile--${i}`}
+              data-board-open={i}
+              aria-haspopup="dialog"
+              data-reveal
+              data-reveal-group="board"
+            >
               <Image
                 src={boardImg(p.file)}
-                alt={p.name}
-                width={480}
+                alt=""
+                width={Math.min(boardImg(p.file).width, 480)}
                 layout="none"
                 class="board__img"
                 loading="lazy"
               />
-              <figcaption>
-                <p class="board__name">{p.name}</p>
-                <p class="board__role t-sm">{p.role}</p>
-              </figcaption>
-            </figure>
+              <span class="board__band">
+                <span class="board__name">{p.name}</span>
+                <span class="board__more">
+                  <span class="board__role">{p.role}</span>
+                  <span class="board__excerpt">{p.bio[0]}</span>
+                  <span class="board__cue">View profile →</span>
+                </span>
+              </span>
+            </button>
           ))}
         </div>
       </div>
+
+      {/* One dialog, a profile per director; about.ts shows the one asked
+          for. Native <dialog>: focus trap, Escape and focus return free. */}
+      <dialog class="profile" data-board-dialog aria-label="Director profile">
+        <button type="button" class="profile__close" data-board-close aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
+        {BOARD.map((p, i) => (
+          <article class="profile__item" data-board-profile={i} hidden>
+            <Image
+              src={boardImg(p.file)}
+              alt={p.name}
+              width={Math.min(boardImg(p.file).width, 560)}
+              layout="none"
+              class="profile__img"
+              loading="lazy"
+            />
+            <div class="profile__text">
+              <p class="t-eyebrow profile__role">{p.role}</p>
+              <h3 class="t-h2 profile__name">{p.name}</h3>
+              {p.bio.map((para) => (
+                <p class="profile__para">{para}</p>
+              ))}
+            </div>
+          </article>
+        ))}
+      </dialog>
     </section>
 
     <!-- ============================== CEO QUOTE ============================== -->
@@ -673,45 +714,251 @@ const STAT_ICONS: Record<string, string> = {
     height: auto;
   }
 
-  /* ---- board: one crop, one caption block ----
-     The portraits run 175px to 2400px across in mixed aspects. They were
-     monochrome by default, which made twelve sources read as one set;
-     Nahian, 2026-09-20: natural colour instead, so the crop and the
-     caption block are what hold the set together (Rule 1 — documentary
-     left real).
-
-     Hover changes the tile's SHAPE, not its size: two opposite corners
-     open from --r-md to --r-xl and back, so the square becomes a leaf.
-     Nothing reflows and no neighbour moves — the people row's rejected
-     grow-on-hover is not repeated here. */
+  /* ---- board: a checkered grid of portraits, profiles in a dialog ----
+     After a reference (Nahian, 2026-09-26). Square black-and-white
+     portraits with white cells between them, the heading inside the grid.
+     Desktop 6 × 3: row one at columns 1 3 4 6, row two 1 2 [heading
+     3–4] 5 6, row three 2 3 5 6 — twelve tiles, four white cells. Phone:
+     the heading across the top, two columns beneath. */
   .board {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
-    gap: clamp(1rem, 2vw, 1.75rem);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: clamp(0.5rem, 1vw, 0.875rem);
   }
-  .board__card {
+  .board__head {
+    grid-area: 2 / 3 / 3 / 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--s-4) var(--s-5);
+  }
+  .board__title {
     margin: 0;
   }
+  .board__tile--0 { grid-area: 1 / 1; }
+  .board__tile--1 { grid-area: 1 / 3; }
+  .board__tile--2 { grid-area: 1 / 4; }
+  .board__tile--3 { grid-area: 1 / 6; }
+  .board__tile--4 { grid-area: 2 / 1; }
+  .board__tile--5 { grid-area: 2 / 2; }
+  .board__tile--6 { grid-area: 2 / 5; }
+  .board__tile--7 { grid-area: 2 / 6; }
+  .board__tile--8 { grid-area: 3 / 2; }
+  .board__tile--9 { grid-area: 3 / 3; }
+  .board__tile--10 { grid-area: 3 / 5; }
+  .board__tile--11 { grid-area: 3 / 6; }
+
+  .board__tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    background: var(--paper-2);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+  }
   .board :global(.board__img) {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5;
+    height: 100%;
     object-fit: cover;
     object-position: 50% 20%;
-    border-radius: var(--r-md);
-    margin-bottom: var(--s-3);
-    background: var(--paper-2);
-    transition: border-radius var(--t-base) var(--ease);
+    filter: grayscale(1);
+    transition:
+      filter var(--t-slow) var(--ease-io),
+      transform var(--t-slow) var(--ease);
   }
-  .board__card:hover :global(.board__img) {
-    border-radius: var(--r-xl) var(--r-md);
+  /* The name on a black band at the foot; on hover it rises to show the
+     role, the biography's opening, and the cue to open the profile. */
+  .board__band {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--s-2) var(--s-3);
+    background: var(--board-band);
+    color: var(--on-night);
   }
   .board__name {
+    display: block;
+    font-size: var(--fs-sm);
     font-weight: 600;
-    letter-spacing: -0.012em;
+    line-height: 1.3;
+  }
+  .board__more {
+    display: grid;
+    gap: var(--s-1);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      max-height var(--t-base) var(--ease),
+      opacity var(--t-base) var(--ease-io),
+      margin var(--t-base) var(--ease);
   }
   .board__role {
-    color: var(--ink-3);
+    font-size: var(--fs-xs);
+    color: var(--pink-lift);
+    font-weight: 600;
+  }
+  .board__excerpt {
+    font-size: var(--fs-xs);
+    line-height: 1.4;
+    color: var(--on-night-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .board__cue {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--on-night);
+  }
+  @media (hover: hover) {
+    .board__tile:hover :global(.board__img),
+    .board__tile:focus-visible :global(.board__img) {
+      filter: none;
+      transform: scale(1.04);
+    }
+    .board__tile:hover .board__more,
+    .board__tile:focus-visible .board__more {
+      max-height: 8rem;
+      opacity: 1;
+      margin-top: var(--s-2);
+    }
+  }
+  .board__tile:focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 2px;
+  }
+
+  /* Phone: heading on top, two columns, every cell a portrait. */
+  @media (max-width: 767px) {
+    .board {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-2);
+    }
+    .board__head {
+      grid-area: auto;
+      grid-column: 1 / -1;
+      padding: 0 0 var(--s-5);
+    }
+    .board__tile {
+      grid-area: auto !important;
+    }
+  }
+
+  /* ---- the profile dialog ---- */
+  .profile {
+    width: min(56rem, calc(100vw - 2 * var(--gutter)));
+    max-height: calc(var(--vh) * 0.86);
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-lg);
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: var(--e-4);
+    overflow: hidden;
+  }
+  .profile::backdrop {
+    background: var(--scrim-dialog);
+  }
+  .profile[open] {
+    display: flex;
+  }
+  .profile__item {
+    display: grid;
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    width: 100%;
+    max-height: calc(var(--vh) * 0.86);
+  }
+  .profile__item[hidden] {
+    display: none;
+  }
+  .profile :global(.profile__img) {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: 50% 20%;
+    background: var(--paper-2);
+  }
+  .profile__text {
+    overflow-y: auto;
+    padding: var(--s-7) var(--s-7) var(--s-6);
+  }
+  .profile__role {
+    color: var(--pink);
+    margin-bottom: var(--s-2);
+  }
+  .profile__name {
+    margin: 0 0 var(--s-5);
+  }
+  .profile__para {
+    color: var(--ink-2);
+    line-height: 1.65;
+    text-align: justify;
+    hyphens: auto;
+  }
+  .profile__para + .profile__para {
+    margin-top: var(--s-4);
+  }
+  .profile__close {
+    position: absolute;
+    top: var(--s-3);
+    right: var(--s-3);
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-full);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .profile__close:hover {
+    border-color: var(--pink);
+    color: var(--pink);
+  }
+  .profile__close svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  @media (max-width: 767px) {
+    .profile {
+      width: 100vw;
+      max-width: 100vw;
+      max-height: calc(var(--vh) * 0.92);
+      margin: auto 0 0;
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+    }
+    .profile__item {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto minmax(0, 1fr);
+      max-height: calc(var(--vh) * 0.92);
+    }
+    .profile :global(.profile__img) {
+      height: auto;
+      min-height: 0;
+      aspect-ratio: 16 / 11;
+    }
+    .profile__text {
+      padding: var(--s-5) var(--gutter) var(--s-7);
+    }
+    .profile__para {
+      text-align: start;
+    }
   }
 
   /* ---- the CEO ---- */

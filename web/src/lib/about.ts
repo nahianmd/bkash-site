@@ -156,7 +156,30 @@ function initWall(): void {
   });
 }
 
+/* ---- the board: a director's profile in a dialog -------------------
+   Each tile is a button; it opens the one <dialog> showing that
+   director's profile. The native dialog gives the focus trap, Escape and
+   focus return. A click on the dim outside the box closes it too. */
+function initBoard(): void {
+  const dialog = document.querySelector<HTMLDialogElement>('[data-board-dialog]');
+  if (!dialog) return;
+  const profiles = [...dialog.querySelectorAll<HTMLElement>('[data-board-profile]')];
+  const open = (i: number) => {
+    profiles.forEach((p, k) => (p.hidden = k !== i));
+    dialog.showModal();
+    profiles[i]?.querySelector<HTMLElement>('.profile__text')?.scrollTo(0, 0);
+  };
+  document
+    .querySelectorAll<HTMLElement>('[data-board-open]')
+    .forEach((t) => t.addEventListener('click', () => open(Number(t.dataset.boardOpen))));
+  dialog.querySelector('[data-board-close]')?.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+}
+
 export function initAbout(): void {
+  initBoard();
   initReveal();
   initCounters();
   initInvestors();

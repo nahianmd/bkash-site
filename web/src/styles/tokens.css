@@ -60,6 +60,10 @@
      deeper so the two read as separate surfaces, and its shadow on the
      paper ground */
   --device-rim: #f4f2f3;
+  /* the black band carrying a board director's name over the portrait,
+     and the dim behind the profile dialog (about) */
+  --board-band: rgb(11 11 11 / 80%);
+  --scrim-dialog: rgb(11 11 11 / 60%);
   /* the pink line along each collage photograph's edges (services) */
   --collage-edge: 1.5px;
   --device-edge: #e8e4e6;
