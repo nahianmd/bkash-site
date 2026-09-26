@@ -81,12 +81,21 @@ export const CAST_TUNING: Record<string, { zoom: number; dx: number; dy: number 
      top. That apex is the cheapest place for it: what shows is a wedge
      of roughly 15 x 15 CSS px, not a band.
 
-     Then a step down, 2026-09-24. She has no room left underneath — her
-     bottom edge already met the box's — so moving down only grows the
-     top gap: 23 units to 32, and the wedge from about 15 x 15 to 21 x 21
-     CSS px. If that notch reads as a fault rather than as shape, zoom
-     0.97 halves it and zoom 1 removes it, at the cost of the zoom-out. */
-  customer: { zoom: 0.95, dx: -0.116, dy: 0.045 },
+     Then two steps down, 2026-09-24 ("customer needs it more"). She has
+     no room underneath — her bottom edge met the box's at the first step
+     — so going down only grows the gap ABOVE: 23 units, then 32, now 44,
+     and the wedge at the apex from about 15 x 15 to 29 x 29 CSS px.
+     Nothing more of the scene comes into view either; she under-fills,
+     so the whole height is already showing and this only moves her.
+
+     THE WAY OUT, if that notch reads as a fault rather than as shape:
+     zoom IN instead of out. At zoom 1.14 with the same dy she sits
+     exactly this low with NO gap at all, because overflowing vertically
+     gives the offset something to move through. It costs the full-height
+     view — 12% of her height and 32% of her width cropped — which is the
+     opposite of the zoom-out originally asked for. That trade is
+     Nahian's, not one to make for him. */
+  customer: { zoom: 0.95, dx: -0.116, dy: 0.07 },
   /* Left 20%, which a pure pan could not do: at cover this scene is
      441.9 units wide against a facet of 442, so the width fits EXACTLY
      and there was no slack to move through. Slack costs zoom, 1 unit of
