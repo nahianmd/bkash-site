@@ -46,41 +46,49 @@ export const CAST = [
 
 /* The dials, per window.
 
-   Each scene is COVER-fitted to its facet's bounding box: scaled until it
-   covers the box, keeping its own aspect, with the overflow clipped by
-   the triangle. Something is always cropped, and these choose what.
+   Each scene is COVER-fitted to its facet's bounding box — scaled until
+   it covers the box, keeping its own aspect, overflow clipped by the
+   triangle — and then MOVED.
 
-   `zoom` — 1 is exactly cover, the loosest framing that leaves no gap.
-   Above 1 pushes in and crops more. Below 1 would open a bare corner
-   inside the mark, so it is not useful.
+   `zoom` — 1 is exactly cover. Above 1 pushes in and crops more. Below 1
+   no longer covers, and because a triangle's bounding box is defined by
+   its own three vertices there is no slack anywhere to borrow: any zoom
+   under 1 exposes something. Sometimes that is affordable (see the
+   customer) but it is never free.
 
-   `x`, `y` — which part survives the crop, 0..1. 0.5 centres; 0 keeps the
-   left/top edge, 1 the right/bottom. Only the axis that actually
-   overflows responds, so on a window cropped in width, `y` does nothing.
+   `dx`, `dy` — how far to MOVE THE SCENE, as a fraction of the facet's
+   width and height, from centred. **Negative is left and up, positive is
+   right and down**, and it means the image moves that way — so `dx:
+   -0.2` slides the scene 20% of the facet's width to the left, which
+   brings its RIGHT side into view.
 
-   The agent sits at y 0.3 rather than centred: his is the flat facet, so
-   a third of the scene's HEIGHT is cropped, and centring that crop takes
-   the top of his head. Biasing upward keeps him whole and still holds
-   the QR stand and the table. */
-export const CAST_TUNING: Record<string, { zoom: number; x: number; y: number }> = {
-  /* Out a little and down-left, 2026-09-24. Below 1 the scene no longer
-     covers the facet's box, so a gap opens — and because a triangle's
-     bounding box is defined by its own vertices, there is no slack to
-     borrow: any zoom under 1 exposes something. `y: 0.8` is what makes
-     that affordable. It drives 80% of the gap to the TOP of the box,
-     which for this facet is a single apex, so what shows is a wedge of
-     about 12 x 12 CSS px rather than a band. 0.97 would halve it. */
-  customer: { zoom: 0.95, x: 0.2, y: 0.8 },
-  /* Left, 2026-09-24 — but a pure pan could not do it. At cover this
-     scene is 441.9 units wide against a facet of 442: the width fits
-     EXACTLY, so there is no horizontal slack and `x` had no effect at
-     all. Slack has to be bought with zoom, at 1 unit of shift per 2
-     units of zoom-in, so reaching the asked-for 20% of the facet's width
-     took zoom 1.4. The cost is the vertical crop going 31% -> 51%; `y`
-     stays at 0.3 and his head clears the top edge by about 2% of the
-     scene's height. */
-  agent: { zoom: 1.4, x: 0, y: 0.3 },
-  merchant: { zoom: 1, x: 0.5, y: 0.5 },
+   That sign convention is the whole reason this is written as a signed
+   offset from centre rather than as a 0..1 position. The 0..1 form
+   inverts when the image under-fills instead of overflowing, so the same
+   number meant "move left" in one window and "move right" in another —
+   which is exactly how 2026-09-24's adjustments went out backwards.
+
+   Neither dial is clamped. Pushing past the available slack opens a gap
+   and the hero's street shows through it; the numbers below say where
+   each one stands. */
+export const CAST_TUNING: Record<string, { zoom: number; dx: number; dy: number }> = {
+  /* Out a little, and as far down-left as she goes. Asked for 30% left
+     and bottom; neither is fully reachable. At zoom 0.95 the horizontal
+     slack is 102.8 units, so -0.116 is the furthest left before a gap
+     opens on the right — 30% would need 132.6. And zooming out means she
+     under-fills vertically, so there is no "down" past +0.025, where her
+     bottom edge meets the box's and the whole 23-unit gap sits at the
+     top. That apex is the cheapest place for it: what shows is a wedge
+     of roughly 12 x 12 CSS px, not a band. zoom 0.97 halves it. */
+  customer: { zoom: 0.95, dx: -0.116, dy: 0.025 },
+  /* Left 20%, which a pure pan could not do: at cover this scene is
+     441.9 units wide against a facet of 442, so the width fits EXACTLY
+     and there was no slack to move through. Slack costs zoom, 1 unit of
+     travel per 2 of zoom-in, so 20% took 1.4 — and at 1.4 the -0.2 lands
+     exactly on the slack: fully left, no gap. The price is the vertical
+     crop going 31% -> 51%. dy holds his head where it was. */
+  agent: { zoom: 1.4, dx: -0.2, dy: 0.092 },
+  merchant: { zoom: 1, dx: 0, dy: 0 },
 };
 
 export type Box = { x: number; y: number; w: number; h: number };
@@ -110,7 +118,7 @@ export function castWindows(
   for (const { facet, id, role } of CAST) {
     const img = dims[id];
     if (!img) continue;
-    const t = CAST_TUNING[id] ?? { zoom: 1, x: 0.5, y: 0.5 };
+    const t = CAST_TUNING[id] ?? { zoom: 1, dx: 0, dy: 0 };
 
     const [bx, by, bw, bh] = facetBox(facet);
 
@@ -119,15 +127,21 @@ export function castWindows(
     const w = img.width * s;
     const h = img.height * s;
 
-    /* Pan. (bw - w) is <= 0 under cover, so x = 0 pins the scene's left
-       edge to the box's and x = 1 pins the right; 0.5 centres. The axis
-       that does not overflow contributes zero and ignores its dial. */
+    /* Centre the scene on the box, then move it. The centred term is
+       (bw - w) / 2 whichever way the fit falls, so the offset keeps one
+       meaning — negative left, positive right — for over- and
+       under-filling windows alike. */
     out.push({
       facet,
       id,
       role,
       clipId: `bird-cast-${id}`,
-      img: { x: bx + (bw - w) * t.x, y: by + (bh - h) * t.y, w, h },
+      img: {
+        x: bx + (bw - w) / 2 + t.dx * bw,
+        y: by + (bh - h) / 2 + t.dy * bh,
+        w,
+        h,
+      },
     });
   }
 
