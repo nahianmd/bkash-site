@@ -60,6 +60,12 @@
      deeper so the two read as separate surfaces, and its shadow on the
      paper ground */
   --device-rim: #f4f2f3;
+  /* the board carousel's panels: soft tints, one per person in turn */
+  --bod-tint-1: #f5e4e1;
+  --bod-tint-2: #efe7dc;
+  --bod-tint-3: #e2e9e3;
+  --bod-tint-4: #e0e8ee;
+  --bod-tint-5: #ece4ef;
   /* the pink line along each collage photograph's edges (services) */
   --collage-edge: 1.5px;
   --device-edge: #e8e4e6;

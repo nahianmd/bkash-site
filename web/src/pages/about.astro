@@ -228,41 +228,58 @@ const STAT_ICONS: Record<string, string> = {
             Board of directors
           </h2>
         </div>
-        {/* An editorial list (Nahian, 2026-09-26): names set large, roles
-            beside them, hairlines between. With a pointer, the named
-            person's portrait fades in and follows the cursor (about.ts);
-            on touch each row carries a small portrait of its own. */}
-        <div class="board" data-board>
-          <ul class="board__list">
+        {/* A carousel, after a reference video (Nahian, 2026-09-26): one
+            director large on a soft tinted panel, the rest a filmstrip
+            either side; the next grows into the centre as the strip
+            slides, the panel's tint and the caption crossfading. It
+            advances by itself, and by thumbnail, arrow, key or swipe
+            (about.ts). Every portrait is laid out at the centre's size
+            and only ever scaled DOWN, so none goes soft. */}
+        <div class="bod" data-bod data-reveal>
+          <div class="bod__view">
+          <div class="bod__panel" data-bod-panel aria-hidden="true">
+            <p class="t-eyebrow bod__eyebrow" data-bod-eyebrow>{BOARD[0].role}</p>
+            <p class="bod__count t-sm">
+              <span data-bod-count>01</span> / {String(BOARD.length).padStart(2, '0')}
+            </p>
+          </div>
+          <div class="bod__stage" data-bod-stage>
             {BOARD.map((p, i) => (
-              <li class="board__row" data-board-row={i} data-reveal data-reveal-group="board">
-                <Image
-                  src={boardImg(p.file)}
-                  alt=""
-                  width={128}
-                  layout="none"
-                  class="board__thumb"
-                  loading="lazy"
-                />
-                <span class="board__name">{p.name}</span>
-                <span class="board__role t-sm">{p.role}</span>
-              </li>
+              <button
+                type="button"
+                class="bod__item"
+                data-bod-item={i}
+                aria-label={`${p.name}, ${p.role}`}
+              >
+                <span class="bod__frame">
+                  <Image
+                    src={boardImg(p.file)}
+                    alt=""
+                    width={560}
+                    layout="none"
+                    class="bod__img"
+                    loading="lazy"
+                  />
+                </span>
+              </button>
             ))}
-          </ul>
-          <div class="board__float" data-board-float aria-hidden="true">
-            <div class="board__float-in">
-              {BOARD.map((p, i) => (
-                <Image
-                  src={boardImg(p.file)}
-                  alt=""
-                  width={480}
-                  layout="none"
-                  class="board__float-img"
-                  data-board-img={i}
-                  loading="lazy"
-                />
-              ))}
-            </div>
+          </div>
+          <div class="bod__caps" aria-live="polite">
+            {BOARD.map((p, i) => (
+              <div class="bod__cap" data-bod-cap={i}>
+                <p class="bod__name">{p.name}</p>
+                <p class="bod__role t-sm">{p.role}</p>
+              </div>
+            ))}
+          </div>
+          </div>
+          <div class="bod__nav">
+            <button type="button" class="bod__arrow" data-bod-prev aria-label="Previous director">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7" /></svg>
+            </button>
+            <button type="button" class="bod__arrow" data-bod-next aria-label="Next director">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+            </button>
           </div>
         </div>
       </div>
@@ -692,130 +709,202 @@ const STAT_ICONS: Record<string, string> = {
     height: auto;
   }
 
-  /* ---- board: an editorial list, the portrait on hover ----
-     Nahian, 2026-09-26: the twelve portraits, on twelve different
-     grounds, read as a mismatched grid. Now the names carry the section,
-     set large with hairlines between, like a masthead. With a pointer the
-     person's portrait fades in and follows the cursor (about.ts, one
-     transform per frame); the named row goes pink and the rest dim. On
-     touch, where there is no hover, each row carries a small portrait.
-     Written touch-first; the wide pointer layout is the media block. */
-  .board {
+  /* ---- board: a carousel, after a reference video ----
+     Nahian, 2026-09-26. One director large on a soft tinted panel, the
+     rest a filmstrip either side. about.ts writes the geometry as custom
+     properties (--aw, --ah the centre photo's size; --top the band above
+     it; --cap the caption's height) and each item's transform; the
+     panel's tint crossfades, the captions crossfade. Every portrait is
+     laid out at the centre's size and scaled DOWN for the strip, so it
+     stays sharp. The strip is clipped to the page's width. */
+  .bod {
+    --aw: 18rem;
+    --ah: 21.6rem;
+    --top: 3.25rem;
+    --cap: 5rem;
+    --pad: var(--s-6);
+  }
+  .bod__view {
     position: relative;
+    height: calc(var(--top) + var(--ah) + var(--cap) + var(--pad));
+    overflow: hidden;
   }
-  .board__list {
-    margin: 0;
+  .bod__panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: calc(var(--aw) + 2 * var(--pad));
+    transform: translateX(-50%);
+    background: var(--bod-tint-1);
+    transition: background-color var(--t-slow) var(--ease-io);
+  }
+  .bod__eyebrow {
+    position: absolute;
+    top: calc(var(--top) / 2);
+    left: var(--pad);
+    transform: translateY(-50%);
+    color: var(--pink);
+  }
+  .bod__count {
+    position: absolute;
+    top: calc(var(--top) / 2);
+    right: var(--pad);
+    transform: translateY(-50%);
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .bod__count [data-bod-count] {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .bod__stage {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--top);
+    height: var(--ah);
+  }
+  /* One item per director, all laid out at the centre's size on the
+     centre; about.ts moves and scales each with one transform. */
+  .bod__item {
+    position: absolute;
+    top: 0;
+    left: calc(50% - var(--aw) / 2);
+    width: var(--aw);
+    height: var(--ah);
     padding: 0;
-    list-style: none;
-    border-top: 1px solid var(--rule);
+    border: 0;
+    background: none;
+    cursor: pointer;
+    transform-origin: 50% 50%;
+    transition:
+      transform var(--t-slow) var(--ease),
+      opacity var(--t-base) var(--ease-io);
+    will-change: transform;
   }
-  .board__row {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    grid-template-areas: 'thumb name' 'thumb role';
-    align-items: center;
-    column-gap: var(--s-4);
-    padding-block: var(--s-3);
-    border-bottom: 1px solid var(--rule);
+  .bod__item[aria-current='true'] {
+    cursor: default;
   }
-  .board :global(.board__thumb) {
-    grid-area: thumb;
-    width: 3.5rem;
-    height: 3.5rem;
+  .bod__item.is-jump {
+    transition: none;
+  }
+  .bod__frame {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+    background: var(--paper-2);
+    transition: transform var(--t-base) var(--ease);
+  }
+  .bod :global(.bod__img) {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     object-position: 50% 20%;
-    border-radius: var(--r-sm);
-    background: var(--paper-2);
+    display: block;
   }
-  .board__name {
-    grid-area: name;
-    align-self: end;
+  /* the strip on hover: a thumbnail lifts toward you */
+  @media (hover: hover) {
+    .bod__item:not([aria-current='true']):hover .bod__frame {
+      transform: scale(1.08);
+    }
+  }
+  .bod__item:focus-visible {
+    outline: none;
+  }
+  .bod__item:focus-visible .bod__frame {
+    outline: 2px solid var(--pink);
+    outline-offset: 2px;
+  }
+  /* the caption under the centre photo, crossfading */
+  .bod__caps {
+    position: absolute;
+    top: calc(var(--top) + var(--ah) + var(--s-4));
+    left: calc(50% - var(--aw) / 2);
+    width: var(--aw);
+  }
+  .bod__cap {
+    position: absolute;
+    inset: 0 0 auto;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity var(--t-base) var(--ease-io),
+      transform var(--t-base) var(--ease);
+  }
+  .bod__cap.is-on {
+    opacity: 1;
+    transform: none;
+  }
+  .bod__name {
+    font-size: var(--fs-h3);
     font-weight: 600;
-    letter-spacing: -0.012em;
+    letter-spacing: -0.018em;
+    line-height: 1.2;
   }
-  .board__role {
-    grid-area: role;
-    align-self: start;
-    color: var(--ink-3);
+  .bod__role {
+    margin-top: var(--s-1);
+    color: var(--ink-2);
   }
-  .board__float {
+  .bod__nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--s-3);
+    margin-top: var(--s-5);
+  }
+  .bod__arrow {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-full);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      border-color var(--t-fast) var(--ease-io),
+      color var(--t-fast) var(--ease-io);
+  }
+  .bod__arrow:hover {
+    border-color: var(--pink);
+    color: var(--pink);
+  }
+  .bod__arrow:focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 2px;
+  }
+  .bod__arrow svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  /* no JS: the portraits as a plain wrapping row, no carousel */
+  :global(.no-js) .bod__view {
+    height: auto;
+  }
+  :global(.no-js) .bod__panel,
+  :global(.no-js) .bod__caps,
+  :global(.no-js) .bod__nav {
     display: none;
   }
-
-  @media (hover: hover) and (min-width: 768px) {
-    .board__row {
-      grid-template-columns: minmax(0, 1fr) auto;
-      grid-template-areas: 'name role';
-      align-items: baseline;
-      padding-block: var(--s-4);
-      cursor: default;
-      transition: opacity var(--recede-t) var(--ease-io);
-    }
-    .board :global(.board__thumb) {
-      display: none;
-    }
-    .board__name {
-      align-self: baseline;
-      font-size: var(--fs-h2);
-      line-height: 1.15;
-      letter-spacing: -0.022em;
-      transition: color var(--t-fast) var(--ease-io);
-    }
-    .board__role {
-      align-self: baseline;
-      font-size: var(--fs-body);
-    }
-    /* the named row pink, the others stepping back */
-    .board__list:hover .board__row:not(:hover) {
-      opacity: 0.35;
-    }
-    .board__row:hover .board__name {
-      color: var(--pink);
-    }
-    /* The portrait: one frame, its position written by about.ts, the
-       person's photograph crossfading inside it. It sits above the list
-       and never takes the pointer. */
-    .board__float {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 2;
-      width: clamp(12rem, 17vw, 16rem);
-      aspect-ratio: 4 / 5;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity var(--t-base) var(--ease-io);
-      will-change: transform, opacity;
-    }
-    .board.is-active .board__float {
-      opacity: 1;
-    }
-    .board__float-in {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      border-radius: var(--r-md);
-      box-shadow: var(--e-3);
-      transform: scale(0.92);
-      transition: transform var(--t-base) var(--ease);
-    }
-    .board.is-active .board__float-in {
-      transform: none;
-    }
-    .board :global(.board__float-img) {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% 20%;
-      opacity: 0;
-      transition: opacity var(--t-fast) var(--ease-io);
-    }
-    .board :global(.board__float-img.is-shown) {
-      opacity: 1;
-    }
+  :global(.no-js) .bod__stage {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+  }
+  :global(.no-js) .bod__item {
+    position: relative;
+    left: auto;
+    width: 9rem;
+    height: 11rem;
   }
 
   /* ---- the CEO ---- */
