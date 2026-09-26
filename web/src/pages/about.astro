@@ -220,10 +220,10 @@ const STAT_ICONS: Record<string, string> = {
     <!-- ============================== BOARD ============================== -->
     <section class="ab-section" aria-label="Board of directors">
       <div class="wrap">
-        {/* After a reference (Nahian, 2026-09-26): black-and-white square
+        {/* After a reference (Nahian, 2026-09-26): square colour
             portraits in a checkered grid with white cells between them,
             the heading set inside the grid. Each name sits on a black band
-            at the photograph's foot; hover brings the colour back and
+            at the photograph's foot; hover eases the portrait in and
             raises the band to the role and the biography's opening; a
             click, tap or Enter opens that director's full profile in a
             dialog (about.ts). Biographies are bkash.com's, verbatim. */}
@@ -715,7 +715,7 @@ const STAT_ICONS: Record<string, string> = {
   }
 
   /* ---- board: a checkered grid of portraits, profiles in a dialog ----
-     After a reference (Nahian, 2026-09-26). Square black-and-white
+     After a reference (Nahian, 2026-09-26). Square colour
      portraits with white cells between them, the heading inside the grid.
      Desktop 6 × 3: row one at columns 1 3 4 6, row two 1 2 [heading
      3–4] 5 6, row three 2 3 5 6 — twelve tiles, four white cells. Phone:
@@ -767,7 +767,6 @@ const STAT_ICONS: Record<string, string> = {
     height: 100%;
     object-fit: cover;
     object-position: 50% 20%;
-    filter: grayscale(1);
     transition:
       filter var(--t-slow) var(--ease-io),
       transform var(--t-slow) var(--ease);
@@ -822,7 +821,6 @@ const STAT_ICONS: Record<string, string> = {
   @media (hover: hover) {
     .board__tile:hover :global(.board__img),
     .board__tile:focus-visible :global(.board__img) {
-      filter: none;
       transform: scale(1.04);
     }
     .board__tile:hover .board__more,
