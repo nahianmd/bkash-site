@@ -5,7 +5,27 @@
    internal pitch; not yet by bKash for a public URL (CLAUDE.md).
    ============================================================ */
 
-export type Person = { file: string; name: string; role: string };
+/** Where the face sits in the photograph, as fractions of its width (cx)
+    and height (crown, eye, chin) — read off each source, so the page can
+    crop all twelve to one head size and one eye line. */
+export type Face = { cx: number; crown: number; eye: number; chin: number };
+export type Person = { file: string; name: string; role: string; face?: Face };
+
+/* Measured 2026-09-26 against a 10% grid over each source. */
+export const BOARD_FACES: Record<string, Face> = {
+  'shameran-abed': { cx: 0.5, crown: 0.085, eye: 0.32, chin: 0.59 },
+  'tareq-refat-ullah-khan': { cx: 0.52, crown: 0.125, eye: 0.34, chin: 0.54 },
+  'asif-saleh': { cx: 0.5, crown: 0.02, eye: 0.22, chin: 0.52 },
+  'fahima-choudhury': { cx: 0.507, crown: 0.16, eye: 0.387, chin: 0.56 },
+  'nicholas-hughes': { cx: 0.5, crown: 0.083, eye: 0.41, chin: 0.69 },
+  'shinya-yoshino': { cx: 0.5, crown: 0.027, eye: 0.38, chin: 0.68 },
+  'edward-yue': { cx: 0.5, crown: 0.123, eye: 0.39, chin: 0.57 },
+  'jason-park': { cx: 0.5, crown: 0.03, eye: 0.384, chin: 0.69 },
+  'anita-ghazi-rahman': { cx: 0.5, crown: 0.072, eye: 0.33, chin: 0.5 },
+  'douglas-feagin': { cx: 0.5, crown: 0.107, eye: 0.373, chin: 0.607 },
+  'gregory-c-chen': { cx: 0.51, crown: 0.096, eye: 0.3, chin: 0.49 },
+  'weixiang-lim': { cx: 0.52, crown: 0.01, eye: 0.397, chin: 0.69 },
+};
 export type Investor = { file: string; name: string };
 export type Voice = { file: string; tag: string; quote: string; name: string; city: string };
 

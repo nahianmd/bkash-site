@@ -9,7 +9,7 @@
    and cleared for the pitch, not yet for a public URL (CLAUDE.md). */
 import { Picture, Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { STATS, TRIAD, BOARD, INVESTORS, VOICES } from '../lib/about-data';
+import { STATS, TRIAD, BOARD, BOARD_FACES, INVESTORS, VOICES } from '../lib/about-data';
 
 import banner from '../assets/img/about/banner.jpg';
 import ceo from '../assets/img/about/kamal-quadir.jpg';
@@ -38,6 +38,34 @@ const voiceImgs = import.meta.glob<{ default: ImageMetadata }>(
   },
 );
 const boardImg = (f: string) => boardImgs[`../assets/img/about/board/${f}.jpg`].default;
+
+/* One head size and one eye line for the board (Nahian, 2026-09-26).
+   Each 4:5 tile places its photograph by the face measured in it
+   (BOARD_FACES): scaled so the head, crown to chin, is HEAD of the
+   tile's height, the eyes at EYE of it, the face centred — but never
+   smaller than covers the tile, so the tightest sources stay a little
+   bigger rather than showing a gap. Written as a class per person (no
+   inline styles); the hover zoom turns about the eyes. */
+const HEAD = 0.55;
+const EYE = 0.4;
+const boardCrop = (file: string) => {
+  const face = BOARD_FACES[file];
+  const img = boardImg(file);
+  if (!face) return '';
+  const a = img.width / img.height;
+  const H = 1.25; // tile height in tile widths
+  const Hi = Math.max((HEAD * H) / (face.chin - face.crown), H, 1 / a);
+  const Wi = a * Hi;
+  const T = Math.min(0, Math.max(H - Hi, EYE * H - face.eye * Hi));
+  const L = Math.min(0, Math.max(1 - Wi, 0.5 - face.cx * Wi));
+  const f = (n: number) => +n.toFixed(2);
+  return (
+    `.bc-${file}{width:${f(Wi * 100)}%;height:${f((Hi / H) * 100)}%;` +
+    `left:${f(L * 100)}%;top:${f((T / H) * 100)}%;` +
+    `transform-origin:${f(face.cx * 100)}% ${f(face.eye * 100)}%}`
+  );
+};
+const boardCss = BOARD.map((p) => boardCrop(p.file)).join('');
 const investorImg = (f: string) =>
   investorImgs[`../assets/img/about/investors/${f}.png`].default;
 const voiceImg = (f: string) =>
@@ -231,21 +259,26 @@ const STAT_ICONS: Record<string, string> = {
         <div class="board">
           {BOARD.map((p) => (
             <figure class="board__card" data-reveal data-reveal-group="board">
-              <Image
-                src={boardImg(p.file)}
-                alt={p.name}
-                width={480}
-                layout="none"
-                class="board__img"
-                loading="lazy"
-              />
+              <span class="board__frame">
+                <Image
+                  src={boardImg(p.file)}
+                  alt={p.name}
+                  width={Math.min(boardImg(p.file).width, 900)}
+                  layout="none"
+                  class={`board__img bc-${p.file}`}
+                  loading="lazy"
+                />
+              </span>
               <figcaption>
-                <p class="board__name">{p.name}</p>
-                <p class="board__role t-sm">{p.role}</p>
+                <p class="board__name"><span>{p.name}</span></p>
+                <p class:list={['board__role t-sm', { 'is-chair': p.role === 'Chairman' }]}>
+                  {p.role}
+                </p>
               </figcaption>
             </figure>
           ))}
         </div>
+        <style is:global set:html={boardCss}></style>
       </div>
     </section>
 
@@ -689,29 +722,86 @@ const STAT_ICONS: Record<string, string> = {
     grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
     gap: clamp(1rem, 2vw, 1.75rem);
   }
+  /* Two columns on a phone, stated: two 10.5rem tracks and the gap need
+     352px, a 390 phone gives 350 inside its gutters, and auto-fill fell
+     to ONE column — twelve full-width portraits, several screens long. */
+  @media (max-width: 767px) {
+    .board {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-5) var(--s-4);
+    }
+  }
   .board__card {
     margin: 0;
   }
-  .board :global(.board__img) {
-    width: 100%;
-    height: auto;
+  /* The frame: 4:5, clipping the photograph, which a per-person class
+     (.bc-*, generated above) sizes and places so every head is the same
+     size with the eyes on one line (Nahian, 2026-09-26). */
+  .board__frame {
+    position: relative;
+    display: block;
     aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: 50% 20%;
+    overflow: hidden;
     border-radius: var(--r-md);
     margin-bottom: var(--s-3);
     background: var(--paper-2);
-    transition: border-radius var(--t-base) var(--ease);
+    transition:
+      transform var(--t-base) var(--ease),
+      box-shadow var(--t-base) var(--ease);
   }
-  .board__card:hover :global(.board__img) {
-    border-radius: var(--r-xl) var(--r-md);
+  .board :global(.board__img) {
+    position: absolute;
+    max-width: none;
+    object-fit: cover;
+    /* the twelve sources in one light: a touch less saturation */
+    filter: saturate(0.9);
+    transition: transform var(--t-slow) var(--ease);
+  }
+  /* The shared light: a soft vignette at every frame's edges, drawing
+     twelve different backgrounds toward one. */
+  .board__frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 85% 75% at 50% 40%,
+      transparent 55%,
+      var(--board-vignette) 100%
+    );
   }
   .board__name {
     font-weight: 600;
     letter-spacing: -0.012em;
   }
+  /* the name's underline, drawn in on hover */
+  .board__name span {
+    background: linear-gradient(var(--pink), var(--pink)) 0 100% / 0 1px no-repeat;
+    transition:
+      background-size var(--t-base) var(--ease),
+      color var(--t-fast) var(--ease-io);
+  }
   .board__role {
     color: var(--ink-3);
+  }
+  .board__role.is-chair {
+    color: var(--pink);
+    font-weight: 600;
+  }
+  /* Hover: the tile lifts on a soft shadow, the portrait eases in about
+     the eyes, the name goes pink and its line draws in. */
+  @media (hover: hover) {
+    .board__card:hover .board__frame {
+      transform: translateY(-4px);
+      box-shadow: var(--e-3);
+    }
+    .board__card:hover :global(.board__img) {
+      transform: scale(1.06);
+    }
+    .board__card:hover .board__name span {
+      color: var(--pink);
+      background-size: 100% 1px;
+    }
   }
 
   /* ---- the CEO ---- */
