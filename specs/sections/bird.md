@@ -413,3 +413,39 @@ the client's artwork exists larger, and it is worth asking the client before
 the crops are baked rather than after.
 
 **Model: Fable 5.1** for the build, per this spec's own header.
+
+## Rebuilt 2026-09-27 — finished scenes, not composites
+
+Nahian supplied three finished illustrations — `customer.png` (922x744),
+`agent.png` (1178x1024), `merchant.png` (1032x896) — each a complete scene
+with its own background. A window is now **one image**, cover-fitted to its
+facet and clipped to it, where it was previously the plate plus that
+character's cutout composited at runtime.
+
+**Why the composite existed, and why it is gone.** It was a workaround for a
+resolution problem: a crop of the plate framed on a character had nowhere near
+the pixels — Amena is 45px wide in the plate — so the figure had to be drawn
+from its own high-resolution cutout while the street was loosened until its
+softness read as depth of field. The supplied scenes have no such problem.
+
+| facet    | scene    | crops         | at 2560           |
+| -------- | -------- | ------------- | ----------------- |
+| middle   | customer | 23% of width  | 0.91x (≈1:1)      |
+| flat     | agent    | 32% of height | 1.51x downsampled |
+| top wing | merchant | 11% of width  | 1.14x downsampled |
+
+Against the **1.4x–2.1x upscale** they replace. Every window is sharper and
+the code is smaller: `fill` / `bg` / `lift` are gone, replaced by `zoom` /
+`x` / `y` — how far in, and which part survives the crop.
+
+**What it gives up.** The windows are no longer views into the hero's own
+plate, so a person in the mark no longer stands in the same street they stand
+in below. They are three vignettes. That is the trade the finished scenes
+make, and it also retires the `diorama-integration.md` problem _for the bird_
+— though not for the hero, which still composites plate and cutouts.
+
+The agent sits at `y: 0.3` rather than centred: his facet is the flat one, so
+a third of the scene's height is cropped, and centring that crop takes the top
+of his head.
+
+The hero's cutouts (`amena/rahim/faysal.png`) are untouched.

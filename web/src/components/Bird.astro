@@ -49,11 +49,22 @@ const people = await Promise.all(
    Images are reused from above: same plate, same cutouts, no extra
    variants for the fallback path. */
 const cast = castWindows({
-  amena: cuts['../assets/img/hero/amena.png'].default,
-  faysal: cuts['../assets/img/hero/faysal.png'].default,
-  rahim: cuts['../assets/img/hero/rahim.png'].default,
+  customer: cuts['../assets/img/hero/customer.png'].default,
+  agent: cuts['../assets/img/hero/agent.png'].default,
+  merchant: cuts['../assets/img/hero/merchant.png'].default,
 });
-const figHref = Object.fromEntries(people.map((p) => [p.id, p.href]));
+/* One finished scene per window, same as the live overlay. Requested at
+   1000 rather than full: this poster only ever renders at the mark's
+   own size and never animates, so it can afford to be smaller. */
+const sceneHref = Object.fromEntries(
+  await Promise.all(
+    cast.map(async (c) => {
+      const m = cuts[`../assets/img/hero/${c.id}.png`].default;
+      const im = await getImage({ src: m, width: Math.min(m.width, 1000), format: 'webp' });
+      return [c.id, im.src];
+    }),
+  ),
+);
 ---
 
 <section class="bird-still" aria-label="The bKash mark, framing the street">
@@ -88,8 +99,13 @@ const figHref = Object.fromEntries(people.map((p) => [p.id, p.href]));
     </g>
     {cast.map((c) => (
       <g clip-path={`url(#still-${c.clipId})`}>
-        <image href={img.src} x={c.bg.x} y={c.bg.y} width={c.bg.w} height={c.bg.h} />
-        <image href={figHref[c.id]} x={c.fig.x} y={c.fig.y} width={c.fig.w} height={c.fig.h} />
+        <image
+          href={sceneHref[c.id]}
+          x={c.img.x}
+          y={c.img.y}
+          width={c.img.w}
+          height={c.img.h}
+        />
       </g>
     ))}
     <g class="bird-still__lines" fill="none">
