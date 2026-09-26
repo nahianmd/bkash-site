@@ -156,9 +156,83 @@ function initWall(): void {
   });
 }
 
+/* ---- the board: a portrait that follows the pointer ----------------
+   Only with a real pointer on the wide layout (the CSS media block
+   matches). Hovering a row shows that person's photograph in one
+   floating frame, which eases after the cursor: the pointer sets a
+   target, one rAF loop moves the frame toward it — one transform per
+   frame, and the loop stops once the frame has settled and let go.
+   No layout read per move: the board's page position and the frame's
+   size are read once, on entering the list; pageX/pageY stay true
+   while the page scrolls under a still pointer. */
+function initBoard(): void {
+  const board = document.querySelector<HTMLElement>('[data-board]');
+  const float = board?.querySelector<HTMLElement>('[data-board-float]');
+  if (!board || !float) return;
+  const list = board.querySelector<HTMLElement>('.board__list');
+  const imgs = [...board.querySelectorAll<HTMLElement>('[data-board-img]')];
+  if (!list) return;
+  const mq = window.matchMedia('(hover: hover) and (min-width: 768px)');
+  const follow = reducedMotion() ? 1 : 0.16;
+  let origin = { x: 0, y: 0 };
+  let size = { w: 0, h: 0 };
+  const target = { x: 0, y: 0 };
+  const at = { x: 0, y: 0 };
+  let raf = 0;
+  let active = false;
+  let shown = -1;
+
+  const place = () => {
+    /* right of the cursor, centred on it vertically */
+    float.style.transform = `translate3d(${(at.x + 28).toFixed(1)}px, ${(at.y - size.h / 2).toFixed(1)}px, 0)`;
+  };
+  const tick = () => {
+    at.x += (target.x - at.x) * follow;
+    at.y += (target.y - at.y) * follow;
+    place();
+    const settled = Math.abs(target.x - at.x) < 0.3 && Math.abs(target.y - at.y) < 0.3;
+    raf = active || !settled ? requestAnimationFrame(tick) : 0;
+  };
+  const show = (i: number) => {
+    if (i === shown) return;
+    imgs[shown]?.classList.remove('is-shown');
+    imgs[i]?.classList.add('is-shown');
+    shown = i;
+  };
+
+  list.addEventListener('pointerenter', (e) => {
+    if (!mq.matches) return;
+    const r = board.getBoundingClientRect();
+    origin = { x: r.left + window.scrollX, y: r.top + window.scrollY };
+    size = { w: float.offsetWidth, h: float.offsetHeight };
+    target.x = at.x = e.pageX - origin.x;
+    target.y = at.y = e.pageY - origin.y;
+    place();
+    active = true;
+    board.classList.add('is-active');
+    if (!raf) raf = requestAnimationFrame(tick);
+  });
+  list.addEventListener(
+    'pointermove',
+    (e) => {
+      if (!active) return;
+      target.x = e.pageX - origin.x;
+      target.y = e.pageY - origin.y;
+      const row = (e.target as HTMLElement).closest<HTMLElement>('[data-board-row]');
+      if (row) show(Number(row.dataset.boardRow));
+    },
+    { passive: true },
+  );
+  list.addEventListener('pointerleave', () => {
+    active = false;
+    board.classList.remove('is-active');
+  });
+}
+
 export function initAbout(): void {
   initReveal();
   initCounters();
   initInvestors();
   initWall();
+  initBoard();
 }
