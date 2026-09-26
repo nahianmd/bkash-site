@@ -63,8 +63,23 @@ export const CAST = [
    the top of his head. Biasing upward keeps him whole and still holds
    the QR stand and the table. */
 export const CAST_TUNING: Record<string, { zoom: number; x: number; y: number }> = {
-  customer: { zoom: 1, x: 0.5, y: 0.5 },
-  agent: { zoom: 1, x: 0.5, y: 0.3 },
+  /* Out a little and down-left, 2026-09-24. Below 1 the scene no longer
+     covers the facet's box, so a gap opens — and because a triangle's
+     bounding box is defined by its own vertices, there is no slack to
+     borrow: any zoom under 1 exposes something. `y: 0.8` is what makes
+     that affordable. It drives 80% of the gap to the TOP of the box,
+     which for this facet is a single apex, so what shows is a wedge of
+     about 12 x 12 CSS px rather than a band. 0.97 would halve it. */
+  customer: { zoom: 0.95, x: 0.2, y: 0.8 },
+  /* Left, 2026-09-24 — but a pure pan could not do it. At cover this
+     scene is 441.9 units wide against a facet of 442: the width fits
+     EXACTLY, so there is no horizontal slack and `x` had no effect at
+     all. Slack has to be bought with zoom, at 1 unit of shift per 2
+     units of zoom-in, so reaching the asked-for 20% of the facet's width
+     took zoom 1.4. The cost is the vertical crop going 31% -> 51%; `y`
+     stays at 0.3 and his head clears the top edge by about 2% of the
+     scene's height. */
+  agent: { zoom: 1.4, x: 0, y: 0.3 },
   merchant: { zoom: 1, x: 0.5, y: 0.5 },
 };
 
