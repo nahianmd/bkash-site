@@ -228,42 +228,23 @@ const STAT_ICONS: Record<string, string> = {
             Board of directors
           </h2>
         </div>
-        {/* An editorial list (Nahian, 2026-09-26): names set large, roles
-            beside them, hairlines between. With a pointer, the named
-            person's portrait fades in and follows the cursor (about.ts);
-            on touch each row carries a small portrait of its own. */}
-        <div class="board" data-board>
-          <ul class="board__list">
-            {BOARD.map((p, i) => (
-              <li class="board__row" data-board-row={i} data-reveal data-reveal-group="board">
-                <Image
-                  src={boardImg(p.file)}
-                  alt=""
-                  width={128}
-                  layout="none"
-                  class="board__thumb"
-                  loading="lazy"
-                />
-                <span class="board__name">{p.name}</span>
-                <span class="board__role t-sm">{p.role}</span>
-              </li>
-            ))}
-          </ul>
-          <div class="board__float" data-board-float aria-hidden="true">
-            <div class="board__float-in">
-              {BOARD.map((p, i) => (
-                <Image
-                  src={boardImg(p.file)}
-                  alt=""
-                  width={480}
-                  layout="none"
-                  class="board__float-img"
-                  data-board-img={i}
-                  loading="lazy"
-                />
-              ))}
-            </div>
-          </div>
+        <div class="board">
+          {BOARD.map((p) => (
+            <figure class="board__card" data-reveal data-reveal-group="board">
+              <Image
+                src={boardImg(p.file)}
+                alt={p.name}
+                width={480}
+                layout="none"
+                class="board__img"
+                loading="lazy"
+              />
+              <figcaption>
+                <p class="board__name">{p.name}</p>
+                <p class="board__role t-sm">{p.role}</p>
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </div>
     </section>
@@ -692,130 +673,45 @@ const STAT_ICONS: Record<string, string> = {
     height: auto;
   }
 
-  /* ---- board: an editorial list, the portrait on hover ----
-     Nahian, 2026-09-26: the twelve portraits, on twelve different
-     grounds, read as a mismatched grid. Now the names carry the section,
-     set large with hairlines between, like a masthead. With a pointer the
-     person's portrait fades in and follows the cursor (about.ts, one
-     transform per frame); the named row goes pink and the rest dim. On
-     touch, where there is no hover, each row carries a small portrait.
-     Written touch-first; the wide pointer layout is the media block. */
+  /* ---- board: one crop, one caption block ----
+     The portraits run 175px to 2400px across in mixed aspects. They were
+     monochrome by default, which made twelve sources read as one set;
+     Nahian, 2026-09-20: natural colour instead, so the crop and the
+     caption block are what hold the set together (Rule 1 — documentary
+     left real).
+
+     Hover changes the tile's SHAPE, not its size: two opposite corners
+     open from --r-md to --r-xl and back, so the square becomes a leaf.
+     Nothing reflows and no neighbour moves — the people row's rejected
+     grow-on-hover is not repeated here. */
   .board {
-    position: relative;
-  }
-  .board__list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-top: 1px solid var(--rule);
-  }
-  .board__row {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    grid-template-areas: 'thumb name' 'thumb role';
-    align-items: center;
-    column-gap: var(--s-4);
-    padding-block: var(--s-3);
-    border-bottom: 1px solid var(--rule);
+    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+    gap: clamp(1rem, 2vw, 1.75rem);
   }
-  .board :global(.board__thumb) {
-    grid-area: thumb;
-    width: 3.5rem;
-    height: 3.5rem;
+  .board__card {
+    margin: 0;
+  }
+  .board :global(.board__img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
     object-fit: cover;
     object-position: 50% 20%;
-    border-radius: var(--r-sm);
+    border-radius: var(--r-md);
+    margin-bottom: var(--s-3);
     background: var(--paper-2);
+    transition: border-radius var(--t-base) var(--ease);
+  }
+  .board__card:hover :global(.board__img) {
+    border-radius: var(--r-xl) var(--r-md);
   }
   .board__name {
-    grid-area: name;
-    align-self: end;
     font-weight: 600;
     letter-spacing: -0.012em;
   }
   .board__role {
-    grid-area: role;
-    align-self: start;
     color: var(--ink-3);
-  }
-  .board__float {
-    display: none;
-  }
-
-  @media (hover: hover) and (min-width: 768px) {
-    .board__row {
-      grid-template-columns: minmax(0, 1fr) auto;
-      grid-template-areas: 'name role';
-      align-items: baseline;
-      padding-block: var(--s-4);
-      cursor: default;
-      transition: opacity var(--recede-t) var(--ease-io);
-    }
-    .board :global(.board__thumb) {
-      display: none;
-    }
-    .board__name {
-      align-self: baseline;
-      font-size: var(--fs-h2);
-      line-height: 1.15;
-      letter-spacing: -0.022em;
-      transition: color var(--t-fast) var(--ease-io);
-    }
-    .board__role {
-      align-self: baseline;
-      font-size: var(--fs-body);
-    }
-    /* the named row pink, the others stepping back */
-    .board__list:hover .board__row:not(:hover) {
-      opacity: 0.35;
-    }
-    .board__row:hover .board__name {
-      color: var(--pink);
-    }
-    /* The portrait: one frame, its position written by about.ts, the
-       person's photograph crossfading inside it. It sits above the list
-       and never takes the pointer. */
-    .board__float {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 2;
-      width: clamp(12rem, 17vw, 16rem);
-      aspect-ratio: 4 / 5;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity var(--t-base) var(--ease-io);
-      will-change: transform, opacity;
-    }
-    .board.is-active .board__float {
-      opacity: 1;
-    }
-    .board__float-in {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      border-radius: var(--r-md);
-      box-shadow: var(--e-3);
-      transform: scale(0.92);
-      transition: transform var(--t-base) var(--ease);
-    }
-    .board.is-active .board__float-in {
-      transform: none;
-    }
-    .board :global(.board__float-img) {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% 20%;
-      opacity: 0;
-      transition: opacity var(--t-fast) var(--ease-io);
-    }
-    .board :global(.board__float-img.is-shown) {
-      opacity: 1;
-    }
   }
 
   /* ---- the CEO ---- */
