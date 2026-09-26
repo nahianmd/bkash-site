@@ -156,128 +156,77 @@ function initWall(): void {
   });
 }
 
-/* ---- the board: a carousel ----------------------------------------
-   After a reference video (Nahian, 2026-09-26). One director at the
-   centre, the rest a filmstrip either side; a ring, so it loops. Each
-   item is laid out at the centre's size on the centre, and moved and
-   scaled with ONE transform — scaled down only, so the strip stays
-   sharp; CSS transitions do the motion. Geometry is measured on resize,
-   never per frame. It advances by itself every few seconds (paused on
-   hover, on focus, off screen, and never under reduced motion), and by
-   thumbnail, arrow, arrow key or swipe. */
-const BOD_TINTS = 5;
+/* ---- the board: a portrait that follows the pointer ----------------
+   Only with a real pointer on the wide layout (the CSS media block
+   matches). Hovering a row shows that person's photograph in one
+   floating frame, which eases after the cursor: the pointer sets a
+   target, one rAF loop moves the frame toward it — one transform per
+   frame, and the loop stops once the frame has settled and let go.
+   No layout read per move: the board's page position and the frame's
+   size are read once, on entering the list; pageX/pageY stay true
+   while the page scrolls under a still pointer. */
 function initBoard(): void {
-  const root = document.querySelector<HTMLElement>('[data-bod]');
-  const view = root?.querySelector<HTMLElement>('.bod__view');
-  if (!root || !view) return;
-  const items = [...root.querySelectorAll<HTMLElement>('[data-bod-item]')];
-  const caps = [...root.querySelectorAll<HTMLElement>('[data-bod-cap]')];
-  const panel = root.querySelector<HTMLElement>('[data-bod-panel]');
-  const eyebrow = root.querySelector<HTMLElement>('[data-bod-eyebrow]');
-  const count = root.querySelector<HTMLElement>('[data-bod-count]');
-  const n = items.length;
-  if (n === 0) return;
+  const board = document.querySelector<HTMLElement>('[data-board]');
+  const float = board?.querySelector<HTMLElement>('[data-board-float]');
+  if (!board || !float) return;
+  const list = board.querySelector<HTMLElement>('.board__list');
+  const imgs = [...board.querySelectorAll<HTMLElement>('[data-board-img]')];
+  if (!list) return;
+  const mq = window.matchMedia('(hover: hover) and (min-width: 768px)');
+  const follow = reducedMotion() ? 1 : 0.16;
+  let origin = { x: 0, y: 0 };
+  let size = { w: 0, h: 0 };
+  const target = { x: 0, y: 0 };
+  const at = { x: 0, y: 0 };
+  let raf = 0;
+  let active = false;
+  let shown = -1;
 
-  let active = 0;
-  let geo = { aw: 0, tw: 0, gap: 0, show: 3 };
-  const rel = (i: number) => {
-    /* the shortest signed distance round the ring */
-    let d = (i - active) % n;
-    if (d > n / 2) d -= n;
-    if (d < -n / 2) d += n;
-    return d;
+  const place = () => {
+    /* right of the cursor, centred on it vertically */
+    float.style.transform = `translate3d(${(at.x + 28).toFixed(1)}px, ${(at.y - size.h / 2).toFixed(1)}px, 0)`;
   };
-  const lastD = new Array<number>(n).fill(0);
-
-  function measure() {
-    const W = view!.clientWidth;
-    const phone = W < 640;
-    const aw = phone ? Math.min(W * 0.56, rem(15)) : Math.min(Math.max(W * 0.24, rem(15)), rem(21));
-    const ah = aw * 1.2;
-    const st = phone ? 0.46 : 0.4;
-    const px = (v: number) => `${v.toFixed(1)}px`;
-    root!.style.setProperty('--aw', px(aw));
-    root!.style.setProperty('--ah', px(ah));
-    geo = { aw, tw: aw * st, gap: phone ? 10 : 16, show: phone ? 2 : 4 };
-    layout(true);
-  }
-  function rem(v: number) {
-    return v * (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
-  }
-
-  function layout(jump = false) {
-    const { aw, tw, gap, show } = geo;
-    const st = tw / aw;
-    items.forEach((el, i) => {
-      const d = rel(i);
-      let x = 0;
-      let s = 1;
-      if (d !== 0) {
-        const k = Math.abs(d);
-        x = Math.sign(d) * (aw / 2 + gap + tw / 2 + (k - 1) * (tw + gap));
-        s = st;
-      }
-      /* an item that goes round the back of the ring jumps, unseen */
-      const wrapped = Math.abs(d - lastD[i]) > n / 2;
-      el.classList.toggle('is-jump', jump || wrapped);
-      el.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) scale(${s.toFixed(4)})`;
-      el.style.opacity = Math.abs(d) > show ? '0' : '1';
-      el.style.zIndex = String(n - Math.abs(d));
-      el.tabIndex = Math.abs(d) > show ? -1 : 0;
-      el.setAttribute('aria-current', d === 0 ? 'true' : 'false');
-      lastD[i] = d;
-    });
-    caps.forEach((c, i) => c.classList.toggle('is-on', i === active));
-    if (panel) panel.style.backgroundColor = `var(--bod-tint-${(active % BOD_TINTS) + 1})`;
-    if (eyebrow) eyebrow.textContent = caps[active]?.querySelector('.bod__role')?.textContent ?? '';
-    if (count) count.textContent = String(active + 1).padStart(2, '0');
-  }
-  function go(i: number) {
-    active = ((i % n) + n) % n;
-    layout();
-  }
-
-  items.forEach((el, i) => el.addEventListener('click', () => go(i)));
-  root.querySelector('[data-bod-prev]')?.addEventListener('click', () => go(active - 1));
-  root.querySelector('[data-bod-next]')?.addEventListener('click', () => go(active + 1));
-  root.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') go(active - 1);
-    else if (e.key === 'ArrowRight') go(active + 1);
-    else return;
-    e.preventDefault();
-  });
-  /* swipe: a horizontal drag of 40px turns one */
-  let sx = 0;
-  let sy = 0;
-  view.addEventListener('pointerdown', (e) => {
-    sx = e.clientX;
-    sy = e.clientY;
-  });
-  view.addEventListener('pointerup', (e) => {
-    const dx = e.clientX - sx;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(e.clientY - sy)) go(active + (dx < 0 ? 1 : -1));
-  });
-
-  /* auto-advance, only while visible and not being handled */
-  let timer = 0;
-  let visible = false;
-  let held = false;
-  const run = () => {
-    clearInterval(timer);
-    timer = 0;
-    if (visible && !held && !reducedMotion()) timer = window.setInterval(() => go(active + 1), 3600);
+  const tick = () => {
+    at.x += (target.x - at.x) * follow;
+    at.y += (target.y - at.y) * follow;
+    place();
+    const settled = Math.abs(target.x - at.x) < 0.3 && Math.abs(target.y - at.y) < 0.3;
+    raf = active || !settled ? requestAnimationFrame(tick) : 0;
   };
-  root.addEventListener('pointerenter', () => ((held = true), run()));
-  root.addEventListener('pointerleave', () => ((held = false), run()));
-  root.addEventListener('focusin', () => ((held = true), run()));
-  root.addEventListener('focusout', () => ((held = false), run()));
-  new IntersectionObserver((es) => {
-    visible = es.some((e) => e.isIntersecting);
-    run();
-  }).observe(root);
+  const show = (i: number) => {
+    if (i === shown) return;
+    imgs[shown]?.classList.remove('is-shown');
+    imgs[i]?.classList.add('is-shown');
+    shown = i;
+  };
 
-  measure();
-  window.addEventListener('resize', measure);
+  list.addEventListener('pointerenter', (e) => {
+    if (!mq.matches) return;
+    const r = board.getBoundingClientRect();
+    origin = { x: r.left + window.scrollX, y: r.top + window.scrollY };
+    size = { w: float.offsetWidth, h: float.offsetHeight };
+    target.x = at.x = e.pageX - origin.x;
+    target.y = at.y = e.pageY - origin.y;
+    place();
+    active = true;
+    board.classList.add('is-active');
+    if (!raf) raf = requestAnimationFrame(tick);
+  });
+  list.addEventListener(
+    'pointermove',
+    (e) => {
+      if (!active) return;
+      target.x = e.pageX - origin.x;
+      target.y = e.pageY - origin.y;
+      const row = (e.target as HTMLElement).closest<HTMLElement>('[data-board-row]');
+      if (row) show(Number(row.dataset.boardRow));
+    },
+    { passive: true },
+  );
+  list.addEventListener('pointerleave', () => {
+    active = false;
+    board.classList.remove('is-active');
+  });
 }
 
 export function initAbout(): void {
