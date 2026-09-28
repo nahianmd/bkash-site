@@ -48,9 +48,15 @@ export const PLATE = { w: 1672, h: 941 };
    Re-derived 2026-09-24 after all three cut boxes were re-placed against
    the new plate and Faysal's new artwork, and again 2026-09-27 for
    Amena's new artwork (1254x1212, aspect 1.035 against the old 0.920 —
-   she is now marginally wider than tall). Rahim and Faysal did not move. The cams pasted with those
-   boxes were the OLD derived ones and had gone stale exactly as this
-   comment warns: Amena had drifted +0.0221 in x, Rahim +0.0102.
+   she is now marginally wider than tall), and again 2026-09-28 for
+   Faysal's, whose art was re-exported at the same 2163x2560 but framed
+   differently. Rahim has not moved since the 24th; Amena's re-derives to
+   exactly what was pasted, which is the check that she did not either.
+
+   Each time, the cams pasted with the boxes were the OLD derived ones
+   and had gone stale exactly as this comment warns. On the 24th Amena
+   had drifted +0.0221 in x and Rahim +0.0102; on the 28th Faysal was
+   +0.0065 out in y.
 
    The zoom is not independent of the centring. The cover clamp in
    `poseFor` keeps cam.y inside [vh/2H_s, 1 - vh/2H_s], and at s = 3
@@ -75,7 +81,7 @@ export const BEATS: Beat[] = [
   },
   {
     id: 'faysal',
-    cam: { x: 0.5704, y: 0.8073, s: 4 },
-    cut: { x: 0.5359, y: 0.7347, w: 0.069, soft: 0 },
+    cam: { x: 0.5698, y: 0.8138, s: 4 },
+    cut: { x: 0.5363, y: 0.7434, w: 0.067, soft: 0 },
   },
 ];
