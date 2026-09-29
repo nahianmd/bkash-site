@@ -1329,6 +1329,13 @@ const STAT_ICONS: Record<string, string> = {
     .wall--first :global(.wall__img) {
       height: calc(var(--vh) * 0.5);
     }
+    /* First on a phone (Nahian, 2026-09-29): the group sits near the top
+       under the nav rather than centred, which left a tall band of black
+       above "Our journey". */
+    .wall--first .wall__pin {
+      align-content: start;
+      padding-top: calc(var(--nav-h) + var(--s-7));
+    }
   }
 </style>
 

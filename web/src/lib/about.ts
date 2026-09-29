@@ -6,7 +6,7 @@
    ScrollTrigger and --vh (CLAUDE.md).
    ============================================================ */
 
-import { gsap, ScrollTrigger, reducedMotion } from './scroll';
+import { gsap, ScrollTrigger, reducedMotion, isPhone } from './scroll';
 import { LOGO_DIVISOR, LOGO_FILL } from './about-data';
 
 /* ---- reveals ----------------------------------------------------
@@ -129,12 +129,24 @@ function initWall(): void {
     return;
   }
   let travel = 0;
+  /* Where the pan starts. On a phone the artwork's opening "15" (its
+     centre ~13.8% across, measured from the pixels) lands in the middle
+     of the frame, under the headline, rather than far to the right
+     (Nahian, 2026-09-29); the pan then runs on to the same end. */
+  const FIFTEEN = 0.138;
+  let start = 0;
   const measure = () => {
-    travel = Math.max(0, track.scrollWidth - pin.clientWidth);
+    const end = Math.max(0, track.scrollWidth - pin.clientWidth);
+    const img = track.querySelector<HTMLElement>('.wall__img');
+    start =
+      isPhone() && img
+        ? Math.min(end, Math.max(0, img.offsetLeft + FIFTEEN * img.offsetWidth - pin.clientWidth / 2))
+        : 0;
+    travel = end;
   };
   const proxy = { p: 0 };
   const render = () => {
-    track.style.transform = `translate3d(${(-travel * proxy.p).toFixed(1)}px, 0, 0)`;
+    track.style.transform = `translate3d(${(-(start + (travel - start) * proxy.p)).toFixed(1)}px, 0, 0)`;
     if (fill) fill.style.transform = `scaleX(${proxy.p.toFixed(4)})`;
   };
   measure();
