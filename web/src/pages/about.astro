@@ -967,6 +967,14 @@ const STAT_ICONS: Record<string, string> = {
      sits at the start of its container — only the text inside it was
      centring, which pushed the headline to the left of the section while
      the eyebrow stayed in the middle. Centre the BOX too. */
+  /* One line on the wide layout (Nahian, 2026-09-29): the heading's
+     measure would otherwise break it in two. */
+  @media (min-width: 768px) {
+    .wall__head :is(h1, h2) {
+      max-width: none;
+      white-space: nowrap;
+    }
+  }
   .wall__head :is(h1, h2) {
     margin-inline: auto;
   }
