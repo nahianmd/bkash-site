@@ -1,17 +1,16 @@
-﻿---
-/* About bKash â€” the prototype's page (reference/prototype/about.html),
+---
+/* About bKash — the prototype's page (reference/prototype/about.html),
    its content and its layout, in this site's design language: the
    tokens and type steps, `.on-photo` for anything on a photograph,
    --vh and ScrollTrigger for the Journey Wall, images through
    astro:assets, no inline styles.
 
-   Content is real â€” board names, the CEO's words, customers' words â€”
+   Content is real — board names, the CEO's words, customers' words —
    and cleared for the pitch, not yet for a public URL (CLAUDE.md). */
 import { Picture, Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { STATS, TRIAD, BOARD, INVESTORS, VOICES } from '../lib/about-data';
 
-import banner from '../assets/img/about/banner.jpg';
 import ceo from '../assets/img/about/kamal-quadir.jpg';
 import journey from '../assets/img/about/journey-wall-v2.jpg';
 import careers from '../assets/img/about/careers.jpg';
@@ -29,7 +28,7 @@ const investorImgs = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 /* Face crops for the byline (thumbs/, 336px squares): each cut from the
-   person's photograph in voices/ â€” the new portraits Nahian supplied on
+   person's photograph in voices/ — the new portraits Nahian supplied on
    2026-09-24, which replaced the old social-media frames. */
 const voiceImgs = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/img/about/voices/thumbs/*.jpg',
@@ -84,40 +83,46 @@ const STAT_ICONS: Record<string, string> = {
 ---
 
 <Base
-  title="About bKash â€” Financial freedom for millions"
+  title="About bKash — Financial freedom for millions"
   description="A secure digital account where millions store value and decide how to use it."
   current="company"
 >
   <main class="about">
-    <!-- ============================== HERO ============================== -->
-    <header class="ab-hero">
-      <Picture
-        src={banner}
-        alt="bKash customers across Bangladesh"
-        widths={[640, 1024, 1536, 2200]}
-        sizes="100vw"
-        formats={['avif', 'webp']}
-        layout="none"
-        loading="eager"
-        fetchpriority="high"
-        pictureAttributes={{ class: 'ab-hero__img' }}
-      />
-      <div class="wrap ab-hero__body">
-        <div class="on-photo ab-hero__copy" data-reveal>
-          <p class="t-eyebrow ab-hero__eyebrow">About bKash</p>
-          <h1 class="t-display">Empowering 85M Bangladeshis with financial freedom</h1>
-          <p class="t-lead ab-hero__lead">
-            Bridging the everyday economy and digital finance, bKash brought millions into the
-            formal economy who now have controls on their own money.
-          </p>
-          <a class="btn btn--primary ab-hero__cta" href="#story">
-            Be part of the story â†’
-          </a>
+    <!-- ============================== JOURNEY WALL ============================== -->
+    {/* The page opens on the journey (Nahian, 2026-09-29): the banner hero
+        is gone, and this section, pinned and panned, is the first thing
+        seen; its headline is the page's h1. The nav stays solid over it. */}
+    <section class="wall wall--first" data-wall aria-label="The bKash journey">
+      <div class="wall__pin" data-wall-pin>
+        <div class="wall__head">
+          <p class="t-eyebrow wall__eyebrow">Our journey</p>
+          <h1 class="t-h2">15 years of moving Bangladesh forward</h1>
+        </div>
+        <div class="wall__viewport">
+          <div class="wall__track" data-wall-track>
+            {/* The client's 60×10 ft wall (Journey Wall____60x10__ft.ai,
+                2026-09-23), rendered from the .ai and cropped to the wall.
+                Sized by height, so `sizes` is the width that height gives
+                at 6:1: ~1900px on a phone (0.5 --vh), ~3650px on desktop
+                (38rem cap). The first thing on the page, so it loads
+                eagerly. */}
+            <Image
+              src={journey}
+              alt="The bKash journey from 2012 to 2026"
+              widths={[3800, 7600]}
+              sizes="(max-width: 767px) 1900px, 3650px"
+              layout="none"
+              class="wall__img"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        </div>
+        <div class="wall__bar">
+          <div class="wall__fill" data-wall-fill></div>
         </div>
       </div>
-      <!-- The nav is transparent over the banner, solid below it. -->
-      <div data-nav-dark-end></div>
-    </header>
+    </section>
 
     <!-- ============================== STATS ============================== -->
     <section class="ab-section" id="story" aria-label="bKash in numbers">
@@ -152,7 +157,7 @@ const STAT_ICONS: Record<string, string> = {
     <!-- ============================== PLATFORM ============================== -->
     <section class="ab-section ab-section--tint" aria-label="Our platform">
       <div class="wrap">
-        {/* Copy left, the mark right â€” the mark drawn from the faces the
+        {/* Copy left, the mark right — the mark drawn from the faces the
             copy is about, which is the same idea the homepage's bird
             ends on. Documentary photographs, so Rule 1 holds. */}
         <div class="revolution">
@@ -254,7 +259,7 @@ const STAT_ICONS: Record<string, string> = {
                 <span class="board__more">
                   <span class="board__role">{p.role}</span>
                   <span class="board__excerpt">{p.bio[0]}</span>
-                  <span class="board__cue">View profile â†’</span>
+                  <span class="board__cue">View profile →</span>
                 </span>
               </span>
             </button>
@@ -308,48 +313,17 @@ const STAT_ICONS: Record<string, string> = {
                 quote step made the section, and so the photo, too big
                 (Nahian, 2026-09-23). */}
             <blockquote class="t-lead">
-              â€œMillions of Bangladeshis once hid their money under the mattress simply because
+              “Millions of Bangladeshis once hid their money under the mattress simply because
               access to financial services was out of reach. bKash became the collective
-              mattress for the country, putting money within peopleâ€™s control and giving them
+              mattress for the country, putting money within people’s control and giving them
               the freedom to use it on their terms. And somewhere along the way, bKash became a
               verb. That was never accidental. It was planned. And our ambition remains just as
-              deliberate: to keep going until we ensure financial inclusion for all.â€
+              deliberate: to keep going until we ensure financial inclusion for all.”
             </blockquote>
             <p class="quote__attr t-sm">
               <strong>Kamal Quadir</strong>Founder &amp; Chief Executive Officer, bKash
             </p>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================== JOURNEY WALL ============================== -->
-    <section class="wall" data-wall aria-label="The bKash journey">
-      <div class="wall__pin" data-wall-pin>
-        <div class="wall__head">
-          <p class="t-eyebrow wall__eyebrow">Our journey</p>
-          <h2 class="t-h2">15 years of moving Bangladesh forward</h2>
-        </div>
-        <div class="wall__viewport">
-          <div class="wall__track" data-wall-track>
-            {/* The client's 60Ã—10 ft wall (Journey Wall____60x10__ft.ai,
-                2026-09-23), rendered from the .ai and cropped to the wall.
-                Sized by height, so `sizes` is the width that height gives
-                at 6:1: ~1900px on a phone (0.38 --vh), ~3650px on desktop
-                (38rem cap). */}
-            <Image
-              src={journey}
-              alt="The bKash journey from 2012 to 2026"
-              widths={[3800, 7600]}
-              sizes="(max-width: 767px) 1900px, 3650px"
-              layout="none"
-              class="wall__img"
-              loading="lazy"
-            />
-          </div>
-        </div>
-        <div class="wall__bar">
-          <div class="wall__fill" data-wall-fill></div>
         </div>
       </div>
     </section>
@@ -369,7 +343,7 @@ const STAT_ICONS: Record<string, string> = {
           {VOICES.map((v) => (
             <figure class="voices__card" data-reveal data-reveal-group="voices">
               <p class="t-eyebrow voices__tag">{v.tag}</p>
-              <blockquote class="t-body voices__quote">â€œ{v.quote}â€</blockquote>
+              <blockquote class="t-body voices__quote">“{v.quote}”</blockquote>
               <figcaption class="voices__who t-sm">
                 {/* alt="": the name is right beside it. */}
                 <Image
@@ -462,7 +436,7 @@ const STAT_ICONS: Record<string, string> = {
           <p class="t-lead ab-head__lead" data-reveal>
             The next chapter is bigger than access. We are building towards a country where
             cashless is the norm, every transaction is secure, digital finance is understood and
-            trusted, and advanced financial services are within everyoneâ€™s reach.
+            trusted, and advanced financial services are within everyone’s reach.
           </p>
           <p class="t-body road__body" data-reveal>
             After 15 years of transforming how Bangladesh moves money, the ambition is not
@@ -517,75 +491,6 @@ const STAT_ICONS: Record<string, string> = {
     color: var(--on-night-2);
   }
 
-  /* ---- hero: the banner, the copy on its ground (Rule 3) ---- */
-  .ab-hero {
-    position: relative;
-    min-height: min(calc(var(--vh) * 0.86), 46rem);
-    display: grid;
-    align-items: end;
-    overflow: hidden;
-    background: var(--night);
-  }
-  .ab-hero :global(.ab-hero__img),
-  .ab-hero :global(.ab-hero__img img) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 42%;
-  }
-  .ab-hero__body {
-    position: relative;
-    z-index: 2;
-    padding-top: calc(var(--nav-h) + var(--s-8));
-    padding-bottom: clamp(3rem, 8vh, 5.5rem);
-  }
-  .ab-hero__copy {
-    max-width: 44rem;
-  }
-  .ab-hero__eyebrow {
-    color: var(--pink-lift);
-    margin-bottom: var(--s-4);
-  }
-  .ab-hero__copy h1 {
-    margin-bottom: var(--s-5);
-  }
-  .ab-hero__lead {
-    color: var(--on-night-2);
-    max-width: 42ch;
-  }
-  .ab-hero__cta {
-    margin-top: var(--s-6);
-  }
-  /* Phone: the photograph first, uncovered, then the copy on the black
-     below it (Nahian, 2026-09-24). Over the photo, the five-line
-     headline and its lead hid the girl on the boat entirely. A square
-     panel under the nav, cropped onto her (she sits ~39% across the
-     frame), its lower part fading into --night â€” the CEO portrait's
-     dissolve â€” and the copy starting inside the fade. */
-  @media (max-width: 767px) {
-    .ab-hero {
-      display: block;
-      min-height: 0;
-    }
-    .ab-hero :global(.ab-hero__img) {
-      position: relative;
-      display: block;
-      height: auto;
-      aspect-ratio: 1;
-      -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
-      mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
-    }
-    .ab-hero :global(.ab-hero__img img) {
-      object-position: 18% 50%;
-    }
-    .ab-hero__body {
-      padding-top: 0;
-      margin-top: calc(-1 * var(--s-8));
-      padding-bottom: var(--s-8);
-    }
-  }
 
   /* ---- stats ---- */
   .stats {
@@ -654,7 +559,7 @@ const STAT_ICONS: Record<string, string> = {
   /* ---- the revolution: copy beside the mark ---- */
   .revolution {
     display: grid;
-    /* 1.6 : 1 is where the headline settles at four lines â€” measured at
+    /* 1.6 : 1 is where the headline settles at four lines — measured at
              1920, it runs to six at 1.1 and five at 1.35, and taking the mark
              below this buys no further line. */
     grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
@@ -717,8 +622,8 @@ const STAT_ICONS: Record<string, string> = {
   /* ---- board: a checkered grid of portraits, profiles in a dialog ----
      After a reference (Nahian, 2026-09-26). Square colour
      portraits with white cells between them, the heading inside the grid.
-     Desktop 6 Ã— 3: row one at columns 1 3 4 6, row two 1 2 [heading
-     3â€“4] 5 6, row three 2 3 5 6 â€” twelve tiles, four white cells. Phone:
+     Desktop 6 × 3: row one at columns 1 3 4 6, row two 1 2 [heading
+     3–4] 5 6, row three 2 3 5 6 — twelve tiles, four white cells. Phone:
      the heading across the top, two columns beneath. */
   .board {
     display: grid;
@@ -963,8 +868,8 @@ const STAT_ICONS: Record<string, string> = {
   /* A cinematic split (Nahian, 2026-09-23). The photograph is composed
      for it: him on the right third, plain brick on the left two. So the
      photo runs from the section's right, top and bottom edges across a
-     bit over half its width, and its left side â€” the empty wall, never
-     him â€” fades into --night, the same dissolve as the phone's. The
+     bit over half its width, and its left side — the empty wall, never
+     him — fades into --night, the same dissolve as the phone's. The
      quote sits on the dark in the left column and ends where the fade
      begins. The photo is barely cropped from its own landscape, so it
      is barely enlarged. */
@@ -985,7 +890,7 @@ const STAT_ICONS: Record<string, string> = {
     z-index: 1;
   }
   /* This is a long executive quote in a column, not a pull quote, so it
-     takes the lead measure rather than the quote measure â€” still a named
+     takes the lead measure rather than the quote measure — still a named
      step, and the column is narrower than it at this size, so the column
      governs. Justified per Nahian; `balance` would fight it. */
   .quote blockquote {
@@ -1009,12 +914,12 @@ const STAT_ICONS: Record<string, string> = {
     object-fit: cover;
     object-position: 85% 50%;
     /* A little zoom, pivoting on the right edge so the photo still meets
-       it and his face comes left: ~74% â†’ ~68% across the panel at 1440
+       it and his face comes left: ~74% → ~68% across the panel at 1440
        (Nahian, 2026-09-23). `scale`, not transform, so the reveal's
        transform cannot cancel it. The mask scales with the element, so
        its stops are written in the element's own space to land where
-       the unzoomed fade did on screen â€” transparent at the panel's left
-       edge, solid 45% in: stop = 1 âˆ’ (1 âˆ’ p) / 1.2. The section's
+       the unzoomed fade did on screen — transparent at the panel's left
+       edge, solid 45% in: stop = 1 − (1 − p) / 1.2. The section's
        overflow clips the zoom's top and bottom. */
     scale: 1.2;
     transform-origin: 100% 50%;
@@ -1059,10 +964,10 @@ const STAT_ICONS: Record<string, string> = {
     padding-inline: var(--gutter);
   }
   /* The type step caps the headline at --measure-head, and a capped block
-     sits at the start of its container â€” only the text inside it was
+     sits at the start of its container — only the text inside it was
      centring, which pushed the headline to the left of the section while
      the eyebrow stayed in the middle. Centre the BOX too. */
-  .wall__head h2 {
+  .wall__head :is(h1, h2) {
     margin-inline: auto;
   }
   .wall__eyebrow {
@@ -1076,7 +981,7 @@ const STAT_ICONS: Record<string, string> = {
   }
   /* Edge to edge (Nahian, 2026-09-23): no side margin and no radius, so
      the wall starts flush with the left of the screen and the pan ends
-     flush with the right â€” about.ts pans by the track's own width. */
+     flush with the right — about.ts pans by the track's own width. */
   .wall__track {
     display: flex;
     will-change: transform;
@@ -1085,6 +990,17 @@ const STAT_ICONS: Record<string, string> = {
     height: min(calc(var(--vh) * 0.64), 38rem);
     width: auto;
     max-width: none;
+  }
+  /* First on the page (Nahian, 2026-09-29): the fixed nav sits over the
+     pin's top whenever it is pinned, so the frame keeps clear of it —
+     the nav's height added above, the air above and below trimmed, and
+     the artwork a touch shorter so all four still fit one screen. */
+  .wall--first .wall__pin {
+    padding-top: calc(var(--nav-h) + clamp(1.5rem, 4vh, 3rem));
+    padding-bottom: clamp(1.5rem, 4vh, 3rem);
+  }
+  .wall--first :global(.wall__img) {
+    height: min(calc(var(--vh) * 0.6), 38rem);
   }
   .wall__bar {
     width: min(28rem, 62vw);
@@ -1121,9 +1037,9 @@ const STAT_ICONS: Record<string, string> = {
   /* ---- voices ---- */
   /* Words first, the face as a byline (Nahian, 2026-09-24). The round,
      ringed faces in bordered cards were the page's only circles and its
-     last boxes. Now each voice is open under a pink hairline â€” the
+     last boxes. Now each voice is open under a pink hairline — the
      stats' and the triad's treatment and rhythm, so the three read as
-     one family â€” and the photograph is a small square at the board's
+     one family — and the photograph is a small square at the board's
      radius beside the name. */
   .voices {
     display: grid;
@@ -1198,7 +1114,7 @@ const STAT_ICONS: Record<string, string> = {
     box-shadow: var(--e-3);
   }
   /* The values as quiet pills: white on the tinted ground, a hairline
-     rule, the word in ink, and the brand only in each small icon â€” no
+     rule, the word in ink, and the brand only in each small icon — no
      pink fill, no decoration. One size for all five, so none shouts. */
   .values {
     display: flex;
@@ -1267,7 +1183,7 @@ const STAT_ICONS: Record<string, string> = {
 
   @media (max-width: 767px) {
     /* One rhythm for every section on a phone. The road keeps its zero
-             bottom â€” its illustration runs full-bleed off the foot of the
+             bottom — its illustration runs full-bleed off the foot of the
              section, and this rule comes after `.road` in the file. */
     .ab-section {
       padding-block: var(--section-pad-phone);
@@ -1277,14 +1193,14 @@ const STAT_ICONS: Record<string, string> = {
     }
     /* The mark under the copy, flying in from off the screen (Nahian,
        2026-09-23): larger than the frame and pulled past its left edge,
-       so the wing and tail â€” behind it, it faces right â€” are cut off and
+       so the wing and tail — behind it, it faces right — are cut off and
        the bird reads as going on beyond the screen. About a third of the
        drawing is hidden; the head lands at ~83% across. The
        PNG's ground is transparent, so the bleed shows no box. Overflow
        to the left cannot be scrolled to, so the page does not widen. */
     /* Even air around the drawing, not the file (Nahian, 2026-09-23):
        the PNG carries 7.28% of its height as transparent margin above
-       the bird and 5.65% below â€” measured from its alpha â€” so at 128vw
+       the bird and 5.65% below — measured from its alpha — so at 128vw
        those are pulled back with negative margins, and the gap above
        and the section's space below are the same --s-6. */
     .revolution {
@@ -1340,15 +1256,15 @@ const STAT_ICONS: Record<string, string> = {
        sides and the section's top padding, so it is the section's own
        ground rather than a picture placed on it; its lower half fades
        into --night, where his dark suit already nearly is; and the quote
-       starts right where the fade ends â€” not inside it, which covered
+       starts right where the fade ends — not inside it, which covered
        his suit (Nahian, 2026-09-23).
 
        Square, not 6:7: a smaller enlargement of the 1200x669 landscape,
        so it stays sharper, and more of the wall around him. Anchored
-       right, his face lands at ~57% across. The mask is static â€” it
+       right, his face lands at ~57% across. The mask is static — it
        composites once, it is not animated. */
     .quote :global(.quote__portrait) {
-      /* back in flow, above the quote â€” the desktop panel is absolute */
+      /* back in flow, above the quote — the desktop panel is absolute */
       position: static;
       width: calc(100% + 2 * var(--gutter));
       max-width: none;
@@ -1358,7 +1274,7 @@ const STAT_ICONS: Record<string, string> = {
          across the square; 100% is the furthest left the frame allows
          without a gap at the right edge, ~57% (Nahian, 2026-09-23). */
       object-position: 100% 50%;
-      /* â€¦and the zoom takes it to the centre: 1.16 about the top-right
+      /* …and the zoom takes it to the centre: 1.16 about the top-right
          corner puts his face at 50% across, the photo still flush with
          the right edge and the section's top. */
       scale: 1.16;
@@ -1401,7 +1317,8 @@ const STAT_ICONS: Record<string, string> = {
       grid-template-rows: auto auto auto;
       gap: var(--s-6);
     }
-    .wall :global(.wall__img) {
+    .wall :global(.wall__img),
+    .wall--first :global(.wall__img) {
       height: calc(var(--vh) * 0.5);
     }
   }
