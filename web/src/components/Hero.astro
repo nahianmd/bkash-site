@@ -106,6 +106,19 @@ import BirdOverlay from './BirdOverlay.astro';
     max-width: min(52vw, 44rem);
   }
 
+  /* The ground runs edge to edge (Nahian, 2026-10-07): from the frame's
+     left edge, past the block, out to the right edge. The right side
+     overshoots by a full viewport and the pin's overflow:hidden clips it,
+     so it reaches the edge whatever width the headline sets. Top and
+     bottom keep their feather; the sides have none left to show. */
+  @media (min-width: 768px) {
+    .hero__open::before {
+      left: calc(-1 * var(--gutter));
+      right: -100vw;
+      border-radius: 0;
+    }
+  }
+
   .hero__line {
     margin-top: var(--s-4);
     color: var(--scrim-ink);
