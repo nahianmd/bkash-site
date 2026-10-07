@@ -29,6 +29,10 @@ export const reducedMotion = () =>
 /** The project's single phone breakpoint. Matches the CSS. */
 export const isPhone = () => window.matchMedia('(max-width: 767px)').matches;
 
+/** The site-wide travel multiplier, `--travel` in tokens.css. */
+export const travelScale = () =>
+  parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--travel')) || 1;
+
 /* ---- viewport height, told the truth ------------------------
    `100vh` is a lie on mobile: the URL bar collapses as you scroll and
    the viewport grows under the animation, so every pinned section

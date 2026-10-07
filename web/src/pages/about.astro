@@ -944,7 +944,8 @@ const STAT_ICONS: Record<string, string> = {
   /* ---- the journey wall: pinned, panned ---- */
   .wall {
     position: relative;
-    height: calc(var(--vh) * 3.2);
+    /* one screen of pin plus 2.2 of travel, times the site's --travel */
+    height: calc(var(--vh) * (1 + 2.2 * var(--travel)));
     background: var(--night);
     color: var(--on-night);
   }
@@ -1315,7 +1316,7 @@ const STAT_ICONS: Record<string, string> = {
       gap: clamp(1.5rem, 5vw, 2.25rem) var(--s-4);
     }
     .wall {
-      height: calc(var(--vh) * 2.6);
+      height: calc(var(--vh) * (1 + 1.6 * var(--travel)));
     }
     /* Heading, wall and bar as one group, centred, with the same air
        above the wall as below it (Nahian, 2026-09-24). The middle row

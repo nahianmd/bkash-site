@@ -9,7 +9,7 @@
    lead, the trigger and snap, and the dev handle.
    ============================================================ */
 
-import { gsap, ScrollTrigger, reducedMotion } from './scroll';
+import { gsap, ScrollTrigger, reducedMotion, travelScale } from './scroll';
 import { createSceneRig, poseFor, type Cam, type Cut } from './scene-rig';
 import { BEATS, PLATE } from './hero-beats';
 import { BIRD, createBirdOverlay } from './bird';
@@ -78,7 +78,11 @@ export function initHero() {
      bird's, and the CSS fallback height is overwritten from the configs
      so there is one source. */
   const heroScreens = HERO.travelPerBeat * (HERO.beats.length - 1);
-  section.style.setProperty('--hero-screens', String(1 + heroScreens + BIRD.travelScreens));
+  /* Both travels scale together, so HERO.share is unchanged. */
+  section.style.setProperty(
+    '--hero-screens',
+    String(1 + (heroScreens + BIRD.travelScreens) * travelScale()),
+  );
 
   const openEl = section.querySelector<HTMLElement>('[data-hero-open]');
   const capEls = HERO.beats.map((_, i) =>

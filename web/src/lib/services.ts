@@ -10,7 +10,7 @@
    own section (services-detail.ts), reached by the button.
    ============================================================ */
 
-import { gsap, ScrollTrigger, reducedMotion, isPhone } from './scroll';
+import { gsap, ScrollTrigger, reducedMotion, isPhone, travelScale } from './scroll';
 import { cubicInOut } from './scene-rig';
 import { MODEL, POSE_ZERO, solvePlacement, type Camera, type Pose } from './device';
 
@@ -463,7 +463,7 @@ export function initServices() {
   const pin: HTMLElement = pinEl;
 
   /* One pin, the travel from config, one source. */
-  section.style.setProperty('--svc-screens', String(1 + WALL.travelScreens));
+  section.style.setProperty('--svc-screens', String(1 + WALL.travelScreens * travelScale()));
 
   const device = section.querySelector<HTMLElement>('[data-device]');
   const ground = section.querySelector<HTMLElement>('[data-ground]');
