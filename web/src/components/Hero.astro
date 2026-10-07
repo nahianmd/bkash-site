@@ -148,6 +148,16 @@ import BirdOverlay from './BirdOverlay.astro';
     will-change: opacity, transform;
   }
 
+  /* Edge to edge, as the opening claim (Nahian, 2026-10-07). Both sides
+     overshoot by a viewport and the pin clips them, so one rule serves
+     the left-anchored captions and the right-anchored agent alike, at
+     every width. Top and bottom keep their feather. */
+  .hero__cap::before {
+    left: -100vw;
+    right: -100vw;
+    border-radius: 0;
+  }
+
   /* Beat 2 (Agent) mirrors to the right edge. Not a composition
      preference — the scrim was the problem. `.on-photo` darkens its text
      block plus --s-6 on every side and then feathers out over a further
