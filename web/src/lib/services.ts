@@ -174,6 +174,10 @@ export const WALL = {
   restEnd: 0.884,
   slideEnd: 0.962,
   travelScreens: 6.1,
+  /* This section's share of the site's --travel. At the full 2x it read
+     too slow (Nahian, 2026-10-07): already the longest story, doubled it
+     ran past 12 screens. 0.7 makes it 1.4x, about 8.5 screens. */
+  pace: 0.7,
   scrub: 0.6,
   /* Rest B: the device's height as a fraction of --vh (desktop), or its
      width as a fraction of the viewport (phone). */
@@ -463,7 +467,7 @@ export function initServices() {
   const pin: HTMLElement = pinEl;
 
   /* One pin, the travel from config, one source. */
-  section.style.setProperty('--svc-screens', String(1 + WALL.travelScreens * travelScale()));
+  section.style.setProperty('--svc-screens', String(1 + WALL.travelScreens * travelScale() * WALL.pace));
 
   const device = section.querySelector<HTMLElement>('[data-device]');
   const ground = section.querySelector<HTMLElement>('[data-ground]');
