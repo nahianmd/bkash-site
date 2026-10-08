@@ -221,7 +221,7 @@
      How far you scroll for a pinned section's story, as a multiple of
      each section's own configured travel (hero, bird, services, the
      journey wall). At 1, one flick of a trackpad crossed a whole beat
-     (Nahian, 2026-10-07: "the scroll is skipping some journey"). The
+     (2026-10-07: "the scroll is skipping some journey"). The
      one dial for pace site-wide: higher is slower. The pin's own one
      screen is not multiplied — only the travel. */
   --travel: 2;
