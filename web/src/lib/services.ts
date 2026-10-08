@@ -175,7 +175,7 @@ export const WALL = {
   slideEnd: 0.962,
   travelScreens: 6.1,
   /* This section's share of the site's --travel. At the full 2x it read
-     too slow (Nahian, 2026-10-07): already the longest story, doubled it
+     too slow (2026-10-07): already the longest story, doubled it
      ran past 12 screens. 0.7 makes it 1.4x, about 8.5 screens. */
   pace: 0.7,
   scrub: 0.6,
@@ -186,14 +186,17 @@ export const WALL = {
     phoneWidthFrac: 0.92,
     /* clear air between the resting handset and the copy on a phone */
     phoneCopyGap: 'var(--s-8)',
-    /* The resting pose, after a product-page reference (Nahian,
-       2026-09-24): the right side turned toward you — the top edge rising
-       to the right, the bottom falling, the slab's right edge showing —
-       and the top leaning back a little about the bottom edge. No roll.
-       Eased in with the slide; the life plays on top of it. */
-    leanDeg: 10,
-    turnDeg: -24,
-    rollDeg: 0,
+    /* The resting pose, after a product-shot reference (2026-10-08, the
+       GCash phone): the LEFT side turned toward you, the slab's left edge
+       showing, the top leaning back about the bottom edge, and the whole
+       rolled so the top sits left of the bottom. Matched by eye against
+       the reference in headless screenshots; a solve from its corners
+       came out too narrow and too steep. Eased in with the slide; the
+       life and the pointer tilt play on top of it. (Was lean 10,
+       turn −24, roll 0 — the right side forward.) */
+    leanDeg: 22,
+    turnDeg: 30,
+    rollDeg: -14,
     /* The rim (Nahian, 2026-09-24, from "bKash Mobile.png"): a light
        bezel between the screen and the pink line, as a fraction of the
        screen's width — 16px on the reference's 600. The same on every
